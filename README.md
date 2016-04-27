@@ -7,6 +7,8 @@ Postgresql: sudo apt-get install postgresql postgresql-contrib libpq-dev
 #### Configuration
 Create user railsapp with password nicolas on postgresql
 
+Ejecutar `rake db:create` // Si recibes el error "psql: FATAL: Peer authentication failed for user" --> http://stackoverflow.com/questions/17443379/psql-fatal-peer-authentication-failed-for-user-dev
+
 ## Usage
 TODO: Write usage instructions
 ## Contributing
