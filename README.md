@@ -1,5 +1,7 @@
 # integra2
-TODO: Write a project description
+Proyecto semestral del curso Taller de Integración | IIC3103 - Sección 1 | 1' 2016
+
+Busca simular un sistema automático de compra-venta entre distintos grupos mediante APIs y una vista web que permite comprar con un sistema simulado tipo webpay.
 ## Installation
 #### Prerequisites
 Postgresql: sudo apt-get install postgresql postgresql-contrib libpq-dev
@@ -24,7 +26,7 @@ TODO: Write history
 TODO: Write credits
 ## License
 TODO: Write license
-## Users & Passwords (CARFEUL!)
+## Users & Passwords (CAREFUL!)
 #### Postgresql
-User: grupo2
+User: railsapp
 Pass: nicolas
