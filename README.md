@@ -3,6 +3,10 @@ TODO: Write a project description
 ## Installation
 #### Prerequisites
 Postgresql: sudo apt-get install postgresql postgresql-contrib libpq-dev
+
+#### Configuration
+Create user railsapp with password nicolas on postgresql
+
 ## Usage
 TODO: Write usage instructions
 ## Contributing
