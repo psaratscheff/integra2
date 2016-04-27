@@ -18,3 +18,7 @@ TODO: Write history
 TODO: Write credits
 ## License
 TODO: Write license
+## Users & Passwords (CARFEUL!)
+#### Postgresql
+User: grupo2
+Pass: nicolas
