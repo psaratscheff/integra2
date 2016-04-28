@@ -1,5 +1,26 @@
-class OcController < ApplicationController
+class Api::OcController < ApplicationController
   include HmacHelper # Para utilizar la función de hashing
+  skip_before_action :verify_authenticity_token
+
+  def recibir
+    idoc = params[:idoc].to_i
+
+    oc = obtener_oc(idoc)
+
+    render json: oc
+  end
+
+  private
+
+  def obtener_oc(idoc)
+    require 'httparty'
+    url = "http://mare.ing.puc.cl/oc/"
+    result = HTTParty.get(url+"obtener/"+idoc.to_s,
+        headers: { 'Content-Type' => 'application/json',
+                      'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+idoc.to_s)} )
+    puts result
+    return JSON.parse(result.body)
+  end
 
   def sftp
     require 'net/sftp' # Utilizar requires dentro de la función que lo utiliza

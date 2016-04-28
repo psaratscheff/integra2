@@ -7,8 +7,8 @@ Rails.application.routes.draw do
   #get 'welcome/index'
 
   # Estas rutas solo sirven para testear resulado en la terminal
-  get 'sftp', to: 'oc#sftp'
-  get 'hmactest', to: 'oc#hmactest'
+  # => get 'sftp', to: 'api/oc#sftp'
+  # => get 'hmactest', to: 'api/oc#hmactest'
 
   # utilizar el namespace, es lo mismo que agregar /api/ a la ruta:
   # => get 'api/documentacion', to: 'documentacion#index'
@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     # We are going to list our resources here
     get 'documentacion', to: 'documentacion#index', defaults: { format: 'html' }
     get 'consultar/:sku', to: 'stock#consultar'
+    get 'oc/recibir/:idoc', to: 'oc#recibir'
   end
 end
 

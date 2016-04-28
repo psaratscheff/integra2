@@ -14,8 +14,6 @@ class Api::StockController < ApplicationController
     retorno = { stock: contador, sku: sku.to_s}.to_json
 
     render json: retorno
-    #render json: {"sku": sku}
-    # render nothing: true
   end
 
   private
