@@ -18,14 +18,14 @@ class OcController < ApplicationController
         end
       end
     end
+    render nothing: true
   end
 
   def hmactest
     a = encode("abcd12345","GET534960ccc88ee69029cd3fb2")
     puts a
+    render nothing: true
   end
-
-
 
 
 end

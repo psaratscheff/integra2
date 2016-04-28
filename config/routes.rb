@@ -5,7 +5,10 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'welcome#index'
   #get 'welcome/index'
-  #get 'oc/sftp'
+
+  # Estas rutas solo sirven para testear resulado en la terminal
+  get 'oc/sftp'
+  get 'oc/hmactest'
 
   namespace :api, defaults: { format: :json } do
     # We are going to list our resources here
