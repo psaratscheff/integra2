@@ -1,6 +1,8 @@
 class OcController < ApplicationController
+  include HmacHelper # Para utilizar la función de hashing
+
   def sftp
-    require 'net/sftp'
+    require 'net/sftp' # Utilizar requires dentro de la función que lo utiliza
     Net::SFTP.start('mare.ing.puc.cl', 'integra2', :password => 'fUgW9wJG') do |sftp|
       # download a file or directory from the remote host
       #sftp.download!("/pedidos", "public/pedidos", :recursive => true)
@@ -17,4 +19,13 @@ class OcController < ApplicationController
       end
     end
   end
+
+  def hmactest
+    a = encode("abcd12345","GET534960ccc88ee69029cd3fb2")
+    puts a
+  end
+
+
+
+
 end
