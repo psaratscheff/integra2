@@ -12,7 +12,14 @@ Create user railsapp with password nicolas on postgresql
 Ejecutar `rake db:create` // Si recibes el error "psql: FATAL: Peer authentication failed for user" --> http://stackoverflow.com/questions/17443379/psql-fatal-peer-authentication-failed-for-user-dev
 
 ## Usage
-TODO: Write usage instructions
+####Stock de un SKU
+Retorna el stock de ese *sku* entre todos los almacenes de la empresa.<br />
+`url/api/consultar/.:sku`<br />
+El formato de retorno es:
+```
+{“stock”: int, “sku”: int}
+```
+
 ## Contributing
 1. Fork it!
 2. Create your feature branch: `git checkout -b my-new-feature`
