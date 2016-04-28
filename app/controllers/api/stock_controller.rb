@@ -6,14 +6,14 @@ class Api::StockController < ApplicationController
 
     parsed_json = lista_de_almacenes()
 
+    contador=0
     parsed_json.each do |almacen|
-      puts stock_de_almacen(almacen["_id"], sku)
+      contador += stock_de_almacen(almacen["_id"], sku).count()
     end
 
-    render json: parsed_json
+    retorno = { stock: contador, sku: sku.to_s}.to_json
 
-
-    puts sku
+    render json: retorno
     #render json: {"sku": sku}
     # render nothing: true
   end
@@ -23,7 +23,7 @@ class Api::StockController < ApplicationController
   def stock_de_almacen(almacenId, sku)
     require 'httparty'
     url = "http://integracion-2016-dev.herokuapp.com/bodega/"
-    result = HTTParty.get(url+"stock",
+    result = HTTParty.get(url+"stock"+"?almacenId="+almacenId+"&"+"sku="+sku.to_s,
         headers: { 'Content-Type' => 'application/json',
                       'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenId+sku.to_s)} )
     return JSON.parse(result.body)
