@@ -39,6 +39,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 # Para el servidor
 gem 'puma'
+# Para conectar sftp
+gem 'net-sftp'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
