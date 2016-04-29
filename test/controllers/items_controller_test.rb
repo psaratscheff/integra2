@@ -18,7 +18,7 @@ class ItemsControllerTest < ActionController::TestCase
 
   test "should create item" do
     assert_difference('Item.count') do
-      post :create, item: { CostoUnitario: @item.CostoUnitario, Descripcion: @item.Descripcion, Grupo: @item.Grupo, Lote: @item.Lote, PrecioUnitario: @item.PrecioUnitario, Sku1: @item.Sku1, Sku2: @item.Sku2, Sku3: @item.Sku3, Sku4: @item.Sku4, Sku: @item.Sku, TiempoMedio: @item.TiempoMedio, Tipo: @item.Tipo, Unidades: @item.Unidades }
+      post :create, item: { Costo_Unitario: @item.Costo_Unitario, Descripcion: @item.Descripcion, Grupo: @item.Grupo, Lote: @item.Lote, Precio_Unitario: @item.Precio_Unitario, Sku1: @item.Sku1, Sku2: @item.Sku2, Sku3: @item.Sku3, Sku4: @item.Sku4, Sku: @item.Sku, Tiempo_Medio: @item.Tiempo_Medio, Tipo: @item.Tipo, Unidades: @item.Unidades }
     end
 
     assert_redirected_to item_path(assigns(:item))
@@ -35,7 +35,7 @@ class ItemsControllerTest < ActionController::TestCase
   end
 
   test "should update item" do
-    patch :update, id: @item, item: { CostoUnitario: @item.CostoUnitario, Descripcion: @item.Descripcion, Grupo: @item.Grupo, Lote: @item.Lote, PrecioUnitario: @item.PrecioUnitario, Sku1: @item.Sku1, Sku2: @item.Sku2, Sku3: @item.Sku3, Sku4: @item.Sku4, Sku: @item.Sku, TiempoMedio: @item.TiempoMedio, Tipo: @item.Tipo, Unidades: @item.Unidades }
+    patch :update, id: @item, item: { Costo_Unitario: @item.Costo_Unitario, Descripcion: @item.Descripcion, Grupo: @item.Grupo, Lote: @item.Lote, Precio_Unitario: @item.Precio_Unitario, Sku1: @item.Sku1, Sku2: @item.Sku2, Sku3: @item.Sku3, Sku4: @item.Sku4, Sku: @item.Sku, Tiempo_Medio: @item.Tiempo_Medio, Tipo: @item.Tipo, Unidades: @item.Unidades }
     assert_redirected_to item_path(assigns(:item))
   end
 

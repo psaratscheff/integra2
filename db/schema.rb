@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160429030209) do
+ActiveRecord::Schema.define(version: 20160429040020) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,16 +22,16 @@ ActiveRecord::Schema.define(version: 20160429030209) do
     t.string   "Tipo"
     t.string   "Grupo"
     t.string   "Unidades"
-    t.integer  "CostoUnitario"
+    t.integer  "Costo_Unitario"
     t.integer  "Lote"
-    t.float    "TiempoMedio"
-    t.integer  "PrecioUnitario"
+    t.float    "Tiempo_Medio"
+    t.integer  "Precio_Unitario"
     t.string   "Sku1"
     t.string   "Sku2"
     t.string   "Sku3"
     t.string   "Sku4"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
 end

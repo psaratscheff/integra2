@@ -6,10 +6,10 @@ class CreateItems < ActiveRecord::Migration
       t.string :Tipo
       t.string :Grupo
       t.string :Unidades
-      t.integer :CostoUnitario
+      t.integer :Costo_Unitario
       t.integer :Lote
-      t.float :TiempoMedio
-      t.integer :PrecioUnitario
+      t.float :Tiempo_Medio
+      t.integer :Precio_Unitario
       t.string :Sku1
       t.string :Sku2
       t.string :Sku3

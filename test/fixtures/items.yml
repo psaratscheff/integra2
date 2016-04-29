@@ -6,10 +6,10 @@ one:
   Tipo: MyString
   Grupo: MyString
   Unidades: MyString
-  CostoUnitario: 1
+  Costo_Unitario: 1
   Lote: 1
-  TiempoMedio: 1.5
-  PrecioUnitario: 1
+  Tiempo_Medio: 1.5
+  Precio_Unitario: 1
   Sku1: MyString
   Sku2: MyString
   Sku3: MyString
@@ -21,10 +21,10 @@ two:
   Tipo: MyString
   Grupo: MyString
   Unidades: MyString
-  CostoUnitario: 1
+  Costo_Unitario: 1
   Lote: 1
-  TiempoMedio: 1.5
-  PrecioUnitario: 1
+  Tiempo_Medio: 1.5
+  Precio_Unitario: 1
   Sku1: MyString
   Sku2: MyString
   Sku3: MyString
