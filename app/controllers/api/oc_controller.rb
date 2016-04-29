@@ -3,8 +3,8 @@ class Api::OcController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def recibir
-    idoc = params[:idoc].to_i
-
+    idoc = params[:idoc]
+    puts idoc
     oc = obtener_oc(idoc)
 
     render json: oc
@@ -15,9 +15,10 @@ class Api::OcController < ApplicationController
   def obtener_oc(idoc)
     require 'httparty'
     url = "http://mare.ing.puc.cl/oc/"
-    result = HTTParty.get(url+"obtener/"+idoc.to_s,
-        headers: { 'Content-Type' => 'application/json',
-                      'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+idoc.to_s)} )
+    result = HTTParty.get(url+"obtener/"+idoc,
+        headers: {
+          'Content-Type' => 'application/json'
+          })
     puts result
     return JSON.parse(result.body)
   end
