@@ -5,23 +5,12 @@ class Api::OcController < ApplicationController
   def recibir
     idoc = params[:idoc]
     puts idoc
-    oc = obtener_oc(idoc)
+    oc = obtener_oc(idoc) # Función definida en ApplicationController
 
     render json: oc
   end
 
   private
-
-  def obtener_oc(idoc)
-    require 'httparty'
-    url = "http://mare.ing.puc.cl/oc/"
-    result = HTTParty.get(url+"obtener/"+idoc,
-        headers: {
-          'Content-Type' => 'application/json'
-          })
-    puts result
-    return JSON.parse(result.body)
-  end
 
   def sftp
     require 'net/sftp' # Utilizar requires dentro de la función que lo utiliza
