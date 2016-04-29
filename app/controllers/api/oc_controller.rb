@@ -7,10 +7,50 @@ class Api::OcController < ApplicationController
     puts idoc
     oc = obtener_oc(idoc) # Función definida en ApplicationController
 
-    render json: oc
+    if consultar_stock(oc["sku"]) >= oc["cantidad"]
+      #TODO: Procesar orden
+      aceptar_oc(oc["_id"])
+      render json: {"aceptado": true}
+    else
+      rechazar_oc(oc["_id"])
+      render json: {"aceptado": false}
+    end
   end
 
   private
+
+  def aceptar_oc(idoc)
+    require 'httparty'
+    url = "http://mare.ing.puc.cl/oc/"
+    result = HTTParty.post(url+"recepcionar/"+idoc.to_s,
+            headers: {
+              'Content-Type' => 'application/json'
+            })
+    json = JSON.parse(result.body)
+
+    if json.count() > 1
+      raise "Error: se retornó más de una OC para el mismo id"
+    end
+    return json[0]
+  end
+
+  def rechazar_oc(idoc)
+    require 'httparty'
+    url = "http://mare.ing.puc.cl/oc/"
+    result = HTTParty.post(url+"rechazar/"+idoc.to_s,
+            body: {
+              rechazo: 'No tenemos stock para el sku solicitado'
+            }.to_json,
+            headers: {
+              'Content-Type' => 'application/json'
+            })
+    json = JSON.parse(result.body)
+
+    if json.count() > 1
+      raise "Error: se retornó más de una OC para el mismo id"
+    end
+    return json[0]
+  end
 
   def sftp
     require 'net/sftp' # Utilizar requires dentro de la función que lo utiliza

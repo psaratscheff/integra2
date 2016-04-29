@@ -4,10 +4,10 @@ class ScriptsController < ApplicationController
   def generar_oc
     require 'httparty'
 
-    cliente = "g2"
+    cliente = "g5"
     proveedor = "g2"
     cantidad = 10
-    sku = 12
+    sku = 1
     precio = 1000
     notas = ""
     fechaEntrega = "1461980200000"

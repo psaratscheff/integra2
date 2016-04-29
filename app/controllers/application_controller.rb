@@ -24,7 +24,12 @@ class ApplicationController < ActionController::Base
               'Content-Type' => 'application/json',
               'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+idoc.to_s)
             })
-    return JSON.parse(result.body)
+    json = JSON.parse(result.body)
+
+    if json.count() > 1
+      raise "Error: se retornó más de una OC para el mismo id"
+    end
+    return json[0]
   end
 
 
