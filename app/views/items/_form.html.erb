@@ -1,0 +1,69 @@
+<%= form_for(@item) do |f| %>
+  <% if @item.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@item.errors.count, "error") %> prohibited this item from being saved:</h2>
+
+      <ul>
+      <% @item.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :Sku %><br>
+    <%= f.text_field :Sku %>
+  </div>
+  <div class="field">
+    <%= f.label :Descripcion %><br>
+    <%= f.text_field :Descripcion %>
+  </div>
+  <div class="field">
+    <%= f.label :Tipo %><br>
+    <%= f.text_field :Tipo %>
+  </div>
+  <div class="field">
+    <%= f.label :Grupo %><br>
+    <%= f.text_field :Grupo %>
+  </div>
+  <div class="field">
+    <%= f.label :Unidades %><br>
+    <%= f.text_field :Unidades %>
+  </div>
+  <div class="field">
+    <%= f.label :CostoUnitario %><br>
+    <%= f.number_field :CostoUnitario %>
+  </div>
+  <div class="field">
+    <%= f.label :Lote %><br>
+    <%= f.number_field :Lote %>
+  </div>
+  <div class="field">
+    <%= f.label :TiempoMedio %><br>
+    <%= f.text_field :TiempoMedio %>
+  </div>
+  <div class="field">
+    <%= f.label :PrecioUnitario %><br>
+    <%= f.number_field :PrecioUnitario %>
+  </div>
+  <div class="field">
+    <%= f.label :Sku1 %><br>
+    <%= f.text_field :Sku1 %>
+  </div>
+  <div class="field">
+    <%= f.label :Sku2 %><br>
+    <%= f.text_field :Sku2 %>
+  </div>
+  <div class="field">
+    <%= f.label :Sku3 %><br>
+    <%= f.text_field :Sku3 %>
+  </div>
+  <div class="field">
+    <%= f.label :Sku4 %><br>
+    <%= f.text_field :Sku4 %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
