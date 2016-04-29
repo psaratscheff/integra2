@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -17,6 +18,8 @@ Rails.application.routes.draw do
     get 'documentacion', to: 'documentacion#index', defaults: { format: 'html' }
     get 'consultar/:sku', to: 'stock#consultar'
     get 'oc/recibir/:idoc', to: 'oc#recibir'
+    get 'ids/grupo'
+    get 'ids/banco'
   end
 end
 
