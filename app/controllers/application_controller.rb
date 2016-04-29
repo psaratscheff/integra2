@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
 
     contador=0
     parsed_json.each do |almacen|
-      contador += stock_de_almacen(almacen["_id"], sku).count()
+      contador += stock_de_almacen(almacen["_id"], sku).count() unless almacen["despacho"] # No consideramos el stock en el almacen de despacho
     end
 
     return contador
