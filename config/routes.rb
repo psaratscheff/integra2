@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     get 'oc/recibir/:idoc', to: 'oc#recibir'
     get 'ids/grupo'
     get 'ids/banco'
+    get 'ids/almacenId'
   end
 end
 
