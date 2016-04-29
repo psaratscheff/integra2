@@ -8,7 +8,8 @@ class Api::OcController < ApplicationController
     oc = obtener_oc(idoc) # Función definida en ApplicationController
 
     if consultar_stock(oc["sku"]) >= oc["cantidad"]
-      #TODO: Procesar orden
+      factura = generar_factura(idoc)
+      #TODO: Enviar factura
       aceptar_oc(oc["_id"])
       render json: {"aceptado": true}
     else
@@ -18,6 +19,24 @@ class Api::OcController < ApplicationController
   end
 
   private
+
+  def generar_factura(idoc)
+    require 'httparty'
+    url = "http://mare.ing.puc.cl/facturas/"
+    result = HTTParty.put(url,
+            body: {
+              oc: idoc
+            }.to_json,
+            headers: {
+              'Content-Type' => 'application/json'
+            })
+    json = JSON.parse(result.body)
+
+    if json.count() > 1
+      raise "Error: se retornó más de una OC para el mismo id"
+    end
+    return json[0]
+  end
 
   def aceptar_oc(idoc)
     require 'httparty'
@@ -51,6 +70,8 @@ class Api::OcController < ApplicationController
     end
     return json[0]
   end
+
+  # -------------------Funciones de prueba--------------------------
 
   def sftp
     require 'net/sftp' # Utilizar requires dentro de la función que lo utiliza
