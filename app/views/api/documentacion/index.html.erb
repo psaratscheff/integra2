@@ -16,8 +16,13 @@
   <p>Parámetros: Ningungo</p>
   <p>Retorno: <span class="code">{“id”: string}</span></p>
 
+  <li><h3>api/ids/almacenId (GET)</h3></li>
+  <p>Retorna un JSON con el id del almacen de recepción del grupo.</p>
+  <p>Parámetros: Ningungo</p>
+  <p>Retorno: <span class="code">{“id”: string}</span></p>
+
   <li><h3>api/consultar/.:sku (GET)</h3></li>
-  <p>Retorna un JSON con el stock del SKU sumando todas las bodegas de la empresa.</p>
+  <p>Retorna un JSON con el stock del SKU sumando todas los almacenes de la empresa (Excepto las de despacho).</p>
   <p>Parámetros: Ningungo</p>
   <p>Retorno: <span class="code">{“stock”: int, “sku”: int}</span></p>
 </ul>
