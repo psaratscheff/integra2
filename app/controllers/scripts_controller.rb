@@ -14,7 +14,7 @@ class ScriptsController < ApplicationController
           sku = three_letters = data[/<sku>(.*?)<\/sku>/m, 1]
           qty = three_letters = data[/<qty>(.*?)<\/qty>/m, 1]
           puts "ID: "+id+" // sku: "+ sku + " // qty: "+qty
-          
+
         end
       end
     end

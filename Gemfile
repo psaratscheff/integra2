@@ -44,6 +44,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'puma'
 # Para conectar sftp
 gem 'net-sftp'
+# Para realizar tareas por schedule
+gem 'whenever', require: false # (Instalar manualmente en el servidor)
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
