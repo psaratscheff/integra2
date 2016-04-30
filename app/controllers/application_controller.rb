@@ -5,6 +5,14 @@ class ApplicationController < ActionController::Base
 
   private
 
+
+  def getLinkGrupo(id) #Los IDS están malos, reemplazarlos por los correctos cuando los sepamos
+    dic = {'abc123'=>'1', '12dweads'=>'2' , 'sd213d3'=>'3' ,'12w21w'=>'4' ,'asdf3'=>'5' ,'2134redsd'=>'6' ,'43fqw'=>'7' ,'9ifds'=>'8',
+            'dw12e'=>'9','43few4'=>'10','12d43'=>'11','234fsdf'=>'12'}
+    url = sprintf('http://integra%s.ing.puc.cl/', dic[id])
+   end
+
+
   def consultar_stock(sku)
     parsed_json = lista_de_almacenes()
 
