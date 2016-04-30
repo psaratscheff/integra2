@@ -20,6 +20,7 @@ Rails.application.routes.draw do
     get 'documentacion', to: 'documentacion#index', defaults: { format: 'html' }
     get 'consultar/:sku', to: 'stock#consultar'
     get 'oc/recibir/:idoc', to: 'oc#recibir'
+    get 'facturas/recibir/:idfactura', to: 'facturas#recibir'
     get 'ids/grupo'
     get 'ids/banco'
     get 'ids/almacenId'
