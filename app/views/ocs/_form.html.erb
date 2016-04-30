@@ -1,0 +1,61 @@
+<%= form_for(@oc) do |f| %>
+  <% if @oc.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@oc.errors.count, "error") %> prohibited this oc from being saved:</h2>
+
+      <ul>
+      <% @oc.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :idoc %><br>
+    <%= f.text_field :idoc %>
+  </div>
+  <div class="field">
+    <%= f.label :idfactura %><br>
+    <%= f.text_field :idfactura %>
+  </div>
+  <div class="field">
+    <%= f.label :estado %><br>
+    <%= f.text_field :estado %>
+  </div>
+  <div class="field">
+    <%= f.label :fechaRecepcion %><br>
+    <%= f.text_field :fechaRecepcion %>
+  </div>
+  <div class="field">
+    <%= f.label :fechaEntrega %><br>
+    <%= f.text_field :fechaEntrega %>
+  </div>
+  <div class="field">
+    <%= f.label :canal %><br>
+    <%= f.text_field :canal %>
+  </div>
+  <div class="field">
+    <%= f.label :cliente %><br>
+    <%= f.text_field :cliente %>
+  </div>
+  <div class="field">
+    <%= f.label :proveedor %><br>
+    <%= f.text_field :proveedor %>
+  </div>
+  <div class="field">
+    <%= f.label :sku %><br>
+    <%= f.number_field :sku %>
+  </div>
+  <div class="field">
+    <%= f.label :cantidad %><br>
+    <%= f.number_field :cantidad %>
+  </div>
+  <div class="field">
+    <%= f.label :cantidadDespachada %><br>
+    <%= f.number_field :cantidadDespachada %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

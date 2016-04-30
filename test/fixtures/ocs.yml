@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  idoc: MyString
+  idfactura: MyString
+  estado: MyString
+  fechaRecepcion: MyString
+  fechaEntrega: MyString
+  canal: MyString
+  cliente: MyString
+  proveedor: MyString
+  sku: 1
+  cantidad: 1
+  cantidadDespachada: 1
+
+two:
+  idoc: MyString
+  idfactura: MyString
+  estado: MyString
+  fechaRecepcion: MyString
+  fechaEntrega: MyString
+  canal: MyString
+  cliente: MyString
+  proveedor: MyString
+  sku: 1
+  cantidad: 1
+  cantidadDespachada: 1
