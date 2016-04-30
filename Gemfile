@@ -4,9 +4,18 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.6'
 
+<<<<<<< HEAD
 #hashing
 gem 'rubysl-base64','2.0.0'
 gem 'ruby-hmac','0.4.0'
+=======
+# Hashing
+gem 'rubysl-base64', '2.0.0'
+gem 'ruby-hmac', '0.4.0'
+
+# Para conexiones http fácil
+gem 'httparty'
+>>>>>>> origin/master
 
 # Use pg as the database for Active Record
 gem 'pg'
@@ -39,6 +48,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 # Para el servidor
 gem 'puma'
+# Para conectar sftp
+gem 'net-sftp'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
