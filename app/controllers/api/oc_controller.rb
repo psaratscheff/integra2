@@ -9,8 +9,13 @@ class Api::OcController < ApplicationController
     if consultar_stock(oc["sku"]) >= oc["cantidad"]
       aceptar_oc(oc["_id"])
       factura = generar_factura(idoc)
-      #TODO: Enviar factura
+      json = enviarFactura(factura) #Definido un poco más abajo
+      if json['validado']==false
+        #TODO: Borrar la factura generada
+        raise "ERROR: Factura fue rechazada por el comprador"
+      end
       render json: {"aceptado": true, "idoc": oc["_id"]}
+
     else
       rechazar_oc(oc["_id"])
       render json: {"aceptado": false, "idoc": oc["_id"]}
@@ -36,6 +41,23 @@ class Api::OcController < ApplicationController
     end
     return json[0]
   end
+
+  def enviarFactura(factura)
+    idComprador = factura['comprador'] #Revisar sintaxis
+    idFactura = factura['_id'] #Revisar sintaxis
+    url = getLinkGrupo(idComprador)+'api/facturas/recibir/'+idFactura.to_s
+
+    result = HTTParty.post(url,
+            body: factura,
+            headers: {
+              'Content-Type' => 'application/json'
+            })
+
+    json = JSON.parse(result.body)
+    return json
+
+  end
+
 
   def aceptar_oc(idoc)
     require 'httparty'
