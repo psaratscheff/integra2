@@ -4,24 +4,95 @@ class Api::OcController < ApplicationController
 
   def recibir
     idoc = params[:idoc]
-    puts idoc
-    oc = obtener_oc(idoc)
+    oc = obtener_oc(idoc) # Función definida en ApplicationController
 
-    render json: oc
+    if consultar_stock(oc["sku"]) >= oc["cantidad"]
+      aceptar_oc(oc["_id"])
+      factura = generar_factura(idoc)
+      json = enviarFactura(factura) #Definido un poco más abajo
+      if json['validado']==false
+        #TODO: Borrar la factura generada
+        raise "ERROR: Factura fue rechazada por el comprador"
+      end
+      render json: {"aceptado": true, "idoc": oc["_id"]}
+
+    else
+      rechazar_oc(oc["_id"])
+      render json: {"aceptado": false, "idoc": oc["_id"]}
+    end
   end
 
   private
 
-  def obtener_oc(idoc)
+  def generar_factura(idoc)
+    require 'httparty'
+    url = "http://mare.ing.puc.cl/facturas/"
+    result = HTTParty.put(url,
+            body: {
+              oc: idoc
+            }.to_json,
+            headers: {
+              'Content-Type' => 'application/json'
+            })
+    json = JSON.parse(result.body)
+
+    if json.count() > 1
+      raise "Error: se retornó más de una OC para el mismo id"
+    end
+    return json[0]
+  end
+
+  def enviarFactura(factura)
+    idComprador = factura['comprador'] #Revisar sintaxis
+    idFactura = factura['_id'] #Revisar sintaxis
+    url = getLinkGrupo(idComprador)+'api/facturas/recibir/'+idFactura.to_s
+
+    result = HTTParty.post(url,
+            body: factura,
+            headers: {
+              'Content-Type' => 'application/json'
+            })
+
+    json = JSON.parse(result.body)
+    return json
+
+  end
+
+
+  def aceptar_oc(idoc)
     require 'httparty'
     url = "http://mare.ing.puc.cl/oc/"
-    result = HTTParty.get(url+"obtener/"+idoc,
-        headers: {
-          'Content-Type' => 'application/json'
-          })
-    puts result
-    return JSON.parse(result.body)
+    result = HTTParty.post(url+"recepcionar/"+idoc.to_s,
+            headers: {
+              'Content-Type' => 'application/json'
+            })
+    json = JSON.parse(result.body)
+
+    if json.count() > 1
+      raise "Error: se retornó más de una OC para el mismo id"
+    end
+    return json[0]
   end
+
+  def rechazar_oc(idoc)
+    require 'httparty'
+    url = "http://mare.ing.puc.cl/oc/"
+    result = HTTParty.post(url+"rechazar/"+idoc.to_s,
+            body: {
+              rechazo: 'No tenemos stock para el sku solicitado'
+            }.to_json,
+            headers: {
+              'Content-Type' => 'application/json'
+            })
+    json = JSON.parse(result.body)
+
+    if json.count() > 1
+      raise "Error: se retornó más de una OC para el mismo id"
+    end
+    return json[0]
+  end
+
+  # -------------------Funciones de prueba--------------------------
 
   def sftp
     require 'net/sftp' # Utilizar requires dentro de la función que lo utiliza

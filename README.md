@@ -25,6 +25,12 @@ El formato de retorno es:
 ```
 {id: string}
 ```
+Retorna el *id* del **almacen de recepción** mediante:<br />
+`url/api/ids/almacenId`<br />
+El formato de retorno es:
+```
+{id: string}
+```
 ####Stock de un SKU
 Retorna el stock de ese *sku* entre todos los almacenes de la empresa.<br />
 `url/api/consultar/.:sku`<br />
