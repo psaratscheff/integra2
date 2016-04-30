@@ -5,8 +5,8 @@ source 'https://rubygems.org'
 gem 'rails', '4.2.6'
 
 #hashing
-gem ‘rubysl-base64’,’2.0.0’
-gem ‘ruby-hmac’,’0.4.0’
+gem 'rubysl-base64','2.0.0'
+gem 'ruby-hmac','0.4.0'
 
 # Use pg as the database for Active Record
 gem 'pg'
