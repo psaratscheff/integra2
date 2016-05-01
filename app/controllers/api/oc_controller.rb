@@ -5,7 +5,13 @@ class Api::OcController < ApplicationController
   def recibir
     idoc = params[:idoc]
     oc = obtener_oc(idoc) # Función definida en ApplicationController
-    puts oc
+    if oc["error"]
+      render json: {"error": ex.message}, status: 503 and return
+    end
+    stock =
+    if oc["error"]
+      render json: {"error": ex.message}, status: 503 and return
+    end
     if consultar_stock(oc["sku"]) >= oc["cantidad"]
       aceptar_oc(oc["_id"])
       factura = generar_factura(idoc)
@@ -44,7 +50,7 @@ class Api::OcController < ApplicationController
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
-      return json: {"error": ex.message}
+      render json: {"error": ex.message}, status: 503 and return
     end
   end
 
@@ -81,7 +87,7 @@ class Api::OcController < ApplicationController
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
-      return json: {"error": ex.message}
+      render json: {"error": ex.message}, status: 503 and return
     end
   end
 
@@ -104,7 +110,7 @@ class Api::OcController < ApplicationController
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
-      return json: {"error": ex.message}
+      render json: {"error": ex.message}, status: 503 and return
     end
   end
 

@@ -35,13 +35,9 @@
         <td><%= oc.cantidad %></td>
         <td><%= oc.cantidadDespachada %></td>
         <td><%= link_to 'Show', oc %></td>
-        <td><%= link_to 'Edit', edit_oc_path(oc) %></td>
-        <td><%= link_to 'Destroy', oc, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
 <br>
-
-<%= link_to 'New Oc', new_oc_path %>

@@ -5,6 +5,16 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def transform_oc(oc)
+    oc.delete("__v")
+    oc.delete("fechaDespachos")
+    oc.delete("precioUnitario")
+    oc["idoc"] = oc.delete("_id")
+    oc["fechaRecepcion"] = Time.new(oc.delete("created_at")).to_s
+    oc["fechaEntrega"] = Time.new(oc.delete("fechaEntrega")).to_s
+
+    return oc
+  end
 
   def getLinkGrupo(id) #Los IDS están malos, reemplazarlos por los correctos cuando los sepamos
     dic = {'abc123'=>'1', '12dweads'=>'2' , 'sd213d3'=>'3' ,'12w21w'=>'4' ,'asdf3'=>'5' ,'2134redsd'=>'6' ,'43fqw'=>'7' ,'9ifds'=>'8',
@@ -41,7 +51,7 @@ class ApplicationController < ActionController::Base
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
-      return json: {"error": ex.message}
+      render json: {"error": ex.message}, status: 503 and return
     end
   end
 
@@ -60,8 +70,8 @@ class ApplicationController < ActionController::Base
       return JSON.parse(result.body)
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
-      return json: {"error": ex.message}
-    end 
+      render json: {"error": ex.message}, status: 503 and return
+    end
   end
 
   def lista_de_almacenes()
@@ -76,7 +86,7 @@ class ApplicationController < ActionController::Base
       return JSON.parse(result.body)
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
-      return json: {"error": ex.message}
+      render json: {"error": ex.message}, status: 503 and return
     end
   end
 end

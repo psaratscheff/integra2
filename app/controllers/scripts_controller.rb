@@ -13,33 +13,31 @@ class ScriptsController < ApplicationController
     # y luego convertido a string y agregado los 000 por los milisegundos.
     fechaEntrega = Time.now.tomorrow.to_i.to_s+"000"
     begin # Intentamos realizar conexión externa y obtener OC
-    url = "http://mare.ing.puc.cl/oc/"
-    result = HTTParty.put(url+"crear",
-        body:    {
-                    cliente: cliente,
-                    proveedor: proveedor,
-                    sku: sku,
-                    fechaEntrega: fechaEntrega,
-                    precioUnitario: precio,
-                    cantidad: cantidad,
-                    canal: "b2b"
-                  }.to_json,
-        headers: {
-          'Content-Type' => 'application/json'
-        })
+      url = "http://mare.ing.puc.cl/oc/"
+      result = HTTParty.put(url+"crear",
+          body:    {
+                      cliente: cliente,
+                      proveedor: proveedor,
+                      sku: sku,
+                      fechaEntrega: fechaEntrega,
+                      precioUnitario: precio,
+                      cantidad: cantidad,
+                      canal: "b2b"
+                    }.to_json,
+          headers: {
+            'Content-Type' => 'application/json'
+          })
 
-    oc = JSON.parse(result.body)
+      oc = JSON.parse(result.body)
+      oc = transform_oc(oc)
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
-      render json: {"error": ex.message}
+      render json: {"error": ex.message}, status: 503 and return
     end
-    oc.delete("__v")
-    #oc[:id] = oc.delete :__v
-
-    #Item.new(oc)
+    localOc = Oc.new(oc)
+    localOc.save!
 
     render json: oc
-    #return JSON.parse(result.body)
   end
 
 end
