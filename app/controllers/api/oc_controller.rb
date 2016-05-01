@@ -8,14 +8,12 @@ class Api::OcController < ApplicationController
     if oc["error"]
       render json: {"error": ex.message}, status: 503 and return
     end
-    stock =
-    if oc["error"]
-      render json: {"error": ex.message}, status: 503 and return
-    end
+    puts "OC Obtenida: "+oc
     if consultar_stock(oc["sku"]) >= oc["cantidad"]
       aceptar_oc(oc["_id"])
+      puts "OC Aceptada"
       factura = generar_factura(idoc)
-      puts factura
+      puts "Factura generada: "+factura
       json = enviarFactura(factura) #Definido un poco más abajo
       if json['validado']==false
         #TODO: Borrar la factura generada
@@ -25,11 +23,33 @@ class Api::OcController < ApplicationController
 
     else
       rechazar_oc(oc["_id"])
+      puts "OC Rechazada"
       render json: {"aceptado": false, "idoc": oc["_id"]}
     end
   end
 
   private
+
+  def anular_factura(idFactura)
+    require 'httparty'
+    begin # Intentamos realizar conexión externa y obtener OC
+      url = "http://mare.ing.puc.cl/facturas/"
+      result = HTTParty.post(url+"cancel",
+              body: {
+                id: idFactura,
+                motivo: "Factura fue cancelada por contraparte"
+              }.to_json,
+              headers: {
+                'Content-Type' => 'application/json'
+              })
+      json = JSON.parse(result.body)
+      #TODO: Actualizar OC local
+      return json[0]
+    rescue => ex # En caso de excepción retornamos error
+      logger.error ex.message
+      render json: {"error": ex.message}, status: 503 and return
+    end
+  end
 
   def generar_factura(idoc)
     require 'httparty'
@@ -45,8 +65,11 @@ class Api::OcController < ApplicationController
       json = JSON.parse(result.body)
 
       if json.count() > 1
-        raise "Error: se retornó más de una OC para el mismo id"
+        raise "Error1: se retornó más de una OC para el mismo id"
       end
+      localOc = Oc.find_by id: idoc
+      localOc.idFactura = json[0]["_id"]
+      localOc.save!
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
@@ -82,8 +105,11 @@ class Api::OcController < ApplicationController
       json = JSON.parse(result.body)
 
       if json.count() > 1
-        raise "Error: se retornó más de una OC para el mismo id"
+        raise "Error2: se retornó más de una OC para el mismo id"
       end
+      localOc = Oc.find_by id: idoc
+      localOc.estado = json[0]["aceptado"] #TODO: Verificar nombre estado
+      localOc.save!
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
@@ -105,8 +131,11 @@ class Api::OcController < ApplicationController
       json = JSON.parse(result.body)
 
       if json.count() > 1
-        raise "Error: se retornó más de una OC para el mismo id"
+        raise "Error3: se retornó más de una OC para el mismo id"
       end
+      localOc = Oc.find_by id: idoc
+      localOc.estado = json[0]["rechazado"] #TODO: Verificar nombre estado
+      localOc.save!
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message

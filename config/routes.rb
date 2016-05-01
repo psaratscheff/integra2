@@ -20,6 +20,7 @@ Rails.application.routes.draw do
     # We are going to list our resources here
     get 'documentacion', to: 'documentacion#index', defaults: { format: 'html' }
     get 'consultar/:sku', to: 'stock#consultar'
+    #TODO: Cambiar a post!
     get 'oc/recibir/:idoc', to: 'oc#recibir'
     get 'ids/grupo'
     get 'ids/banco'
