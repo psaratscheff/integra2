@@ -3,14 +3,15 @@ class ScriptsController < ApplicationController
 
   def generar_oc
     require 'httparty'
-
     cliente = "g5"
     proveedor = "g2"
     cantidad = 10
     sku = 1
     precio = 1000
     notas = ""
-    fechaEntrega = "1461980200000"
+    # El tiempo de mañana (Un día después de ahora), convertido a int (epoch)
+    # y luego convertido a string y agregado los 000 por los milisegundos.
+    fechaEntrega = Time.now.tomorrow.to_i.to_s+"000"
 
     url = "http://mare.ing.puc.cl/oc/"
     result = HTTParty.put(url+"crear",

@@ -5,10 +5,11 @@ class Api::OcController < ApplicationController
   def recibir
     idoc = params[:idoc]
     oc = obtener_oc(idoc) # Función definida en ApplicationController
-
+    puts oc
     if consultar_stock(oc["sku"]) >= oc["cantidad"]
       aceptar_oc(oc["_id"])
       factura = generar_factura(idoc)
+      puts factura
       json = enviarFactura(factura) #Definido un poco más abajo
       if json['validado']==false
         #TODO: Borrar la factura generada
