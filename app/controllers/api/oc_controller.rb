@@ -27,20 +27,25 @@ class Api::OcController < ApplicationController
 
   def generar_factura(idoc)
     require 'httparty'
-    url = "http://mare.ing.puc.cl/facturas/"
-    result = HTTParty.put(url,
-            body: {
-              oc: idoc
-            }.to_json,
-            headers: {
-              'Content-Type' => 'application/json'
-            })
-    json = JSON.parse(result.body)
+    begin # Intentamos realizar conexión externa y obtener OC
+      url = "http://mare.ing.puc.cl/facturas/"
+      result = HTTParty.put(url,
+              body: {
+                oc: idoc
+              }.to_json,
+              headers: {
+                'Content-Type' => 'application/json'
+              })
+      json = JSON.parse(result.body)
 
-    if json.count() > 1
-      raise "Error: se retornó más de una OC para el mismo id"
+      if json.count() > 1
+        raise "Error: se retornó más de una OC para el mismo id"
+      end
+      return json[0]
+    rescue => ex # En caso de excepción retornamos error
+      logger.error ex.message
+      return json: {"error": ex.message}
     end
-    return json[0]
   end
 
   def enviarFactura(factura)
@@ -62,35 +67,45 @@ class Api::OcController < ApplicationController
 
   def aceptar_oc(idoc)
     require 'httparty'
-    url = "http://mare.ing.puc.cl/oc/"
-    result = HTTParty.post(url+"recepcionar/"+idoc.to_s,
-            headers: {
-              'Content-Type' => 'application/json'
-            })
-    json = JSON.parse(result.body)
+    begin # Intentamos realizar conexión externa y obtener OC
+      url = "http://mare.ing.puc.cl/oc/"
+      result = HTTParty.post(url+"recepcionar/"+idoc.to_s,
+              headers: {
+                'Content-Type' => 'application/json'
+              })
+      json = JSON.parse(result.body)
 
-    if json.count() > 1
-      raise "Error: se retornó más de una OC para el mismo id"
+      if json.count() > 1
+        raise "Error: se retornó más de una OC para el mismo id"
+      end
+      return json[0]
+    rescue => ex # En caso de excepción retornamos error
+      logger.error ex.message
+      return json: {"error": ex.message}
     end
-    return json[0]
   end
 
   def rechazar_oc(idoc)
     require 'httparty'
-    url = "http://mare.ing.puc.cl/oc/"
-    result = HTTParty.post(url+"rechazar/"+idoc.to_s,
-            body: {
-              rechazo: 'No tenemos stock para el sku solicitado'
-            }.to_json,
-            headers: {
-              'Content-Type' => 'application/json'
-            })
-    json = JSON.parse(result.body)
+    begin # Intentamos realizar conexión externa y obtener OC
+      url = "http://mare.ing.puc.cl/oc/"
+      result = HTTParty.post(url+"rechazar/"+idoc.to_s,
+              body: {
+                rechazo: 'No tenemos stock para el sku solicitado'
+              }.to_json,
+              headers: {
+                'Content-Type' => 'application/json'
+              })
+      json = JSON.parse(result.body)
 
-    if json.count() > 1
-      raise "Error: se retornó más de una OC para el mismo id"
+      if json.count() > 1
+        raise "Error: se retornó más de una OC para el mismo id"
+      end
+      return json[0]
+    rescue => ex # En caso de excepción retornamos error
+      logger.error ex.message
+      return json: {"error": ex.message}
     end
-    return json[0]
   end
 
   # -------------------Funciones de prueba--------------------------

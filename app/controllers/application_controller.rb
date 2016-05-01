@@ -26,18 +26,23 @@ class ApplicationController < ActionController::Base
 
   def obtener_oc(idoc)
     require 'httparty'
-    url = "http://mare.ing.puc.cl/oc/"
-    result = HTTParty.get(url+"obtener/"+idoc.to_s,
-            headers: {
-              'Content-Type' => 'application/json',
-              'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+idoc.to_s)
-            })
-    json = JSON.parse(result.body)
+    begin # Intentamos realizar conexión externa y obtener OC
+      url = "http://mare.ing.puc.cl/oc/"
+      result = HTTParty.get(url+"obtener/"+idoc.to_s,
+              headers: {
+                'Content-Type' => 'application/json',
+                'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+idoc.to_s)
+              })
+      json = JSON.parse(result.body)
 
-    if json.count() > 1
-      raise "Error: se retornó más de una OC para el mismo id"
+      if json.count() > 1
+        raise "Error: se retornó más de una OC para el mismo id"
+      end
+      return json[0]
+    rescue => ex # En caso de excepción retornamos error
+      logger.error ex.message
+      return json: {"error": ex.message}
     end
-    return json[0]
   end
 
 
@@ -45,23 +50,33 @@ class ApplicationController < ActionController::Base
 
   def stock_de_almacen(almacenId, sku)
     require 'httparty'
-    url = "http://integracion-2016-dev.herokuapp.com/bodega/"
-    result = HTTParty.get(url+"stock"+"?almacenId="+almacenId+"&"+"sku="+sku.to_s,
-            headers: {
-              'Content-Type' => 'application/json',
-              'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenId+sku.to_s)
-            })
-    return JSON.parse(result.body)
+    begin # Intentamos realizar conexión externa y obtener OC
+      url = "http://integracion-2016-dev.herokuapp.com/bodega/"
+      result = HTTParty.get(url+"stock"+"?almacenId="+almacenId+"&"+"sku="+sku.to_s,
+              headers: {
+                'Content-Type' => 'application/json',
+                'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenId+sku.to_s)
+              })
+      return JSON.parse(result.body)
+    rescue => ex # En caso de excepción retornamos error
+      logger.error ex.message
+      return json: {"error": ex.message}
+    end 
   end
 
   def lista_de_almacenes()
     require 'httparty'
-    url = "http://integracion-2016-dev.herokuapp.com/bodega/"
-    result = HTTParty.get(url+"almacenes",
-            headers: {
-              'Content-Type' => 'application/json',
-              'Authorization' => 'INTEGRACIONgrupo2:z7gr473SiTMjSW8v+J6lqUwqIGo='
-            })
-    return JSON.parse(result.body)
+    begin # Intentamos realizar conexión externa y obtener OC
+      url = "http://integracion-2016-dev.herokuapp.com/bodega/"
+      result = HTTParty.get(url+"almacenes",
+              headers: {
+                'Content-Type' => 'application/json',
+                'Authorization' => 'INTEGRACIONgrupo2:z7gr473SiTMjSW8v+J6lqUwqIGo='
+              })
+      return JSON.parse(result.body)
+    rescue => ex # En caso de excepción retornamos error
+      logger.error ex.message
+      return json: {"error": ex.message}
+    end
   end
 end
