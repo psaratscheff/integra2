@@ -38,6 +38,7 @@ class ApplicationController < ActionController::Base
   def obtener_oc(idoc)
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
+      puts "--------Obteniendo OC--------------"
       url = "http://mare.ing.puc.cl/oc/"
       result = HTTParty.get(url+"obtener/"+idoc.to_s,
               headers: {
@@ -51,6 +52,7 @@ class ApplicationController < ActionController::Base
       elsif json.count() == 0
         raise "Error: No existe la OC pedida" and return
       end
+      puts "--------OC Obtenida--------------"
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
@@ -64,13 +66,16 @@ class ApplicationController < ActionController::Base
   def stock_de_almacen(almacenId, sku)
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
+    puts "--------Obteniendo Stock de Almacen--------------"
       url = "http://integracion-2016-dev.herokuapp.com/bodega/"
       result = HTTParty.get(url+"stock"+"?almacenId="+almacenId+"&"+"sku="+sku.to_s,
               headers: {
                 'Content-Type' => 'application/json',
                 'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenId+sku.to_s)
               })
-      return JSON.parse(result.body)
+      json = JSON.parse(result.body)
+      puts "--------Stock de Almacen Obtenido--------------"
+      return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       render json: {"error": ex.message}, status: 503 and return
@@ -80,13 +85,16 @@ class ApplicationController < ActionController::Base
   def lista_de_almacenes()
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
+      puts "--------Obteniendo Lista de Almacenes--------------"
       url = "http://integracion-2016-dev.herokuapp.com/bodega/"
       result = HTTParty.get(url+"almacenes",
               headers: {
                 'Content-Type' => 'application/json',
                 'Authorization' => 'INTEGRACIONgrupo2:z7gr473SiTMjSW8v+J6lqUwqIGo='
               })
-      return JSON.parse(result.body)
+      json = JSON.parse(result.body)
+      puts "--------Lista de Almacenes Obtenida--------------"
+      return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       render json: {"error": ex.message}, status: 503 and return
