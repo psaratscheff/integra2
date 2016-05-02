@@ -46,9 +46,9 @@ class ApplicationController < ActionController::Base
       json = JSON.parse(result.body)
 
       if json.count() > 1
-        raise "Error4: se retornó más de una OC para el mismo id"
+        raise "Error4: se retornó más de una OC para el mismo id" and return
       elsif json.count() == 0
-        raise "Error: No existe la OC pedida"
+        raise "Error: No existe la OC pedida" and return
       end
       return json[0]
     rescue => ex # En caso de excepción retornamos error

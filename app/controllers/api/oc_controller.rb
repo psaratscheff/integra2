@@ -8,22 +8,18 @@ class Api::OcController < ApplicationController
     if oc["error"]
       render json: {"error": ex.message}, status: 503 and return
     end
-    puts "OC Obtenida: "+oc
     if consultar_stock(oc["sku"]) >= oc["cantidad"]
       aceptar_oc(oc["_id"])
-      puts "OC Aceptada"
       factura = generar_factura(idoc)
-      puts "Factura generada: "+factura
       json = enviarFactura(factura) #Definido un poco más abajo
       if json['validado']==false
         #TODO: Borrar la factura generada
-        raise "ERROR: Factura fue rechazada por el comprador"
+        raise "ERROR: Factura fue rechazada por el comprador" and return
       end
       render json: {"aceptado": true, "idoc": oc["_id"]}
 
     else
       rechazar_oc(oc["_id"])
-      puts "OC Rechazada"
       render json: {"aceptado": false, "idoc": oc["_id"]}
     end
   end
@@ -33,6 +29,7 @@ class Api::OcController < ApplicationController
   def anular_factura(idFactura)
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
+      puts "--------Anulando Factura--------------"
       url = "http://mare.ing.puc.cl/facturas/"
       result = HTTParty.post(url+"cancel",
               body: {
@@ -44,6 +41,7 @@ class Api::OcController < ApplicationController
               })
       json = JSON.parse(result.body)
       #TODO: Actualizar OC local
+      puts "--------Factura Anulada--------------"
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
@@ -54,6 +52,7 @@ class Api::OcController < ApplicationController
   def generar_factura(idoc)
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
+      puts "--------Generando Factura--------------"
       url = "http://mare.ing.puc.cl/facturas/"
       result = HTTParty.put(url,
               body: {
@@ -63,14 +62,12 @@ class Api::OcController < ApplicationController
                 'Content-Type' => 'application/json'
               })
       json = JSON.parse(result.body)
-
-      if json.count() > 1
-        raise "Error1: se retornó más de una OC para el mismo id"
-      end
-      localOc = Oc.find_by id: idoc
-      localOc.idFactura = json[0]["_id"]
+      puts "FORMATO FACTURA: "+ json.to_s
+      localOc = Oc.find_by idoc: idoc
+      #localOc.idFactura = json["_id"]
       localOc.save!
-      return json[0]
+      puts "--------Factura Generada--------------"
+      return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       render json: {"error": ex.message}, status: 503 and return
@@ -78,6 +75,7 @@ class Api::OcController < ApplicationController
   end
 
   def enviarFactura(factura)
+    puts "--------Enviando Factura--------------"
     idComprador = factura['comprador'] #Revisar sintaxis
     idFactura = factura['_id'] #Revisar sintaxis
     url = getLinkGrupo(idComprador)+'api/facturas/recibir/'+idFactura.to_s
@@ -89,6 +87,7 @@ class Api::OcController < ApplicationController
             })
 
     json = JSON.parse(result.body)
+    puts "--------Factura Enviada, Respuesta Recibida--------------"
     return json
 
   end
@@ -97,19 +96,26 @@ class Api::OcController < ApplicationController
   def aceptar_oc(idoc)
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
+      puts "--------Aceptando OC--------------"
       url = "http://mare.ing.puc.cl/oc/"
       result = HTTParty.post(url+"recepcionar/"+idoc.to_s,
+              body:    {
+                      id: idoc
+                    }.to_json,
               headers: {
                 'Content-Type' => 'application/json'
               })
       json = JSON.parse(result.body)
-
       if json.count() > 1
-        raise "Error2: se retornó más de una OC para el mismo id"
+        render json: {"error": "Error2: se retornó más de una OC para el mismo id"}, status: 503 and return
+      elsif !json[0]["proveedor"]
+        render json: {"error": "Error: No se pudo recibir la OC"}, status: 503 and return
       end
-      localOc = Oc.find_by id: idoc
-      localOc.estado = json[0]["aceptado"] #TODO: Verificar nombre estado
+      puts "---------asd--------"+json.to_s #TODO: Borrar esta línea
+      localOc = Oc.find_by idoc: idoc
+      #localOc.estado = json[0]["aceptado"] #TODO: Verificar nombre estado
       localOc.save!
+      puts "--------OC Aceptada--------------"
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
@@ -120,6 +126,7 @@ class Api::OcController < ApplicationController
   def rechazar_oc(idoc)
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
+      puts "--------Rechazando OC--------------"
       url = "http://mare.ing.puc.cl/oc/"
       result = HTTParty.post(url+"rechazar/"+idoc.to_s,
               body: {
@@ -131,11 +138,12 @@ class Api::OcController < ApplicationController
       json = JSON.parse(result.body)
 
       if json.count() > 1
-        raise "Error3: se retornó más de una OC para el mismo id"
+        raise "Error3: se retornó más de una OC para el mismo id" and return
       end
       localOc = Oc.find_by id: idoc
       localOc.estado = json[0]["rechazado"] #TODO: Verificar nombre estado
       localOc.save!
+      puts "--------OC Rechazada--------------"
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
