@@ -24,8 +24,14 @@ class ApplicationController < ActionController::Base
             '??????????'=>'9','571262b8a980ba030058ab58'=>'10','571262b8a980ba030058ab59'=>'11','571262b8a980ba030058ab5a'=>'12'}
     url = "http://integra"+dic[id]+".ing.puc.cl/" #sprintf('http://integra%s.ing.puc.cl/', dic[id])
     return url
-   end
+  end
 
+  def getBancoGrupo(id) #Los IDS están malos, reemplazarlos por los correctos cuando los sepamos
+    dic = {'571262b8a980ba030058ab4f'=>'571262c3a980ba030058ab5b', '571262b8a980ba030058ab50'=>'571262c3a980ba030058ab5c' , '571262b8a980ba030058ab51'=>'571262c3a980ba030058ab5d' ,'571262b8a980ba030058ab52'=>'571262c3a980ba030058ab5f' ,'571262b8a980ba030058ab53'=>'571262c3a980ba030058ab61' ,'571262b8a980ba030058ab54'=>'571262c3a980ba030058ab62' ,'571262b8a980ba030058ab55'=>'571262c3a980ba030058ab60' ,'???????????????????'=>'8',
+            '??????????'=>'9','571262b8a980ba030058ab58'=>'571262c3a980ba030058ab63','571262b8a980ba030058ab59'=>'571262c3a980ba030058ab64','571262b8a980ba030058ab5a'=>'571262c3a980ba030068ab65'}
+    url = "http://integra"+dic[id]+".ing.puc.cl/" #sprintf('http://integra%s.ing.puc.cl/', dic[id])
+    return url
+  end
 
   def consultar_stock(sku)
     parsed_json = lista_de_almacenes()
