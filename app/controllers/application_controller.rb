@@ -19,6 +19,7 @@ class ApplicationController < ActionController::Base
     return oc
   end
 
+  #TODO: Corregir ids
   def getLinkGrupo(id) #Los IDS están malos, reemplazarlos por los correctos cuando los sepamos
     dic = {'571262b8a980ba030058ab4f'=>'1', '571262b8a980ba030058ab50'=>'2' , '571262b8a980ba030058ab51'=>'3' ,'571262b8a980ba030058ab52'=>'4' ,'571262b8a980ba030058ab53'=>'5' ,'571262b8a980ba030058ab54'=>'6' ,'571262b8a980ba030058ab55'=>'7' ,'???????????????????'=>'8',
             '??????????'=>'9','571262b8a980ba030058ab58'=>'10','571262b8a980ba030058ab59'=>'11','571262b8a980ba030058ab5a'=>'12'}
@@ -26,7 +27,26 @@ class ApplicationController < ActionController::Base
     return url
   end
 
-  def getBancoGrupo(id) #Los IDS están malos, reemplazarlos por los correctos cuando los sepamos
+  #TODO: Corregir ids y concatenación
+  def getLinkGrupoSegunCuenta(idCuenta)
+    dic = {'571262c3a980ba030058ab5b'=>'1', '571262c3a980ba030058ab5c'=>'2' , '3'=>'3' ,'4'=>'4'
+          ,'571262c3a980ba030058ab61'=>'5' ,'6'=>'6' ,'571262c3a980ba030058ab60'=>'7' ,'8'=>'8',
+            '9'=>'9','10'=>'10','11'=>'11','571262c3a980ba030068ab65'=>'12'}
+    url = sprintf('http://integra%s.ing.puc.cl/', dic[idCuenta])
+    return url
+  end
+
+  #TODO: Corregir ids y concatenación
+  def getIdBanco(id) #TODO: Cambiar ID a los correctos
+    dic = {'1'=>'571262c3a980ba030058ab5b', '2'=>'571262c3a980ba030058ab5c' , '3'=>'3' ,'4'=>'4'
+          ,'5'=>'571262c3a980ba030058ab61' ,'6'=>'6' ,'7'=>'571262c3a980ba030058ab60' ,'8'=>'8',
+            '9'=>'9','10'=>'10','11'=>'11','12'=>'571262c3a980ba030068ab65'}
+    return dic[id]
+
+   end
+
+  #TODO: Corregir ids
+  def getIdBancoSegunIdGrupo(id)
     dic = {'571262b8a980ba030058ab4f'=>'571262c3a980ba030058ab5b', '571262b8a980ba030058ab50'=>'571262c3a980ba030058ab5c' , '571262b8a980ba030058ab51'=>'571262c3a980ba030058ab5d' ,'571262b8a980ba030058ab52'=>'571262c3a980ba030058ab5f' ,'571262b8a980ba030058ab53'=>'571262c3a980ba030058ab61' ,'571262b8a980ba030058ab54'=>'571262c3a980ba030058ab62' ,'571262b8a980ba030058ab55'=>'571262c3a980ba030058ab60' ,'???????????????????'=>'8',
             '??????????'=>'9','571262b8a980ba030058ab58'=>'571262c3a980ba030058ab63','571262b8a980ba030058ab59'=>'571262c3a980ba030058ab64','571262b8a980ba030058ab5a'=>'571262c3a980ba030068ab65'}
     url = "http://integra"+dic[id]+".ing.puc.cl/" #sprintf('http://integra%s.ing.puc.cl/', dic[id])
@@ -43,6 +63,7 @@ class ApplicationController < ActionController::Base
 
     return contador
   end
+
 
   def obtener_oc(idoc)
     require 'httparty'
@@ -67,6 +88,24 @@ class ApplicationController < ActionController::Base
       logger.error ex.message
       render json: {"error": ex.message}, status: 503 and return
     end
+  end
+
+
+  def obtener_factura(idfactura)
+    require 'httparty'
+    url = "http://mare.ing.puc.cl/oc/"
+    result = HTTParty.get(url+idfactura.to_s,
+            headers: {
+              'Content-Type' => 'application/json',
+              #'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+idfactura.to_s)
+              #TODO: Revisar si va o no la autorización
+            })
+    json = JSON.parse(result.body)
+
+    if json.count() > 1
+      raise "Error: se retornó más de una factura para el mismo id"
+    end
+    return json[0]
   end
 
 

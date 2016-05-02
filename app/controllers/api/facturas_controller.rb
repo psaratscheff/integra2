@@ -7,21 +7,60 @@ class Api::FacturasController < ApplicationController
     if validar_factura(idFactura, factura) # Comparando con nuestra base de datos
       if pagar_factura(idFactura)
         # TODO: Falta implementar
+       	#transferencia = transferir(factura)[0] #TODO: Manejar cuando la transferencia retorna error.
+       	#enviarTransferencia(transferencia)
         render json: factura
       else
         render json: {"error": "No se pudo pagar la factura"}, status: 503 and return
       end
     else
       # Ya se hizo el rendering en validar_factura
+      # No hacer nada...
     end
   end
 
   private
 
-  def pagar_factura
+  def pagar_factura(factura)
+    require 'httparty'
+  	montoFactura = factura['monto']
+    idCuentaOrigen = getIdBanco('2')
+    grupoVendedor = factura['proveedor']
+    idCuentaDestino = getIdBanco(grupoVendedor)
 
+    begin
+      puts "--------Pagando Factura--------------"
+      url = "http://mare.ing.puc.cl/banco/trx/"
+      result = HTTParty.put(url,
+              body: {
+                monto: montoFactura,
+                origen: idCuentaOrigen,
+                destino: idCuentaDestino,
+              }.to_json,
+              headers: {
+                'Content-Type' => 'application/json'
+              })
+      json = JSON.parse(result.body)
+      puts "--------Factura Pagada--------------"
+      return json
+    rescue => ex # En caso de excepción retornamos error
+      logger.error ex.message
+      render json: {"error": ex.message}, status: 503 and return
+    end
+  end
 
-    return false
+  def enviarTransferencia(transaccion, grupoDestinatario)
+  	idTransaccion = transaccion['_id'].to_s
+  	url = grupoDestinatario + 'api/pagos/recibir/' + idTransaccion
+    puts "--------Enviando Transferencia--------------"
+    result = HTTParty.post(url,
+            body: transaccion,
+            headers: {
+              'Content-Type' => 'application/json'
+            })
+    json = JSON.parse(result.body)
+    puts "--------Transferencia Enviada--------------"
+    return json
   end
 
   def marcar_factura_pagada(idFactura)
