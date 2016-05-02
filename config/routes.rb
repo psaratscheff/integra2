@@ -23,6 +23,8 @@ Rails.application.routes.draw do
     get 'consultar/:sku', to: 'stock#consultar'
     #TODO: Cambiar a post!
     get 'oc/recibir/:idoc', to: 'oc#recibir'
+    get 'facturas/recibir/:idfactura', to: 'facturas#recibir'
+    #------------------ esas dos...
     get 'ids/grupo'
     get 'ids/banco'
     get 'ids/almacenId'

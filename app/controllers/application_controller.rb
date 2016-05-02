@@ -3,6 +3,9 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
+  $groupid = "571262b8a980ba030058ab50"
+  $bancoid = "571262c3a980ba030058ab5c"
+
   private
 
   def transform_oc(oc)
