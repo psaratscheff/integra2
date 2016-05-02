@@ -22,7 +22,7 @@ Rails.application.routes.draw do
     get 'documentacion', to: 'documentacion#index', defaults: { format: 'html' }
     get 'consultar/:sku', to: 'stock#consultar'
     #TODO: Cambiar a post!
-    get 'oc/recibir/:idoc', to: 'oc#recibir'
+    post 'oc/recibir/:idoc', to: 'oc#recibir'
     get 'facturas/recibir/:idfactura', to: 'facturas#recibir'
     #------------------ esas dos...
     get 'ids/grupo'
