@@ -4,7 +4,7 @@ class Api::FacturasController < ApplicationController
   def recibir
     idFactura = params[:idfactura]
     factura = obtener_factura(idFactura)
-    if validar_factura(idFactura, factura)
+    if validar_factura(idFactura, factura) # Comparando con nuestra base de datos
       if pagar_factura(idFactura)
         # TODO: Falta implementar
         render json: factura
@@ -48,7 +48,10 @@ class Api::FacturasController < ApplicationController
 
   def validar_factura(idFactura, factura)
     oc = Oc.find_by idoc: factura['oc']
-    if factura['proveedor'].to_s != $groupid
+    if factura == nil
+      puts "--------Factura NO Existe---------"
+      render json: {"error": "Factura Rechazada, no existe en el sistema del curso"}, status: 400 and return false # 400 = Bad Request, error del cliente
+    elsif factura['proveedor'].to_s != $groupid
       puts "--------Factura RECHAZADA---------! No soy el proveedor de la factura"
       render json: {"error": "Factura Rechazada, no soy el proveedor de la factura"}, status: 400 and return false # 400 = Bad Request, error del cliente
     elsif oc == nil

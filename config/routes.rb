@@ -21,13 +21,12 @@ Rails.application.routes.draw do
     # We are going to list our resources here
     get 'documentacion', to: 'documentacion#index', defaults: { format: 'html' }
     get 'consultar/:sku', to: 'stock#consultar'
-    #TODO: Cambiar a post!
-    post 'oc/recibir/:idoc', to: 'oc#recibir'
-    get 'facturas/recibir/:idfactura', to: 'facturas#recibir'
-    #------------------ esas dos...
     get 'ids/grupo'
     get 'ids/banco'
     get 'ids/almacenId'
+    # Métodos POST (Deben ser probados en postman, no sirve en el explorador)
+    post 'oc/recibir/:idoc', to: 'oc#recibir'
+    post 'facturas/recibir/:idfactura', to: 'facturas#recibir'
   end
 end
 

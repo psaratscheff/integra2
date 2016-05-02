@@ -9,16 +9,23 @@ class Api::OcController < ApplicationController
       render json: {"error": ex.message}, status: 503 and return
     end
     if consultar_stock(oc["sku"]) >= oc["cantidad"]
+      puts "--------Suficiente Stock--------------"
       aceptar_oc(oc["_id"])
       factura = generar_factura(idoc)
       json = enviarFactura(factura) #Definido un poco más abajo
-      if json['validado']==false
-        #TODO: Borrar la factura generada
+      # Si es que el key validado no existe en el json de la respuesta o el
+      # value es false de ese key, la factura no fue validada
+      if !json['validado'] || json['validado']==false
+        puts "--------Factura NO Validada por Contraparte--------------"
+        puts "Factura inválida: " + factura.to_s
+        anular_factura(factura['_id'])
         raise "ERROR: Factura fue rechazada por el cliente" and return
+      else
+        puts "--------Factura Validada por Contraparte--------------"
+        render json: {"aceptado": true, "idoc": oc["_id"]}
       end
-      render json: {"aceptado": true, "idoc": oc["_id"]}
-
     else
+      puts "--------Stock Insuficiente--------------"
       rechazar_oc(oc["_id"])
       render json: {"aceptado": false, "idoc": oc["_id"]}
     end
@@ -85,8 +92,8 @@ class Api::OcController < ApplicationController
             headers: {
               'Content-Type' => 'application/json'
             })
-
-    json = JSON.parse(result.body)
+    puts "Respuesta de la contraparte: " + result.to_s
+    json = result.body
     puts "--------Factura Enviada, Respuesta Recibida--------------"
     return json
 
@@ -111,7 +118,6 @@ class Api::OcController < ApplicationController
       elsif !json[0]["proveedor"]
         render json: {"error": "Error: No se pudo recibir la OC"}, status: 503 and return
       end
-      puts "---------asd--------"+json.to_s #TODO: Borrar esta línea
       localOc = Oc.find_by idoc: idoc
       #localOc.estado = json[0]["aceptado"] #TODO: Verificar nombre estado
       localOc.save!
