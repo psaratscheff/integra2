@@ -17,9 +17,9 @@ class ApplicationController < ActionController::Base
   end
 
   def getLinkGrupo(id) #Los IDS están malos, reemplazarlos por los correctos cuando los sepamos
-    dic = {'abc123'=>'1', '12dweads'=>'2' , 'sd213d3'=>'3' ,'12w21w'=>'4' ,'asdf3'=>'5' ,'2134redsd'=>'6' ,'43fqw'=>'7' ,'9ifds'=>'8',
-            'dw12e'=>'9','43few4'=>'10','12d43'=>'11','234fsdf'=>'12'}
-    url = sprintf('http://integra%s.ing.puc.cl/', dic[id])
+    dic = {'571262b8a980ba030058ab4f'=>'1', '571262b8a980ba030058ab50'=>'2' , '571262b8a980ba030058ab51'=>'3' ,'571262b8a980ba030058ab52'=>'4' ,'571262b8a980ba030058ab53'=>'5' ,'571262b8a980ba030058ab54'=>'6' ,'571262b8a980ba030058ab55'=>'7' ,'???????????????????'=>'8',
+            '??????????'=>'9','571262b8a980ba030058ab58'=>'10','571262b8a980ba030058ab59'=>'11','571262b8a980ba030058ab5a'=>'12'}
+    url = "http://integra"+dic[id]+".ing.puc.cl/" #sprintf('http://integra%s.ing.puc.cl/', dic[id])
     return url
    end
 

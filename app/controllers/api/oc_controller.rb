@@ -14,7 +14,7 @@ class Api::OcController < ApplicationController
       json = enviarFactura(factura) #Definido un poco más abajo
       if json['validado']==false
         #TODO: Borrar la factura generada
-        raise "ERROR: Factura fue rechazada por el comprador" and return
+        raise "ERROR: Factura fue rechazada por el cliente" and return
       end
       render json: {"aceptado": true, "idoc": oc["_id"]}
 
@@ -62,9 +62,9 @@ class Api::OcController < ApplicationController
                 'Content-Type' => 'application/json'
               })
       json = JSON.parse(result.body)
-      puts "FORMATO FACTURA: "+ json.to_s
+      # FORMATO FACTURA: {"__v"=>0, "created_at"=>"2016-05-02T14:57:30.324Z", "updated_at"=>"2016-05-02T14:57:30.324Z", "cliente"=>"571262b8a980ba030058ab50", "proveedor"=>"571262b8a980ba030058ab50", "bruto"=>6033, "iva"=>1147, "total"=>7180, "oc"=>"57276aaec1ff9b0300017d1b", "_id"=>"57276adac1ff9b0300017d1c", "estado"=>"pendiente"}
       localOc = Oc.find_by idoc: idoc
-      #localOc.idFactura = json["_id"]
+      localOc.idfactura = json["_id"]
       localOc.save!
       puts "--------Factura Generada--------------"
       return json
@@ -76,10 +76,10 @@ class Api::OcController < ApplicationController
 
   def enviarFactura(factura)
     puts "--------Enviando Factura--------------"
-    idComprador = factura['comprador'] #Revisar sintaxis
+    idCliente = factura['cliente'] #Revisar sintaxis
     idFactura = factura['_id'] #Revisar sintaxis
-    url = getLinkGrupo(idComprador)+'api/facturas/recibir/'+idFactura.to_s
-
+    url = getLinkGrupo(idCliente)+'api/facturas/recibir/'+idFactura.to_s
+    puts "--------Enviando a: " + url + "-----"
     result = HTTParty.post(url,
             body: factura,
             headers: {
