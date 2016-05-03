@@ -4,8 +4,9 @@ class Api::PagosController < ApplicationController
   end
 
   def recibir #TODO: Probar que funcione
-  	#Parte 7 del flujo: (recibir trx)
-  	idtrx = params[:idtrx] #TODO: Revisar si estamos entregando bien el parametro. 
+  	#Parte 7 del flujo: (recibir idtrx e idfactura)
+  	idtrx = params[:idtrx]
+    idfactura = params[:idfactura] #TODO: Revisar si estamos entregando bien el parametro.
 
   	#Parte 8 del fujo: (confirmar trx)
   	require 'httparty'
@@ -18,10 +19,11 @@ class Api::PagosController < ApplicationController
               })
       json = JSON.parse(result.body)
       puts "--------Transacción Obtenida--------------"
-      despachar() #Función definida en application_controller
+      #Parte 9 del fujo: (despachar)
+      despachar(idtrx,idfactura) #Función definida en application_controller
       render json: {validado: true, idtrx: idtrx.to_s}
       return = { validado: true, idtrx: idtrx.to_s}.to_json
-      
+
 
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message

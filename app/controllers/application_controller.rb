@@ -8,21 +8,28 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def despachar() #TODO: Revisar si este método va aquí
+  def despachar(idtrx,idfactura) #TODO: Revisar si este método va aquí
 
-    #NO SABEMOS COMO ENCONTRAR ESTA INFO SOLO CON LA TRX:
+    factura = obtener_factura(idfactura)
+    transaccion = obtener_transaccion(idtrx)
+
+    #OC ID
+    id_oc = factura['idoc']  #TODO ver si esta bien la sitaxis
+    oc = obtener_oc(id_oc)
+    sku = oc['sku']
+    #Precio
+    precio = oc['precioUnitario']
 
     #Producto ID
-    #Direccion
-    #Precio 
-    #OC ID
+    #Para obtener la id de los productos hay que hacer getStock, que retorna una lista de productos
+    lista_productos = stock_de_almacen(almacenId,sku)
+
+    #No se de donde sacar la Direccion
 
     #Una vez que tengamos la info, hacer
-
     # 1) Mandar estos productos a la bodega de despacho con moverStock (Necesito: productoID y almacen de destino)
-    # 2) Despacharlos con la funcion 
-
-
+    # 2) Despacharlos con la funcion
+    # 3) Avisar a gA que se hizo el despacho para terminar el ciclo
 
   end
 
@@ -111,7 +118,7 @@ class ApplicationController < ActionController::Base
 
   def obtener_factura(idfactura)
     require 'httparty'
-    url = "http://mare.ing.puc.cl/oc/"
+    url = "http://mare.ing.puc.cl/facturas/"
     result = HTTParty.get(url+idfactura.to_s,
             headers: {
               'Content-Type' => 'application/json',
@@ -122,6 +129,23 @@ class ApplicationController < ActionController::Base
 
     if json.count() > 1
       raise "Error: se retornó más de una factura para el mismo id"
+    end
+    return json[0]
+  end
+
+  def obtener_transaccion(idtrx)
+    require 'httparty'
+    url = "http://mare.ing.puc.cl/banco/"
+    result = HTTParty.get(url+idtrx.to_s,
+            headers: {
+              'Content-Type' => 'application/json',
+              #'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+idtrx.to_s)
+              #TODO: Revisar si va o no la autorización
+            })
+    json = JSON.parse(result.body)
+
+    if json.count() > 1
+      raise "Error: se retornó más de una transacción para el mismo id"
     end
     return json[0]
   end
