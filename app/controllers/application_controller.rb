@@ -10,6 +10,18 @@ class ApplicationController < ActionController::Base
   private
 
   # --------------------------------------------------------------------------
+  # ------------------------------Links---------------------------------------
+  # --------------------------------------------------------------------------
+
+  def getLinkServidorCurso()
+    return "http://mare.ing.puc.cl/"
+  end
+
+  def getLinkServidorGrupo(numero)
+    return "http://integra" + grupo + ".ing.puc.cl/"
+  end
+
+  # --------------------------------------------------------------------------
   # ------------------------------IDs-----------------------------------------
   # --------------------------------------------------------------------------
 
@@ -29,7 +41,7 @@ class ApplicationController < ActionController::Base
     end
     return almId
   end
-  
+
   def getIdDespacho
     #TODO: MEJORAR ESTE SISTEMA
     return "571262aaa980ba030058a14f"
@@ -38,7 +50,7 @@ class ApplicationController < ActionController::Base
   #TODO: Corregir ids
   def getLinkGrupo(id) #Los IDS están malos, reemplazarlos por los correctos cuando los sepamos
     grupo = get_grupo_by_id(id)
-    url = "http://integra"+grupo+".ing.puc.cl/" #sprintf('http://integra%s.ing.puc.cl/', dic[id])
+    url = getLinkServidorGrupo(grupo)
     return url
   end
 
@@ -53,7 +65,7 @@ class ApplicationController < ActionController::Base
     dic = {'571262c3a980ba030058ab5b'=>'1', '571262c3a980ba030058ab5c'=>'2' , '3'=>'3' ,'4'=>'4',
       '571262c3a980ba030058ab61'=>'5' ,'6'=>'6' ,'571262c3a980ba030058ab60'=>'7' ,'8'=>'8',
             '9'=>'9','10'=>'10','11'=>'11','571262c3a980ba030068ab65'=>'12'}
-    url = sprintf('http://integra%s.ing.puc.cl/', dic[idCuenta])
+    url = getLinkServidorGrupo(dic[idCuenta])
     return url
   end
 
@@ -77,7 +89,7 @@ class ApplicationController < ActionController::Base
   def getIdBancoSegunIdGrupo(id)
     dic = {'571262b8a980ba030058ab4f'=>'571262c3a980ba030058ab5b', '571262b8a980ba030058ab50'=>'571262c3a980ba030058ab5c' , '571262b8a980ba030058ab51'=>'571262c3a980ba030058ab5d' ,'571262b8a980ba030058ab52'=>'571262c3a980ba030058ab5f' ,'571262b8a980ba030058ab53'=>'571262c3a980ba030058ab61' ,'571262b8a980ba030058ab54'=>'571262c3a980ba030058ab62' ,'571262b8a980ba030058ab55'=>'571262c3a980ba030058ab60' ,'???????????????????'=>'8',
             '??????????'=>'9','571262b8a980ba030058ab58'=>'571262c3a980ba030058ab63','571262b8a980ba030058ab59'=>'571262c3a980ba030058ab64','571262b8a980ba030058ab5a'=>'571262c3a980ba030068ab65'}
-    url = "http://integra"+dic[id]+".ing.puc.cl/" #sprintf('http://integra%s.ing.puc.cl/', dic[id])
+    url = getLinkServidorGrupo(dic[id])
     return url
   end
 
@@ -89,7 +101,7 @@ class ApplicationController < ActionController::Base
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Obteniendo OC--------------"
-      url = "http://mare.ing.puc.cl/oc/"
+      url = getLinkServidorCurso + "oc/"
       result = HTTParty.get(url+"obtener/"+idoc.to_s,
               headers: {
                 'Content-Type' => 'application/json',
@@ -128,7 +140,7 @@ class ApplicationController < ActionController::Base
   def obtener_factura(idfactura)
     require 'httparty'
     puts "--------Obteniendo Factura--------------"
-    url = "http://mare.ing.puc.cl/facturas/"
+    url = getLinkServidorCurso + "facturas/"
     result = HTTParty.get(url+idfactura.to_s,
             headers: {
               'Content-Type' => 'application/json'
@@ -149,7 +161,7 @@ class ApplicationController < ActionController::Base
   def obtener_transaccion(idtrx)
     require 'httparty'
     puts "--------Obteniendo Transacción--------------"
-    url = "http://mare.ing.puc.cl/banco/"
+    url = getLinkServidorCurso + "banco/"
     result = HTTParty.get(url++'trx/' + idtrx.to_s,
             headers: {
               'Content-Type' => 'application/json'

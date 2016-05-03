@@ -104,7 +104,7 @@ class ScriptsController < ApplicationController
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Generando OC--------------"
-      url = "http://mare.ing.puc.cl/oc/"
+      url = getLinkServidorCurso + "oc/"
       result = HTTParty.put(url+"crear",
           body:    {
                       cliente: cliente,
@@ -156,7 +156,7 @@ class ScriptsController < ApplicationController
     puts "--------Anulando OC--------------"+oc.to_s
     idOc = oc['_id']
     idOc = oc['idoc'] if (idOc == nil) # En caso de que oc no haya sido transformada todavía
-    url = "http://mare.ing.puc.cl/oc/"
+    url = getLinkServidorCurso + "oc/"
     result = HTTParty.delete(url + 'anular/' + idOc.to_s,
             body: {
               anulacion: "OC Rechazada por contraparte"
@@ -172,7 +172,7 @@ class ScriptsController < ApplicationController
   #TODO: Borrar?? O sirve para algo??
   def analizar_sftp
     require 'net/sftp' # Utilizar requires dentro de la función que lo utiliza
-    Net::SFTP.start('mare.ing.puc.cl', 'integra2', :password => 'fUgW9wJG') do |sftp|
+    Net::SFTP.start(getLinkServidorCurso, 'integra2', :password => 'fUgW9wJG') do |sftp|
       # download a file or directory from the remote host
       #sftp.download!("/pedidos", "public/pedidos", :recursive => true)
       # list the entries in a directory
@@ -193,7 +193,7 @@ class ScriptsController < ApplicationController
   def test
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
-      url = "http://mare.ing.puc.cl/oc/"
+      url = getLinkServidorCurso + "oc/"
       result = HTTParty.post(url+"recepcionar/"+"57275b33c1ff9b0300017cf1",
           body:    {
                       id: "57275b33c1ff9b0300017cf1"

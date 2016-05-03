@@ -30,7 +30,7 @@ class Api::FacturasController < ApplicationController
 
     begin
       puts "--------Pagando Factura--------------"
-      url = "http://mare.ing.puc.cl/banco/trx/"
+      url = getLinkServidorCurso + "banco/trx/"
       result = HTTParty.put(url,
               body: {
                 monto: montoFactura,
@@ -67,7 +67,7 @@ class Api::FacturasController < ApplicationController
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Marcando Factura Pagada--------------"
-      url = "http://mare.ing.puc.cl/facturas/"
+      url = getLinkServidorCurso + "facturas/"
       result = HTTParty.post(url+"pay",
               body: {
                 id: idFactura,
@@ -109,7 +109,7 @@ class Api::FacturasController < ApplicationController
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Obteniendo Factura--------------"
-      url = "http://mare.ing.puc.cl/facturas/"
+      url = getLinkServidorCurso + "facturas/"
       result = HTTParty.get(url+idFactura,
               headers: {
                 'Content-Type' => 'application/json'

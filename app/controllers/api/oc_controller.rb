@@ -39,7 +39,7 @@ class Api::OcController < ApplicationController
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Anulando Factura--------------"
-      url = "http://mare.ing.puc.cl/facturas/"
+      url = getLinkServidorCurso + "facturas/"
       result = HTTParty.post(url+"cancel",
               body: {
                 id: idFactura,
@@ -62,7 +62,7 @@ class Api::OcController < ApplicationController
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Generando Factura--------------"
-      url = "http://mare.ing.puc.cl/facturas/"
+      url = getLinkServidorCurso + "facturas/"
       result = HTTParty.put(url,
               body: {
                 oc: idoc
@@ -105,7 +105,7 @@ class Api::OcController < ApplicationController
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Aceptando OC--------------"
-      url = "http://mare.ing.puc.cl/oc/"
+      url = getLinkServidorCurso + "oc/"
       result = HTTParty.post(url+"recepcionar/"+idoc.to_s,
               body:    {
                       id: idoc
@@ -134,7 +134,7 @@ class Api::OcController < ApplicationController
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Rechazando OC--------------"
-      url = "http://mare.ing.puc.cl/oc/"
+      url = getLinkServidorCurso + "oc/"
       result = HTTParty.post(url+"rechazar/"+idoc.to_s,
               body: {
                 rechazo: 'No tenemos stock para el sku solicitado'
@@ -162,7 +162,7 @@ class Api::OcController < ApplicationController
 
   def sftp
     require 'net/sftp' # Utilizar requires dentro de la función que lo utiliza
-    Net::SFTP.start('mare.ing.puc.cl', 'integra2', :password => 'fUgW9wJG') do |sftp|
+    Net::SFTP.start(getLinkServidorCurso, 'integra2', :password => 'fUgW9wJG') do |sftp|
       # download a file or directory from the remote host
       #sftp.download!("/pedidos", "public/pedidos", :recursive => true)
       # list the entries in a directory
