@@ -28,6 +28,7 @@ Rails.application.routes.draw do
     get 'ids/grupo'
     get 'ids/banco'
     get 'ids/almacenId'
+    get 'pagos/recibir/:idtrx', to: 'pagos#recibir'
   end
 end
 

@@ -92,6 +92,14 @@ class ScriptsController < ApplicationController
       render json: {anulada: true, oc: ocAnulada}.to_json #TODO: Tengo demasiados renders de más :$
     end
   end
+
+  def test
+    render json: obtener_transaccion(1)
+  end
+
+  private
+
+
   def generar_oc(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
@@ -207,5 +215,4 @@ class ScriptsController < ApplicationController
       render json: {"error": ex.message}, status: 503 and return
     end
   end
-
 end
