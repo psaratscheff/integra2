@@ -28,6 +28,14 @@ class ScriptsController < ApplicationController
       render json: {anulada: true, oc: ocAnulada}.to_json #TODO: Tengo demasiados renders de más :$
     end
   end
+
+  def test
+    render json: obtener_transaccion(1)
+  end
+
+  private
+
+
   def generar_oc(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
@@ -96,32 +104,4 @@ class ScriptsController < ApplicationController
     puts "--------OC Anulada--------------"
     return json
   end
-
-  #TODO: Borrar?? O sirve para algo??
-  def test
-    require 'httparty'
-    begin # Intentamos realizar conexión externa y obtener OC
-      url = "http://mare.ing.puc.cl/oc/"
-      result = HTTParty.post(url+"recepcionar/"+"57275b33c1ff9b0300017cf1",
-          body:    {
-                      id: "57275b33c1ff9b0300017cf1"
-                    }.to_json,
-              headers: {
-                'Content-Type' => 'application/json'
-              })
-      json = JSON.parse(result.body)
-      puts json.to_s
-      if json.count() > 1
-        raise "Error2: se retornó más de una OC para el mismo id" and return
-      end
-      localOc = Oc.find_by id: "57275b33c1ff9b0300017cf1"
-      localOc.estado = json[0]["aceptado"] #TODO: Verificar nombre estado
-      localOc.save!
-      return json[0]
-    rescue => ex # En caso de excepción retornamos error
-      logger.error ex.message
-      render json: {"error": ex.message}, status: 503 and return
-    end
-  end
-
 end
