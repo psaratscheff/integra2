@@ -96,7 +96,6 @@ class Api::OcController < ApplicationController
     json = result.body
     puts "--------Factura Enviada, Respuesta Recibida--------------"
     return json
-
   end
 
 

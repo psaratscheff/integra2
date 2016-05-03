@@ -29,8 +29,8 @@ class ApplicationController < ActionController::Base
 
   #TODO: Corregir ids y concatenación
   def getLinkGrupoSegunCuenta(idCuenta)
-    dic = {'571262c3a980ba030058ab5b'=>'1', '571262c3a980ba030058ab5c'=>'2' , '3'=>'3' ,'4'=>'4'
-          ,'571262c3a980ba030058ab61'=>'5' ,'6'=>'6' ,'571262c3a980ba030058ab60'=>'7' ,'8'=>'8',
+    dic = {'571262c3a980ba030058ab5b'=>'1', '571262c3a980ba030058ab5c'=>'2' , '3'=>'3' ,'4'=>'4',
+      '571262c3a980ba030058ab61'=>'5' ,'6'=>'6' ,'571262c3a980ba030058ab60'=>'7' ,'8'=>'8',
             '9'=>'9','10'=>'10','11'=>'11','571262c3a980ba030068ab65'=>'12'}
     url = sprintf('http://integra%s.ing.puc.cl/', dic[idCuenta])
     return url
@@ -38,8 +38,8 @@ class ApplicationController < ActionController::Base
 
   #TODO: Corregir ids y concatenación
   def getIdBanco(id) #TODO: Cambiar ID a los correctos
-    dic = {'1'=>'571262c3a980ba030058ab5b', '2'=>'571262c3a980ba030058ab5c' , '3'=>'3' ,'4'=>'4'
-          ,'5'=>'571262c3a980ba030058ab61' ,'6'=>'6' ,'7'=>'571262c3a980ba030058ab60' ,'8'=>'8',
+    dic = {'1'=>'571262c3a980ba030058ab5b', '2'=>'571262c3a980ba030058ab5c' , '3'=>'3' ,'4'=>'4',
+      '5'=>'571262c3a980ba030058ab61' ,'6'=>'6' ,'7'=>'571262c3a980ba030058ab60' ,'8'=>'8',
             '9'=>'9','10'=>'10','11'=>'11','12'=>'571262c3a980ba030068ab65'}
     return dic[id]
 

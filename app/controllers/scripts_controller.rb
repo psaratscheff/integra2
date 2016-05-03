@@ -1,18 +1,38 @@
 class ScriptsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  def generar_oc
-    require 'httparty'
+  def probar_compra
     cliente = "571262b8a980ba030058ab50" # Mi grupo: 571262b8a980ba030058ab50
     proveedor = "571262b8a980ba030058ab50"
     cantidad = 10
     sku = 2
-    precio = Item.find(sku).Precio_Unitario # Definido en seeds.rb
     notas = ""
     # El tiempo de mañana (Un día después de ahora), convertido a int (epoch)
     # y luego convertido a string y agregado los 000 por los milisegundos.
     fechaEntrega = Time.now.tomorrow.to_i.to_s+"000"
-    begin # Intentamos realizar conexión externa y obtener OC
+    comprar(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
+  end
+
+  def comprar(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
+    oc = generar_oc(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
+    puts "OC GENERADA: " + oc.to_s
+    respuesta = enviar_oc(oc)
+    if respuesta['aceptado']
+      # Wuhu! La aceptaron!!
+      # Nada que hacer, estamos listos! :)
+      render json: oc
+    else
+      # Buuuu pesaos q&% :(
+      # Debemos anular la OC
+      ocAnulada = anular_oc(oc)
+      render json: ocAnulada #TODO: Tengo demasiados renders de más :$
+    end
+  end
+
+  def generar_oc(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
+    require 'httparty'
+    begin
+      puts "--------Generando OC--------------"
       url = "http://mare.ing.puc.cl/oc/"
       result = HTTParty.put(url+"crear",
           body:    {
@@ -20,7 +40,7 @@ class ScriptsController < ApplicationController
                       proveedor: proveedor,
                       sku: sku,
                       fechaEntrega: fechaEntrega,
-                      precioUnitario: precio,
+                      precioUnitario: Item.find(sku).Precio_Unitario, # Definido en seeds.rb
                       cantidad: cantidad,
                       canal: "b2b"
                     }.to_json,
@@ -28,7 +48,14 @@ class ScriptsController < ApplicationController
             'Content-Type' => 'application/json'
           })
 
-      oc = JSON.parse(result.body)
+      json = JSON.parse(result.body)
+      if json.count() > 1
+        render json: {"error": "Error: se retornó más de una OC al generarla"}, status: 503 and return
+      elsif !json[0]["proveedor"]
+        render json: {"error": "Error: No se pudo recibir la OC"}, status: 503 and return
+      end
+      puts "--------OC Generada--------------"
+      puts "SADASF " + oc.to_s
       oc = transform_oc(oc)
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
@@ -37,9 +64,43 @@ class ScriptsController < ApplicationController
     localOc = Oc.new(oc)
     localOc.save!
 
-    render json: oc
+    return oc
   end
 
+  def enviar_oc(oc)
+    puts "--------Enviando OC--------------"
+    idProveedor = oc['proveedor'] #Revisar sintaxis
+    idOc = oc['_id']
+    idOc = oc['id'] if (idOc == nil) # En caso de que oc no haya sido transformada todavía
+    url = getLinkGrupo(idProveedor)+'api/oc/recibir/'+idOc.to_s
+    puts "--------Enviando a: " + url + "-----"
+    result = HTTParty.post(url,
+            body: factura,
+            headers: {
+              'Content-Type' => 'application/json'
+            })
+    puts "Respuesta de la contraparte: " + result.to_s
+    json = result.body
+    puts "--------OC Enviada, Respuesta Recibida--------------"
+    return json
+  end
+
+  def anular_oc(oc)
+    puts "--------Anulando OC--------------"
+    idOc = oc['_id']
+    idOc = oc['id'] if (idOc == nil) # En caso de que oc no haya sido transformada todavía
+    url = "http://mare.ing.puc.cl/oc/"
+    result = HTTParty.delete(url + 'anular/' + idOc.to_s,
+            anulacion: "OC Rechazada por contraparte",
+            headers: {
+              'Content-Type' => 'application/json'
+            })
+    json = result.body
+    puts "--------OC Anulada--------------"
+    return json
+  end
+
+  #TODO: Borrar?? O sirve para algo??
   def test
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
