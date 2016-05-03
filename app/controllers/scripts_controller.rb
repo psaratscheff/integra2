@@ -20,12 +20,12 @@ class ScriptsController < ApplicationController
     if respuesta['aceptado']
       # Wuhu! La aceptaron!!
       # Nada que hacer, estamos listos! :)
-      render json: oc
+      render json: oc #TODO: Tengo demasiados renders de más :$
     else
       # Buuuu pesaos q&% :(
       # Debemos anular la OC
       ocAnulada = anular_oc(oc)
-      render json: ocAnulada #TODO: Tengo demasiados renders de más :$
+      render json: {anulada: true, oc: ocAnulada}.to_json #TODO: Tengo demasiados renders de más :$
     end
   end
   def generar_oc(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
