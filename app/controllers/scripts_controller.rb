@@ -1,6 +1,70 @@
 class ScriptsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
+  def verstock
+    require 'benchmark'
+    benchmark = Benchmark.realtime {
+      @sku1 = consultar_stock(1)
+      @sku2 = consultar_stock(2)
+      @sku3 = consultar_stock(3)
+      @sku4 = consultar_stock(4)
+      @sku5 = consultar_stock(5)
+      @sku6 = consultar_stock(6)
+      @sku7 = consultar_stock(7)
+      @sku8 = consultar_stock(8)
+      @sku9 = consultar_stock(9)
+      @sku10 = consultar_stock(10)
+      @sku11 = consultar_stock(11)
+      @sku12 = consultar_stock(12)
+      @sku13 = consultar_stock(13)
+      @sku14 = consultar_stock(14)
+      @sku15 = consultar_stock(15)
+      @sku16 = consultar_stock(16)
+      @sku17 = consultar_stock(17)
+      @sku18 = consultar_stock(18)
+      @sku19 = consultar_stock(19)
+      @sku20 = consultar_stock(20)
+      @sku21 = consultar_stock(21)
+      @sku22 = consultar_stock(22)
+      @sku23 = consultar_stock(23)
+      @sku24 = consultar_stock(24)
+      @sku25 = consultar_stock(25)
+      @sku26 = consultar_stock(26)
+      @sku27 = consultar_stock(27)
+      @sku28 = consultar_stock(28)
+      @sku29 = consultar_stock(29)
+      @sku30 = consultar_stock(30)
+      @sku31 = consultar_stock(31)
+      @sku32 = consultar_stock(32)
+      @sku33 = consultar_stock(33)
+      @sku34 = consultar_stock(34)
+      @sku35 = consultar_stock(35)
+      @sku36 = consultar_stock(36)
+      @sku37 = consultar_stock(37)
+      @sku38 = consultar_stock(38)
+      @sku39 = consultar_stock(39)
+      @sku40 = consultar_stock(40)
+      @sku41 = consultar_stock(41)
+      @sku42 = consultar_stock(42)
+      @sku43 = consultar_stock(43)
+      @sku44 = consultar_stock(44)
+      @sku45 = consultar_stock(45)
+      @sku46 = consultar_stock(46)
+      @sku47 = consultar_stock(47)
+      @sku48 = consultar_stock(48)
+      @sku49 = consultar_stock(49)
+      @sku50 = consultar_stock(50)
+      @sku51 = consultar_stock(51)
+      @sku52 = consultar_stock(52)
+      @sku53 = consultar_stock(53)
+      @sku54 = consultar_stock(54)
+      @sku55 = consultar_stock(55)
+      @sku56 = consultar_stock(56)
+    }
+    @benchmark = benchmark * 1000
+    render "verstock"
+  end
+
   def probar_compra
     cliente = "571262b8a980ba030058ab50" # Mi grupo: 571262b8a980ba030058ab50
     proveedor = "571262b8a980ba030058ab5a" # Grupo 12

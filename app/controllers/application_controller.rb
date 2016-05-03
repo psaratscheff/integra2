@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
+  include HmacHelper # Para utilizar la función de hashing
 
   $groupid = "571262b8a980ba030058ab50"
   $bancoid = "571262c3a980ba030058ab5c"
