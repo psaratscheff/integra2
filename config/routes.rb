@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   # Estas rutas solo sirven para testear resulado en la terminal
   # => get 'sftp', to: 'api/oc#sftp'
   # => get 'hmactest', to: 'api/oc#hmactest'
-  get 'scripts/generar_oc'
+  get 'scripts/generar_oc2'
   get 'scripts/probar_compra'
   get 'scripts/test'
 

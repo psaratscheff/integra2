@@ -28,10 +28,9 @@ class ScriptsController < ApplicationController
       render json: ocAnulada #TODO: Tengo demasiados renders de más :$
     end
   end
-
   def generar_oc(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
     require 'httparty'
-    begin
+    begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Generando OC--------------"
       url = "http://mare.ing.puc.cl/oc/"
       result = HTTParty.put(url+"crear",
@@ -48,14 +47,11 @@ class ScriptsController < ApplicationController
             'Content-Type' => 'application/json'
           })
 
-      json = JSON.parse(result.body)
-      if json.count() > 1
-        render json: {"error": "Error: se retornó más de una OC al generarla"}, status: 503 and return
-      elsif !json[0]["proveedor"]
+      oc = JSON.parse(result.body)
+      if !oc["proveedor"] # Validamos que la oc sea válida, probando si tiene el key proveedor
         render json: {"error": "Error: No se pudo recibir la OC"}, status: 503 and return
       end
       puts "--------OC Generada--------------"
-      puts "SADASF " + oc.to_s
       oc = transform_oc(oc)
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
@@ -71,11 +67,10 @@ class ScriptsController < ApplicationController
     puts "--------Enviando OC--------------"
     idProveedor = oc['proveedor'] #Revisar sintaxis
     idOc = oc['_id']
-    idOc = oc['id'] if (idOc == nil) # En caso de que oc no haya sido transformada todavía
+    idOc = oc['idoc'] if (idOc == nil) # En caso de que oc no haya sido transformada todavía
     url = getLinkGrupo(idProveedor)+'api/oc/recibir/'+idOc.to_s
     puts "--------Enviando a: " + url + "-----"
-    result = HTTParty.post(url,
-            body: factura,
+    result = HTTParty.get(url,
             headers: {
               'Content-Type' => 'application/json'
             })
@@ -86,12 +81,14 @@ class ScriptsController < ApplicationController
   end
 
   def anular_oc(oc)
-    puts "--------Anulando OC--------------"
+    puts "--------Anulando OC--------------"+oc.to_s
     idOc = oc['_id']
-    idOc = oc['id'] if (idOc == nil) # En caso de que oc no haya sido transformada todavía
+    idOc = oc['idoc'] if (idOc == nil) # En caso de que oc no haya sido transformada todavía
     url = "http://mare.ing.puc.cl/oc/"
     result = HTTParty.delete(url + 'anular/' + idOc.to_s,
-            anulacion: "OC Rechazada por contraparte",
+            body: {
+              anulacion: "OC Rechazada por contraparte"
+            }.to_json,
             headers: {
               'Content-Type' => 'application/json'
             })
