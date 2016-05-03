@@ -1,0 +1,43 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Ocs</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Idoc</th>
+      <th>Idfactura</th>
+      <th>Estado</th>
+      <th>Fecharecepcion</th>
+      <th>Fechaentrega</th>
+      <th>Canal</th>
+      <th>Cliente</th>
+      <th>Proveedor</th>
+      <th>Sku</th>
+      <th>Cantidad</th>
+      <th>Cantidaddespachada</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @ocs.each do |oc| %>
+      <tr>
+        <td><%= oc.idoc %></td>
+        <td><%= oc.idfactura %></td>
+        <td><%= oc.estado %></td>
+        <td><%= oc.fechaRecepcion %></td>
+        <td><%= oc.fechaEntrega %></td>
+        <td><%= oc.canal %></td>
+        <td><%= oc.cliente %></td>
+        <td><%= oc.proveedor %></td>
+        <td><%= oc.sku %></td>
+        <td><%= oc.cantidad %></td>
+        <td><%= oc.cantidadDespachada %></td>
+        <td><%= link_to 'Show', oc %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>

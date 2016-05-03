@@ -38,14 +38,10 @@
         <td><%= item.Sku2 %></td>
         <td><%= item.Sku3 %></td>
         <td><%= item.Sku4 %></td>
-        <td><%= link_to 'Show', item %></td>
-        <td><%= link_to 'Edit', edit_item_path(item) %></td>
-        <td><%= link_to 'Destroy', item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% # Eliminamos la opción de editar contenido %>
       </tr>
     <% end %>
   </tbody>
 </table>
 
 <br>
-
-<%= link_to 'New Item', new_item_path %>
