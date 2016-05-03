@@ -15,7 +15,7 @@ class Api::FacturasController < ApplicationController
       end
     else
       # Ya se hizo el rendering en validar_factura
-      # No hacer nada...
+      #TODO: anular_oc
     end
   end
 
