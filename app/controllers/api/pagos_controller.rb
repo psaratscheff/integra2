@@ -18,6 +18,7 @@ class Api::PagosController < ApplicationController
               })
       json = JSON.parse(result.body)
       puts "--------Transacción Obtenida--------------"
+      despachar() #Función definida en application_controller
       render json: {validado: true, idtrx: idtrx.to_s}
       return = { validado: true, idtrx: idtrx.to_s}.to_json
       
