@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   # => get 'hmactest', to: 'api/oc#hmactest'
   get 'scripts/analizar_sftp'
   get 'scripts/probar_compra'
-  get 'scripts/test'
+  get 'scripts/test1'
   get 'scripts/verstock'
 
   # utilizar el namespace, es lo mismo que agregar /api/ a la ruta:

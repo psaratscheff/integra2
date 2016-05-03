@@ -5,8 +5,9 @@ class Api::OcController < ApplicationController
   def recibir
     idoc = params[:idoc]
     oc = obtener_oc(idoc) # Función definida en ApplicationController
-    if oc["error"]
-      render json: {"error": ex.message}, status: 503 and return
+    puts oc.to_s
+    unless oc["cantidad"]
+      render json: {"error": "La OC solicitada no existe", msgCurso: oc}, status: 400 and return
     end
     if consultar_stock(oc["sku"]) >= oc["cantidad"]
       puts "--------Suficiente Stock--------------"
@@ -19,7 +20,8 @@ class Api::OcController < ApplicationController
         puts "--------Factura NO Validada por Contraparte--------------"
         puts "Factura inválida: " + factura.to_s
         anular_factura(factura['_id'])
-        raise "ERROR: Factura fue rechazada por el cliente" and return
+        # raise "ERROR: Factura fue rechazada por el cliente" and return
+        render json: {"aceptado": false, "idoc": oc["_id"]}
       else
         puts "--------Factura Validada por Contraparte--------------"
         render json: {"aceptado": true, "idoc": oc["_id"]}
@@ -118,7 +120,7 @@ class Api::OcController < ApplicationController
         render json: {"error": "Error: No se pudo recibir la OC"}, status: 503 and return
       end
       localOc = Oc.find_by idoc: idoc
-      #localOc.estado = json[0]["aceptado"] #TODO: Verificar nombre estado
+      localOc['estado'] = 'aceptado'
       localOc.save!
       puts "--------OC Aceptada--------------"
       return json[0]

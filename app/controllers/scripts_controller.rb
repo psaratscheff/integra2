@@ -1,6 +1,10 @@
 class ScriptsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
+  def test1
+    render json: generar_oc(getIdGrupo2, getIdGrupo2, 2, 1, Time.now.tomorrow.to_i.to_s+"000", "ola k ace")
+  end
+
   def verstock
     require 'benchmark'
     benchmark = Benchmark.realtime {
@@ -91,10 +95,6 @@ class ScriptsController < ApplicationController
       ocAnulada = anular_oc(oc)
       render json: {anulada: true, oc: ocAnulada}.to_json #TODO: Tengo demasiados renders de más :$
     end
-  end
-
-  def test
-    render json: obtener_transaccion(1)
   end
 
   private

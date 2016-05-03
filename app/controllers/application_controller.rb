@@ -9,9 +9,31 @@ class ApplicationController < ActionController::Base
 
   private
 
-    # --------------------------------------------------------------------------
-    # ------------------------------IDs-----------------------------------------
-    # --------------------------------------------------------------------------
+  # --------------------------------------------------------------------------
+  # ------------------------------IDs-----------------------------------------
+  # --------------------------------------------------------------------------
+
+  def getIdGrupo2()
+    return "571262b8a980ba030058ab50"
+  end
+
+  def getBancoGrupo2()
+    return "571262c3a980ba030058ab5c"
+  end
+
+  def getRecepcionId()
+    parsed_json = lista_de_almacenes() # Función definida en ApplicationController
+    almId = nil # Necesario declararlo fuera del loop
+    parsed_json.each do |almacen|
+      almId = almacen["_id"] if almacen["recepcion"] # TODO: y si tenemos más de una bodega de recepcion??
+    end
+    return almId
+  end
+  
+  def getIdDespacho
+    #TODO: MEJORAR ESTE SISTEMA
+    return "571262aaa980ba030058a14f"
+  end
 
   #TODO: Corregir ids
   def getLinkGrupo(id) #Los IDS están malos, reemplazarlos por los correctos cuando los sepamos
@@ -195,11 +217,6 @@ class ApplicationController < ActionController::Base
         logger.error ex.message
         render json: {"error": ex.message}, status: 503 and return
       end
-    end
-
-    def getIdDespacho
-      #TODO: MEJORAR ESTE SISTEMA
-      return "571262aaa980ba030058a14f"
     end
 
     def despachar_producto(producto, almacenClienteId, idoc, precio)
