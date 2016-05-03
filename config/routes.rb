@@ -1,5 +1,15 @@
 Rails.application.routes.draw do
 
+  namespace :api do
+  get 'pagos/index'
+  end
+
+  namespace :api do
+  namespace :pagos do
+    get 'recibir/index'
+    end
+  end
+
   resources :ocs, only: [:index, :show]
   resources :items, only: [:index, :show]
   # The priority is based upon order of creation: first created -> highest priority.
@@ -27,6 +37,7 @@ Rails.application.routes.draw do
     get 'ids/grupo'
     get 'ids/banco'
     get 'ids/almacenId'
+    get 'pagos/recibir/:idfactura', to: 'pagos#recibir'
   end
 end
 

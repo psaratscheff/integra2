@@ -8,6 +8,24 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def despachar() #TODO: Revisar si este método va aquí
+
+    #NO SABEMOS COMO ENCONTRAR ESTA INFO SOLO CON LA TRX:
+
+    #Producto ID
+    #Direccion
+    #Precio 
+    #OC ID
+
+    #Una vez que tengamos la info, hacer
+
+    # 1) Mandar estos productos a la bodega de despacho con moverStock (Necesito: productoID y almacen de destino)
+    # 2) Despacharlos con la funcion 
+
+
+
+  end
+
   def transform_oc(oc)
     oc.delete("__v")
     oc.delete("fechaDespachos")
