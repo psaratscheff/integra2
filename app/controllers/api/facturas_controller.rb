@@ -5,11 +5,11 @@ class Api::FacturasController < ApplicationController
     idFactura = params[:idfactura]
     factura = obtener_factura(idFactura)
     if validar_factura(idFactura, factura) # Comparando con nuestra base de datos
-      if pagar_factura(idFactura)
-        # TODO: Falta implementar
-       	#transferencia = transferir(factura)[0] #TODO: Manejar cuando la transferencia retorna error.
-       	#enviarTransferencia(transferencia)
-        render json: factura
+      trx = pagar_factura(factura)
+      if trx['monto'] != nil
+        grupoVendedor = get_grupo_by_id(factura['proveedor'])
+       	enviarTransferencia(trx, idFactura, grupoVendedor)
+        render json: {validado: true, idfactura: idfactura}
       else
         render json: {"error": "No se pudo pagar la factura"}, status: 503 and return
       end
@@ -23,17 +23,21 @@ class Api::FacturasController < ApplicationController
 
   def pagar_factura(factura)
     require 'httparty'
-  	montoFactura = factura['monto']
+  	montoFactura = factura['total']
     idCuentaOrigen = getIdBanco('2')
-    grupoVendedor = factura['proveedor']
+    idVendedor = factura['proveedor']
+    grupoVendedor = get_grupo_by_id(idVendedor)
     idCuentaDestino = getIdBanco(grupoVendedor)
-
+    puts "---- monto factura: ------"
+    puts montoFactura
+    puts "----- factura: ----"
+    puts factura.to_s
     begin
       puts "--------Pagando Factura--------------"
       url = getLinkServidorCurso + "banco/trx/"
       result = HTTParty.put(url,
               body: {
-                monto: montoFactura,
+                monto: montoFactura.to_i,
                 origen: idCuentaOrigen,
                 destino: idCuentaDestino,
               }.to_json,
@@ -49,12 +53,11 @@ class Api::FacturasController < ApplicationController
     end
   end
 
-  def enviarTransferencia(transaccion, grupoDestinatario)
+  def enviarTransferencia(transaccion, idFactura, grupoDestinatario)
   	idTransaccion = transaccion['_id'].to_s
-  	url = grupoDestinatario + 'api/pagos/recibir/' + idTransaccion
+  	url = grupoDestinatario + 'api/pagos/recibir/' + idTransaccion + '?' + 'idfactura=' + idFactura
     puts "--------Enviando Transferencia--------------"
-    result = HTTParty.post(url,
-            body: transaccion,
+    result = HTTParty.get(url,
             headers: {
               'Content-Type' => 'application/json'
             })

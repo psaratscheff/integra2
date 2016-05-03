@@ -18,7 +18,8 @@ class ApplicationController < ActionController::Base
   end
 
   def getLinkServidorGrupo(numero)
-    return "http://integra" + grupo + ".ing.puc.cl/"
+    return "http://localhost:3000/"
+    #return "http://integra" + grupo + ".ing.puc.cl/"
   end
 
   # --------------------------------------------------------------------------
