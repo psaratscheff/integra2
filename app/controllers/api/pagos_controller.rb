@@ -20,14 +20,17 @@ class Api::PagosController < ApplicationController
       json = JSON.parse(result.body)
       puts "--------Transacción Obtenida--------------"
       #Parte 9 del fujo: (despachar)
+
       despachar(idtrx,idfactura) #Función definida en application_controller
+
       render json: {validado: true, idtrx: idtrx.to_s}
       return = { validado: true, idtrx: idtrx.to_s}.to_json
-
 
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       render json: {"Transacción no encontrada": ex.message}, status: 503 and return
     end
   end
+
+
 end
