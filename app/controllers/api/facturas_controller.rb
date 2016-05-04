@@ -112,13 +112,13 @@ class Api::FacturasController < ApplicationController
     oc = Oc.find_by idoc: factura['oc']
     if factura == nil
       puts "--------Factura NO Existe---------"
-      render json: {"error": "Factura Rechazada, no existe en el sistema del curso"}, status: 400 and return false # 400 = Bad Request, error del cliente
+      render json: {"error": "Factura Rechazada, no existe en el sistema del curso", "validado": false, idfactura: idfactura}, status: 400 and return false # 400 = Bad Request, error del cliente
     elsif factura['cliente'].to_s != getIdGrupo2()
       puts "--------Factura RECHAZADA---------! No soy el cliente de la factura"
-      render json: {"error": "Factura Rechazada, no soy el proveedor de la factura"}, status: 400 and return false # 400 = Bad Request, error del cliente
+      render json: {"error": "Factura Rechazada, la factura no existe o no soy el proveedor de la factura", "validado": false, idfactura: idfactura}, status: 400 and return false # 400 = Bad Request, error del cliente
     elsif oc == nil
       puts "--------Factura RECHAZADA---------! No tengo la Oc en mi base de datos (Mi empresa no la generó)"
-      render json: {"error": "Factura Rechazada, no tengo la OC en mi base de datos (Mi empresa no la generó)"}, status: 400 and return false
+      render json: {"error": "Factura Rechazada, no tengo la OC en mi base de datos (Mi empresa no la generó)", "validado": false, idfactura: idfactura}, status: 400 and return false
     else
       puts "--------Factura Aceptada---------"
       oc['estado'] = "Facturada"
