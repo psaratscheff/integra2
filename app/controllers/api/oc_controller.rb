@@ -105,8 +105,8 @@ class Api::OcController < ApplicationController
             headers: {
               'Content-Type' => 'application/json'
             })
-    puts "Respuesta de la contraparte: " + result.to_s
     json = result.body
+    puts "Respuesta de la contraparte: " + json.to_s
     puts "--------Factura Enviada, Respuesta Recibida--------------"
     return json
   end
