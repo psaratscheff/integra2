@@ -125,13 +125,18 @@ class Api::OcController < ApplicationController
                 'Content-Type' => 'application/json'
               })
       json = JSON.parse(result.body)
+      puts "------Respuesta al recepcionar OC:---------"
+      puts json.to_s
       if json.count() > 1
+        puts "--------Error: se retornó más de una OC para el mismo id---------"
         render json: {"error": "Error2: se retornó más de una OC para el mismo id"}, status: 503 and return
       elsif !json[0]["proveedor"]
+        puts "-----------------Error: No se pudo recibir la OC--------------------"
         render json: {"error": "Error: No se pudo recibir la OC"}, status: 503 and return
       end
       localOc = Oc.find_by idoc: idoc # Si es que la OC ya estaba en mi base de datos (La generé yo)
       if localOc == nil
+        puts '-----Añadiendo OC a DB local------'
         localOc = Oc.new(transform_oc(json[0]))
       end
       localOc['estado'] = "aceptado"
