@@ -1,7 +1,9 @@
-<p id="notice"><%= notice %></p>
+<% if notice %>
+  <p id="notice"><%= notice %></p>
+<% end %>
 
-<h1>Lista de OCs</h1>
 <div id="ocs">
+<h1>Lista de OCs</h1>
   <input class="search" placeholder="Buscar..." />
   <button class="sort" data-sort="estado">
     Ordenar por Estado
