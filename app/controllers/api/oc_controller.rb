@@ -7,25 +7,18 @@ class Api::OcController < ApplicationController
     oc = obtener_oc(idoc) # Función definida en ApplicationController
     puts oc.to_s
     unless oc["cantidad"]
+      puts "---------LA OC SOLICITADA NO EXISTE!-------"
       render json: {"error": "La OC solicitada no existe", msgCurso: oc}, status: 400 and return
     end
     if consultar_stock(oc["sku"]) >= oc["cantidad"]
       puts "--------Suficiente Stock--------------"
       aceptar_oc(oc["_id"])
-      factura = generar_factura(idoc)
-      json = enviarFactura(factura) #Definido un poco más abajo
-      # Si es que el key validado no existe en el json de la respuesta o el
-      # value es false de ese key, la factura no fue validada
-      if !json['validado'] || json['validado']==false
-        puts "--------Factura NO Validada por Contraparte--------------"
-        puts "Factura inválida: " + factura.to_s
-        anular_factura(factura['_id'])
-        # raise "ERROR: Factura fue rechazada por el cliente" and return
-        render json: {"aceptado": false, "idoc": oc["_id"]}
-      else
-        puts "--------Factura Validada por Contraparte--------------"
-        render json: {"aceptado": true, "idoc": oc["_id"]}
-      end
+      # Seguimos con el tema de la factura en un Thread aparte, para
+      # no demorar la entrega de la respuesta
+      #background do # Función background definida en ApplicationController
+        proceder_con_factura(idoc)
+      #end
+      render json: {"aceptado": true, "idoc": oc["_id"]}
     else
       puts "--------Stock Insuficiente--------------"
       rechazar_oc(oc["_id"])
@@ -34,6 +27,22 @@ class Api::OcController < ApplicationController
   end
 
   private
+
+  def proceder_con_factura(idoc)
+    factura = generar_factura(idoc)
+    json = enviarFactura(factura) #Definido un poco más abajo
+    # Si es que el key validado no existe en el json de la respuesta o el
+    # value es false de ese key, la factura no fue validada
+    if !json['validado'] || json['validado']==false
+      puts "--------Factura NO Validada por Contraparte--------------"
+      return false
+      anular_factura(factura['_id'])
+      #TODO: anular_oc() (O SI NO NOS QUITAN PUNTOS POR DEJAR OCS EN LA NADA!)
+    else
+      puts "--------Factura Validada por Contraparte--------------"
+      return true
+    end
+  end
 
   def anular_factura(idFactura)
     require 'httparty'
@@ -119,7 +128,10 @@ class Api::OcController < ApplicationController
       elsif !json[0]["proveedor"]
         render json: {"error": "Error: No se pudo recibir la OC"}, status: 503 and return
       end
-      localOc = Oc.find_by idoc: idoc
+      localOc = Oc.find_by idoc: idoc # Si es que la OC ya estaba en mi base de datos (La generé yo)
+      if localOc == nil
+        localOc = Oc.new(transform_oc(json[0]))
+      end
       localOc['estado'] = 'aceptado'
       localOc.save!
       puts "--------OC Aceptada--------------"
