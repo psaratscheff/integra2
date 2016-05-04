@@ -5,7 +5,7 @@ class ScriptsController < ApplicationController
     render json: generar_oc(getIdGrupo2, "571262b8a980ba030058ab53", 50, 1, Time.now.tomorrow.to_i.to_s+"000", "ola k ace")
   end
 
-  def test2 # Grupo 5: "571262b8a980ba030058ab53"
+  def test2 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
     render json: generar_oc("571262b8a980ba030058ab53",getIdGrupo2, 21, 1, Time.now.tomorrow.to_i.to_s+"000", "ola k ace")
   end
 
