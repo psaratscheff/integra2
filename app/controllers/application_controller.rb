@@ -30,11 +30,11 @@ class ApplicationController < ActionController::Base
     return "http://mare.ing.puc.cl/"
   end
 
-  def getLinkServidorGrupo(numero)
+  def getLinkServidorGrupo(numeroGrupo)
     # Habilitar esta línea para hacer pruebas locales
     # return "http://localhost:3000/"
     # Habilitar esta línea para deployment
-    return "http://integra" + grupo + ".ing.puc.cl/"
+    return "http://integra" + numeroGrupo + ".ing.puc.cl/"
   end
 
   # --------------------------------------------------------------------------
