@@ -41,7 +41,16 @@ class Api::OcController < ApplicationController
       #TODO: anular_oc() (O SI NO NOS QUITAN PUNTOS POR DEJAR OCS EN LA NADA!)
     else
       puts "--------Factura Validada por Contraparte--------------"
-      return true
+      oc = Oc.find_by idoc: factura['oc']
+      if oc == nil
+        puts "-----------ERROOOOR: Muy bizarro :/ La OC no existe y eso que la acabo de generar ---------"
+        render json: {"error": "ERROOOOR: Muy bizarro :/ La OC no existe y eso que la acabo de generar"}, status: 500 and return false
+      else
+        puts "--------Factura Aceptada---------"
+        oc['estado'] = "Facturada"
+        oc.save!
+        return true
+      end
     end
   end
 
