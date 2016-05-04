@@ -142,6 +142,8 @@ class ApplicationController < ActionController::Base
     oc.delete("__v")
     oc.delete("fechaDespachos")
     oc.delete("precioUnitario")
+    oc.delete("updated_at") if oc["updated_at"]
+    oc.delete("notas") if oc["notas"]
     oc["idoc"] = oc.delete("_id")
     oc["fechaRecepcion"] = Time.new(oc.delete("created_at")).to_s
     oc["fechaEntrega"] = Time.new(oc.delete("fechaEntrega")).to_s
