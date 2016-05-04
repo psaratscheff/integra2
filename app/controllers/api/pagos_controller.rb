@@ -8,6 +8,7 @@ class Api::PagosController < ApplicationController
   	#Parte 7 del flujo: (recibir idtrx e idfactura)
   	idtrx = params[:idtrx]
     idfactura = params[:idfactura]
+    puts "----idtrx: " + idrtx + "----idfactura: " + idfactura
     if !idfactura || !idtrx
       render json: {validado: false, idtrx: idtrx.to_s}, status: 400 and return
     end
@@ -51,6 +52,7 @@ class Api::PagosController < ApplicationController
               headers: {
                 'Content-Type' => 'application/json'
               })
+      puts "(Avisar_a_Grupo)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
       #TODO: Actualizar OC local
       puts "--------Grupo Avisado de que el Proceso Terminó--------------"
@@ -107,6 +109,7 @@ class Api::PagosController < ApplicationController
                 'Content-Type' => 'application/json',
                 'Authorization' => 'INTEGRACIONgrupo2:'+encode('POST'+idProducto+idDespacho)
               })
+      puts "(Mover_a_Despacho)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
       puts "--------Producto Movido a Despacho--------------"
       return json
@@ -134,6 +137,7 @@ class Api::PagosController < ApplicationController
                 'Content-Type' => 'application/json',
                 'Authorization' => 'INTEGRACIONgrupo2:'+encode('POST'+idProducto+almacenClienteId)
               })
+      puts "(Despachar_Producto)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
       puts "--------Producto Despachado a Cliente B2B--------------"
       return json
@@ -153,6 +157,7 @@ class Api::PagosController < ApplicationController
                 'Content-Type' => 'application/json',
                 'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenid+sku.to_s)
               })
+      puts "(Array_Producto_Almacen)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
       puts "--------Productos Obtenidos por SKU del Almacen--------------"
       return json

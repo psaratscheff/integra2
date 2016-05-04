@@ -123,6 +123,7 @@ class ApplicationController < ActionController::Base
                 'Content-Type' => 'application/json',
                 'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+idoc.to_s)
               })
+      puts "(Obtener_OC)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
 
       if json.count() > 1
@@ -163,6 +164,7 @@ class ApplicationController < ActionController::Base
             headers: {
               'Content-Type' => 'application/json'
             })
+    puts "(Obtener_Factura)Respuesta de la contraparte: " + result.body.to_s
     json = JSON.parse(result.body)
 
     if json.count() > 1
@@ -184,6 +186,7 @@ class ApplicationController < ActionController::Base
             headers: {
               'Content-Type' => 'application/json'
             })
+    puts "(Obtener_Trx)Respuesta de la contraparte: " + result.body.to_s
     json = JSON.parse(result.body)
 
     if json.count() > 1
@@ -218,6 +221,7 @@ class ApplicationController < ActionController::Base
                 'Content-Type' => 'application/json',
                 'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenId+sku.to_s)
               })
+      puts "(Stock_de_Almacen)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
       puts "--------Stock de Almacen Obtenido--------------"
       return json
@@ -237,6 +241,7 @@ class ApplicationController < ActionController::Base
                 'Content-Type' => 'application/json',
                 'Authorization' => 'INTEGRACIONgrupo2:z7gr473SiTMjSW8v+J6lqUwqIGo='
               })
+      puts "(Lista_de_Almacenes)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
       puts "--------Lista de Almacenes Obtenida--------------"
       return json

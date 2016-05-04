@@ -40,8 +40,7 @@ class Api::FacturasController < ApplicationController
     idVendedor = factura['proveedor']
     grupoVendedor = get_grupo_by_id(idVendedor)
     idCuentaDestino = getIdBanco(grupoVendedor)
-    puts "----- factura: ----"
-    puts factura.to_s
+    puts "----- factura: " + factura.to_s
     begin
       puts "--------Pagando Factura--------------"
       url = getLinkServidorCurso + "banco/trx/"
@@ -54,6 +53,7 @@ class Api::FacturasController < ApplicationController
               headers: {
                 'Content-Type' => 'application/json'
               })
+      puts "(Pagar_Factura)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
       puts "--------Factura Pagada--------------"
       return json
@@ -68,11 +68,12 @@ class Api::FacturasController < ApplicationController
   	url = getLinkServidorGrupo(grupoDestinatario) + 'api/pagos/recibir/' + idTransaccion + '?' + 'idfactura=' + idFactura
     puts "--------Enviando Transferencia--------------"
     puts "------ trx: " + transaccion.to_s
-    puts "------ url: " + url
+    puts "------ url(trx): " + url
     result = HTTParty.get(url,
             headers: {
               'Content-Type' => 'application/json'
             })
+    puts "(Enviar_Trx)Respuesta de la contraparte: " + result.body.to_s
     json = JSON.parse(result.body)
     puts "--------Transferencia Enviada--------------"
     return json
@@ -90,6 +91,7 @@ class Api::FacturasController < ApplicationController
               headers: {
                 'Content-Type' => 'application/json'
               })
+      puts "(Marcar_Factura_Pagada)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
       #TODO: Actualizar OC local
       puts "--------Factura Marcada Pagada--------------"
@@ -131,6 +133,7 @@ class Api::FacturasController < ApplicationController
               headers: {
                 'Content-Type' => 'application/json'
               })
+      puts "(Obtener_Factura)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
       #TODO: Actualizar OC local
       puts "--------Factura Obtenida--------------"

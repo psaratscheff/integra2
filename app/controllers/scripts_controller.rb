@@ -4,7 +4,7 @@ class ScriptsController < ApplicationController
   def test1 # Grupo 5: "571262b8a980ba030058ab53"
     render json: generar_oc(getIdGrupo2, "571262b8a980ba030058ab53", 50, 1, Time.now.tomorrow.to_i.to_s+"000", "ola k ace")
   end
-  
+
   def test2 # Grupo 5: "571262b8a980ba030058ab53"
     render json: generar_oc("571262b8a980ba030058ab53",getIdGrupo2, 21, 1, Time.now.tomorrow.to_i.to_s+"000", "ola k ace")
   end
@@ -123,6 +123,7 @@ class ScriptsController < ApplicationController
             'Content-Type' => 'application/json'
           })
 
+      puts "(Generar_OC)Respuesta de la contraparte: " + result.body.to_s
       oc = JSON.parse(result.body)
       if !oc["proveedor"] # Validamos que la oc sea válida, probando si tiene el key proveedor
         render json: {"error": "Error: No se pudo recibir la OC"}, status: 503 and return
@@ -150,8 +151,8 @@ class ScriptsController < ApplicationController
             headers: {
               'Content-Type' => 'application/json'
             })
-    puts "Respuesta de la contraparte: " + result.to_s
     json = result.body
+    puts "(Enviar_OC)Respuesta de la contraparte: " + json.to_s
     puts "--------OC Enviada, Respuesta Recibida--------------"
     return json
   end
@@ -169,6 +170,7 @@ class ScriptsController < ApplicationController
               'Content-Type' => 'application/json'
             })
     json = result.body
+    puts "(Anular_OC)Respuesta de la contraparte: " + json.to_s
     puts "--------OC Anulada--------------"
     return json
   end

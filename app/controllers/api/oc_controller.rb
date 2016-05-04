@@ -6,7 +6,6 @@ class Api::OcController < ApplicationController
     puts "------------------------Solicitud de recibir OC recibida----------------------------"
     idoc = params[:idoc]
     oc = obtener_oc(idoc) # Función definida en ApplicationController
-    puts oc.to_s
     unless oc["cantidad"]
       puts "---------LA OC SOLICITADA NO EXISTE!-------"
       render json: {"error": "La OC solicitada no existe", msgCurso: oc}, status: 400 and return
@@ -67,6 +66,7 @@ class Api::OcController < ApplicationController
               headers: {
                 'Content-Type' => 'application/json'
               })
+      puts "(Anular_Factura)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
       #TODO: Actualizar OC local
       puts "--------Factura Anulada--------------"
@@ -89,8 +89,8 @@ class Api::OcController < ApplicationController
               headers: {
                 'Content-Type' => 'application/json'
               })
+      puts "(Generar_Factura)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
-      puts json.to_s
       # FORMATO FACTURA: {"__v"=>0, "created_at"=>"2016-05-02T14:57:30.324Z", "updated_at"=>"2016-05-02T14:57:30.324Z", "cliente"=>"571262b8a980ba030058ab50", "proveedor"=>"571262b8a980ba030058ab50", "bruto"=>6033, "iva"=>1147, "total"=>7180, "oc"=>"57276aaec1ff9b0300017d1b", "_id"=>"57276adac1ff9b0300017d1c", "estado"=>"pendiente"}
       localOc = Oc.find_by idoc: idoc
       localOc.idfactura = json["_id"]
@@ -113,8 +113,9 @@ class Api::OcController < ApplicationController
             headers: {
               'Content-Type' => 'application/json'
             })
+    puts "(Enviar_Factura)Respuesta de la contraparte: " + result.body.to_s
     json = result.body
-    puts "Respuesta de la contraparte: " + json.to_s
+    puts "(Enviar_factura)Respuesta de la contraparte: " + json.to_s
     puts "--------Factura Enviada, Respuesta Recibida--------------"
     return json
   end
@@ -132,9 +133,8 @@ class Api::OcController < ApplicationController
               headers: {
                 'Content-Type' => 'application/json'
               })
+      puts "(Recepcionar_OC)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
-      puts "------Respuesta al recepcionar OC:---------"
-      puts json.to_s
       if json.count() > 1
         puts "--------Error: se retornó más de una OC para el mismo id---------"
         render json: {"error": "Error2: se retornó más de una OC para el mismo id"}, status: 503 and return
@@ -169,6 +169,7 @@ class Api::OcController < ApplicationController
               headers: {
                 'Content-Type' => 'application/json'
               })
+      puts "(Rechazar_OC)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
 
       if json.count() > 1
