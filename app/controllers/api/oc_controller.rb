@@ -73,6 +73,7 @@ class Api::OcController < ApplicationController
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
+      puts "error 1004"
       render json: {"error": ex.message}, status: 503 and return
     end
   end
@@ -99,6 +100,7 @@ class Api::OcController < ApplicationController
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
+      puts "error 1005"
       render json: {"error": ex.message}, status: 503 and return
     end
   end
@@ -153,6 +155,7 @@ class Api::OcController < ApplicationController
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
+      puts "error 1006"
       render json: {"error": ex.message}, status: 503 and return
     end
   end
@@ -182,6 +185,7 @@ class Api::OcController < ApplicationController
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
+      puts "error 1007"
       render json: {"error": ex.message}, status: 503 and return
     end
   end

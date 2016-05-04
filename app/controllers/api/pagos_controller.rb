@@ -59,6 +59,7 @@ class Api::PagosController < ApplicationController
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
+      puts "error 1008"
       render json: {"error": ex.message}, status: 503 and return
     end
     #TODO: Implementar: Agregar paso 10 AVSISAR QUE DESPACHAMOS
@@ -115,6 +116,7 @@ class Api::PagosController < ApplicationController
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
+      puts "error 1009"
       render json: {"error": ex.message}, status: 503 and return
     end
   end
@@ -143,6 +145,7 @@ class Api::PagosController < ApplicationController
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
+      puts "error 1010"
       render json: {"error": ex.message}, status: 503 and return
     end
   end
@@ -163,6 +166,7 @@ class Api::PagosController < ApplicationController
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
+      puts "error 1011"
       render json: {"error": ex.message}, status: 503 and return
     end
   end

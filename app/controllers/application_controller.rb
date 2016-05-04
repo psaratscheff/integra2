@@ -135,6 +135,7 @@ class ApplicationController < ActionController::Base
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
+      puts "error 1012"
       render json: {"error": ex.message}, status: 503 and return
     end
   end
@@ -227,6 +228,7 @@ class ApplicationController < ActionController::Base
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
+      puts "error 1013"
       render json: {"error": ex.message}, status: 503 and return
     end
   end
@@ -247,6 +249,7 @@ class ApplicationController < ActionController::Base
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
+      puts "error 1014"
       render json: {"error": ex.message}, status: 503 and return
     end
   end

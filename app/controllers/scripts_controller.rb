@@ -132,6 +132,7 @@ class ScriptsController < ApplicationController
       oc = transform_oc(oc)
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
+      puts "error 1015"
       render json: {"error": ex.message}, status: 503 and return
     end
     localOc = Oc.new(oc)
@@ -218,6 +219,7 @@ class ScriptsController < ApplicationController
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
+      puts "error 1016"
       render json: {"error": ex.message}, status: 503 and return
     end
   end
