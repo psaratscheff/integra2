@@ -8,10 +8,10 @@ class Api::PagosController < ApplicationController
   	#Parte 7 del flujo: (recibir idtrx e idfactura)
   	idtrx = params[:idtrx]
     idfactura = params[:idfactura]
-    puts "----idtrx: " + idtrx + "----idfactura: " + idfactura
     if !idfactura || !idtrx
       render json: {"validado": false, idtrx: idtrx.to_s}, status: 400 and return
     end
+    puts "----idtrx: " + idtrx + "----idfactura: " + idfactura
     trx = obtener_transaccion(idtrx)
     factura = obtener_factura(idfactura)
     puts "trx: " + trx.to_s
