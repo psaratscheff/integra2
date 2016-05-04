@@ -19,7 +19,7 @@ gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.1.0'
+#gem 'coffee-rails', '~> 4.1.0' #(Pedro) Me carga esta gema :$
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
@@ -47,6 +47,8 @@ gem 'puma'
 gem 'net-sftp'
 # Para realizar tareas por schedule
 gem 'whenever', require: false # (Instalar manualmente en el servidor)
+# Para utilizar tablas hermosas de manera extremadamente fácil
+gem 'listjs-rails'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
