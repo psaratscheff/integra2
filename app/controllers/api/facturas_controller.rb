@@ -115,9 +115,6 @@ class Api::FacturasController < ApplicationController
     elsif oc == nil
       puts "--------Factura RECHAZADA---------! No tengo la Oc en mi base de datos (Mi empresa no la generó)"
       render json: {"error": "Factura Rechazada, no tengo la OC en mi base de datos (Mi empresa no la generó)"}, status: 400 and return false
-    elsif oc['idfactura'].to_s != params[:idfactura].to_s
-      puts "--------Factura RECHAZADA---------! La id de la factura no corresponde con la OC. oc.idfactura: " + oc['idfactura'].to_s + " --param: " + params[:idfactura]
-      render json: {"error": "Factura Rechazada, la id de esta factura y la factura de la oc no coinciden"}, status: 400 and return false
     else
       puts "--------Factura Aceptada---------"
       oc['estado'] = "Facturada"
