@@ -80,6 +80,7 @@ class Api::OcController < ApplicationController
                 'Content-Type' => 'application/json'
               })
       json = JSON.parse(result.body)
+      puts json.to_s
       # FORMATO FACTURA: {"__v"=>0, "created_at"=>"2016-05-02T14:57:30.324Z", "updated_at"=>"2016-05-02T14:57:30.324Z", "cliente"=>"571262b8a980ba030058ab50", "proveedor"=>"571262b8a980ba030058ab50", "bruto"=>6033, "iva"=>1147, "total"=>7180, "oc"=>"57276aaec1ff9b0300017d1b", "_id"=>"57276adac1ff9b0300017d1c", "estado"=>"pendiente"}
       localOc = Oc.find_by idoc: idoc
       localOc.idfactura = json["_id"]
