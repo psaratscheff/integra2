@@ -6,12 +6,9 @@ class Api::PagosController < ApplicationController
   def recibir
     puts "------------------------Solicitud de recibir PAGO recibida----------------------------"
   	#Parte 7 del flujo: (recibir idtrx e idfactura)
-    puts "--"
   	idtrx = params[:idtrx]
-    puts "---"
     idfactura = params[:idfactura]
-    puts "----"
-    puts "----idtrx: " + idrtx + "----idfactura: " + idfactura
+    puts "----idtrx: " + idtrx + "----idfactura: " + idfactura
     if !idfactura || !idtrx
       render json: {"validado": false, idtrx: idtrx.to_s}, status: 400 and return
     end
