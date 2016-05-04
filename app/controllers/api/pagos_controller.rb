@@ -9,6 +9,7 @@ class Api::PagosController < ApplicationController
   	idtrx = params[:idtrx]
     idfactura = params[:idfactura]
     if !idfactura || !idtrx
+      puts "--------Parámetros Incorrectos-------"
       render json: {"validado": false, idtrx: idtrx.to_s}, status: 400 and return
     end
     puts "----idtrx: " + idtrx + "----idfactura: " + idfactura
