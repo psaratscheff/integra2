@@ -37,7 +37,7 @@ class Api::OcController < ApplicationController
     if !json['validado'] || json['validado']==false
       puts "--------Factura NO Validada por Contraparte--------------"
       return false
-      anular_factura(factura['_id'])
+      #TODO: anular_factura(factura['_id'])
       #TODO: anular_oc() (O SI NO NOS QUITAN PUNTOS POR DEJAR OCS EN LA NADA!)
     else
       puts "--------Factura Validada por Contraparte--------------"
@@ -100,8 +100,7 @@ class Api::OcController < ApplicationController
     idFactura = factura['_id'] #Revisar sintaxis
     url = getLinkGrupo(idCliente)+'api/facturas/recibir/'+idFactura.to_s
     puts "--------Enviando a: " + url + "-----"
-    result = HTTParty.post(url,
-            body: factura,
+    result = HTTParty.get(url,
             headers: {
               'Content-Type' => 'application/json'
             })
