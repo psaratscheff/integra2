@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   get 'scripts/test'
   get 'scripts/verstock'
 
+  get 'tasks/procesar_sftp'
+
   # utilizar el namespace, es lo mismo que agregar /api/ a la ruta:
   # => get 'api/documentacion', to: 'documentacion#index'
   namespace :api, defaults: { format: :json } do
