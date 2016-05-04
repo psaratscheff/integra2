@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   get 'scripts/analizar_sftp'
   get 'scripts/probar_compra'
   get 'scripts/test1'
+  get 'scripts/test2'
   get 'scripts/verstock'
 
   # utilizar el namespace, es lo mismo que agregar /api/ a la ruta:
