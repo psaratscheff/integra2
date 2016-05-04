@@ -3,7 +3,8 @@ class Api::PagosController < ApplicationController
   	render json: {"aceptado": false, "idoc": 123}
   end
 
-  def recibir #TODO: Probar que funcione
+  def recibir
+    puts "------------------------Solicitud de recibir PAGO recibida----------------------------"
   	#Parte 7 del flujo: (recibir idtrx e idfactura)
   	idtrx = params[:idtrx]
     idfactura = params[:idfactura]

@@ -2,6 +2,7 @@ class Api::FacturasController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def recibir
+    puts "------------------------Solicitud de recibir FACTURA recibida----------------------------"
     idFactura = params[:idfactura]
     factura = obtener_factura(idFactura)
     if validar_factura(idFactura, factura) # Comparando con nuestra base de datos
