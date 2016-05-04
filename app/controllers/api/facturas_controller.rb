@@ -23,12 +23,16 @@ class Api::FacturasController < ApplicationController
   def continuar_con_pago(idFactura, factura)
     trx = pagar_factura(factura)
     if trx['monto'] != nil
+      puts "-------FACTURA YA PAGADA!!------"
       localOc = Oc.find_by idfactura: idFactura
       localOc["estado"] = "pagada"
       localOc.save!
+      puts "-------LocalOc actualizada------"
       grupoVendedor = get_grupo_by_id(factura['proveedor'])
       enviarTransferencia(trx, idFactura, grupoVendedor)
+      puts "-------Transferencia Enviada a Grupo------"
     else
+      puts "-----ERROR! --- No se pudo completar la transacción :("
       #TODO: No se, avisarles que no se completo la transacción?
     end
   end
@@ -118,6 +122,7 @@ class Api::FacturasController < ApplicationController
     else
       puts "--------Factura Aceptada---------"
       oc['estado'] = "Facturada"
+      oc['idfactura'] = idFactura
       oc.save!
       return true
     end
