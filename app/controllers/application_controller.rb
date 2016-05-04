@@ -147,13 +147,12 @@ class ApplicationController < ActionController::Base
     oc.delete("updated_at") if oc["updated_at"]
     oc.delete("notas") if oc["notas"]
     oc["idoc"] = oc.delete("_id")
-    #TODO: ARREGLAR ESTAR FECHAS!!
     created_at = oc.delete("created_at")
     fechaEntrega = oc.delete("fechaEntrega")
     puts "Created_at: " + created_at
     puts "fechaEntrega: " + fechaEntrega
-    oc["fechaRecepcion"] = Time.new(created_at).to_s
-    oc["fechaEntrega"] = Time.new(fechaEntrega).to_s
+    oc["fechaRecepcion"] = created_at.to_s
+    oc["fechaEntrega"] = fechaEntrega.to_s
     return oc
   end
 
