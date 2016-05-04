@@ -30,6 +30,9 @@ class Api::PagosController < ApplicationController
     # Seguimos con el tema de la factura en un Thread aparte, para
     # no demorar la entrega de la respuesta
     #background do # Función background definida en ApplicationController
+      localOc = Oc.find_by idfactura: idfactura
+      localOc["estado"] = "pagada"
+      localOc.save!
       despachado = despachar(idfactura, factura) #Función definida en application_controller
       avisar_a_grupo(factura['cliente'], idfactura)
     #end
@@ -81,7 +84,8 @@ class Api::PagosController < ApplicationController
         end
       end
     end
-
+    oc["estado"] = "despachada"
+    oc.save!
     return true
   end
 

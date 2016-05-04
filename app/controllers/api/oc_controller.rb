@@ -132,7 +132,7 @@ class Api::OcController < ApplicationController
       if localOc == nil
         localOc = Oc.new(transform_oc(json[0]))
       end
-      localOc['estado'] = 'aceptado'
+      localOc['estado'] = "aceptado"
       localOc.save!
       puts "--------OC Aceptada--------------"
       return json[0]
@@ -159,8 +159,8 @@ class Api::OcController < ApplicationController
       if json.count() > 1
         raise "Error3: se retornó más de una OC para el mismo id" and return
       end
-      localOc = Oc.find_by id: idoc
-      localOc.estado = json[0]["rechazado"] #TODO: Verificar nombre estado
+      localOc = Oc.find_by idoc: idoc
+      localOc['estado'] = "rechazado"
       localOc.save!
       puts "--------OC Rechazada--------------"
       return json[0]

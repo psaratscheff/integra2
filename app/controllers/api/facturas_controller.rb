@@ -22,6 +22,9 @@ class Api::FacturasController < ApplicationController
   def continuar_con_pago(idFactura, factura)
     trx = pagar_factura(factura)
     if trx['monto'] != nil
+      localOc = Oc.find_by idfactura: idFactura
+      localOc["estado"] = "pagada"
+      localOc.save!
       grupoVendedor = get_grupo_by_id(factura['proveedor'])
       enviarTransferencia(trx, idFactura, grupoVendedor)
     else
@@ -112,6 +115,8 @@ class Api::FacturasController < ApplicationController
       render json: {"error": "Factura Rechazada, la id de esta factura y la factura de la oc no coinciden"}, status: 400 and return false
     else
       puts "--------Factura Aceptada---------"
+      oc['estado'] = "Facturada"
+      oc.save!
       return true
     end
   end
