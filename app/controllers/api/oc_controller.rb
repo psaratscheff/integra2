@@ -117,8 +117,7 @@ class Api::OcController < ApplicationController
             })
     puts "(Enviar_Factura)Respuesta de la contraparte: " + result.body.to_s
     json = result.body
-    puts "(Enviar_factura)Respuesta de la contraparte: " + json.to_s
-    puts "--------Factura Enviada, Respuesta Recibida--------------"
+    puts "--------Factura Enviada--------------"
     return json
   end
 
