@@ -14,7 +14,8 @@ Rails.application.routes.draw do
   # => get 'hmactest', to: 'api/oc#hmactest'
   get 'scripts/analizar_sftp'
   get 'scripts/probar_compra'
-  get 'scripts/test'
+  get 'scripts/test1'
+  get 'scripts/test2'
   get 'scripts/verstock'
 
   get 'tasks/procesar_sftp'
@@ -30,6 +31,8 @@ Rails.application.routes.draw do
     get 'ids/grupo'
     get 'ids/banco'
     get 'ids/almacenId'
+    get 'pagos/recibir/:idtrx', to: 'pagos#recibir'
+    get 'despachos/recibir/:idfactura', to: 'despachos#recibir'
   end
 end
 

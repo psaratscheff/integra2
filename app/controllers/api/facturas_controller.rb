@@ -2,62 +2,83 @@ class Api::FacturasController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def recibir
+    puts "------------------------Solicitud de recibir FACTURA recibida----------------------------"
     idFactura = params[:idfactura]
     factura = obtener_factura(idFactura)
     if validar_factura(idFactura, factura) # Comparando con nuestra base de datos
-      if pagar_factura(idFactura)
-        # TODO: Falta implementar
-       	#transferencia = transferir(factura)[0] #TODO: Manejar cuando la transferencia retorna error.
-       	#enviarTransferencia(transferencia)
-        render json: factura
-      else
-        render json: {"error": "No se pudo pagar la factura"}, status: 503 and return
-      end
+      # Seguimos con el tema de la factura en un Thread aparte, para
+      # no demorar la entrega de la respuesta
+      #background do # Función background definida en ApplicationController
+        continuar_con_pago(idFactura, factura)
+      #end
+      render json: {"validado": true, "idfactura": idfactura}
     else
-      # Ya se hizo el rendering en validar_factura
-      # No hacer nada...
+      # Ya se hizo el rendering en validar_factura (Es complejo, depende de cosas)
+      #TODO: anular_oc
     end
   end
 
   private
 
+  def continuar_con_pago(idFactura, factura)
+    trx = pagar_factura(factura)
+    if trx['monto'] != nil
+      puts "-------FACTURA YA PAGADA!!------"
+      localOc = Oc.find_by idfactura: idFactura
+      localOc["estado"] = "pagada"
+      localOc.save!
+      puts "-------LocalOc actualizada------"
+      grupoVendedor = get_grupo_by_id(factura['proveedor'])
+      enviarTransferencia(trx, idFactura, grupoVendedor)
+      puts "-------Transferencia Enviada a Grupo------"
+    else
+      puts "-----ERROR! --- No se pudo completar la transacción :("
+      #TODO: No se, avisarles que no se completo la transacción?
+    end
+  end
+
   def pagar_factura(factura)
     require 'httparty'
-  	montoFactura = factura['monto']
+  	montoFactura = factura['total']
     idCuentaOrigen = getIdBanco('2')
-    grupoVendedor = factura['proveedor']
+    idVendedor = factura['proveedor']
+    grupoVendedor = get_grupo_by_id(idVendedor)
     idCuentaDestino = getIdBanco(grupoVendedor)
-
+    puts "----- factura: " + factura.to_s
     begin
       puts "--------Pagando Factura--------------"
-      url = "http://mare.ing.puc.cl/banco/trx/"
+      url = getLinkServidorCurso + "banco/trx/"
       result = HTTParty.put(url,
               body: {
-                monto: montoFactura,
+                monto: montoFactura.to_i,
                 origen: idCuentaOrigen,
                 destino: idCuentaDestino,
               }.to_json,
               headers: {
                 'Content-Type' => 'application/json'
               })
+      puts "(Pagar_Factura)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
       puts "--------Factura Pagada--------------"
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
+      puts "error 1001"
       render json: {"error": ex.message}, status: 503 and return
     end
   end
 
-  def enviarTransferencia(transaccion, grupoDestinatario)
+  def enviarTransferencia(transaccion, idFactura, grupoDestinatario)
   	idTransaccion = transaccion['_id'].to_s
-  	url = grupoDestinatario + 'api/pagos/recibir/' + idTransaccion
+  	url = getLinkServidorGrupo(grupoDestinatario) + 'api/pagos/recibir/' + idTransaccion + '?' + 'idfactura=' + idFactura
     puts "--------Enviando Transferencia--------------"
-    result = HTTParty.post(url,
-            body: transaccion,
+    puts "------ trx: " + transaccion.to_s
+    puts "------ url(trx): " + url
+    result = HTTParty.get(url,
             headers: {
               'Content-Type' => 'application/json'
             })
+    puts "(Enviar_Trx)Respuesta de la contraparte: " + result.body.to_s
     json = JSON.parse(result.body)
     puts "--------Transferencia Enviada--------------"
     return json
@@ -67,7 +88,7 @@ class Api::FacturasController < ApplicationController
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Marcando Factura Pagada--------------"
-      url = "http://mare.ing.puc.cl/facturas/"
+      url = getLinkServidorCurso + "facturas/"
       result = HTTParty.post(url+"pay",
               body: {
                 id: idFactura,
@@ -75,12 +96,14 @@ class Api::FacturasController < ApplicationController
               headers: {
                 'Content-Type' => 'application/json'
               })
+      puts "(Marcar_Factura_Pagada)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
       #TODO: Actualizar OC local
       puts "--------Factura Marcada Pagada--------------"
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
+      puts "error 1002"
       render json: {"error": ex.message}, status: 503 and return
     end
   end
@@ -89,18 +112,18 @@ class Api::FacturasController < ApplicationController
     oc = Oc.find_by idoc: factura['oc']
     if factura == nil
       puts "--------Factura NO Existe---------"
-      render json: {"error": "Factura Rechazada, no existe en el sistema del curso"}, status: 400 and return false # 400 = Bad Request, error del cliente
-    elsif factura['proveedor'].to_s != $groupid
-      puts "--------Factura RECHAZADA---------! No soy el proveedor de la factura"
-      render json: {"error": "Factura Rechazada, no soy el proveedor de la factura"}, status: 400 and return false # 400 = Bad Request, error del cliente
+      render json: {"error": "Factura Rechazada, no existe en el sistema del curso", "validado": false, "idfactura": idFactura}, status: 400 and return false # 400 = Bad Request, error del cliente
+    elsif factura['cliente'].to_s != getIdGrupo2()
+      puts "--------Factura RECHAZADA---------! No soy el cliente de la factura"
+      render json: {"error": "Factura Rechazada, la factura no existe o no soy el proveedor de la factura", "validado": false, "idfactura": idFactura}, status: 400 and return false # 400 = Bad Request, error del cliente
     elsif oc == nil
       puts "--------Factura RECHAZADA---------! No tengo la Oc en mi base de datos (Mi empresa no la generó)"
-      render json: {"error": "Factura Rechazada, no tengo la OC en mi base de datos (Mi empresa no la generó)"}, status: 400 and return false
-    elsif oc['idfactura'].to_s != params[:idfactura].to_s
-      puts "--------Factura RECHAZADA---------! La id de la factura no corresponde con la OC. oc.idfactura: " + oc['idfactura'].to_s + " --param: " + params[:idfactura]
-      render json: {"error": "Factura Rechazada, la id de esta factura y la factura de la oc no coinciden"}, status: 400 and return false
+      render json: {"error": "Factura Rechazada, no tengo la OC en mi base de datos (Mi empresa no la generó)", "validado": false, "idfactura": idFactura}, status: 400 and return false
     else
       puts "--------Factura Aceptada---------"
+      oc['estado'] = "Facturada"
+      oc['idfactura'] = idFactura
+      oc.save!
       return true
     end
   end
@@ -109,17 +132,19 @@ class Api::FacturasController < ApplicationController
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Obteniendo Factura--------------"
-      url = "http://mare.ing.puc.cl/facturas/"
+      url = getLinkServidorCurso + "facturas/"
       result = HTTParty.get(url+idFactura,
               headers: {
                 'Content-Type' => 'application/json'
               })
+      puts "(Obtener_Factura)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
       #TODO: Actualizar OC local
       puts "--------Factura Obtenida--------------"
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
+      puts "error 1003"
       render json: {"error": ex.message}, status: 503 and return
     end
   end

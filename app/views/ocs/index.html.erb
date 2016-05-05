@@ -1,43 +1,64 @@
-<p id="notice"><%= notice %></p>
+<% if notice %>
+  <p id="notice"><%= notice %></p>
+<% end %>
 
-<h1>Listing Ocs</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Idoc</th>
-      <th>Idfactura</th>
-      <th>Estado</th>
-      <th>Fecharecepcion</th>
-      <th>Fechaentrega</th>
-      <th>Canal</th>
-      <th>Cliente</th>
-      <th>Proveedor</th>
-      <th>Sku</th>
-      <th>Cantidad</th>
-      <th>Cantidaddespachada</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @ocs.each do |oc| %>
+<div id="ocs">
+<h1>Lista de OCs</h1>
+  <input class="search" placeholder="Buscar..." />
+  <button class="sort" data-sort="estado">
+    Ordenar por estado
+  </button>
+  <button class="sort" data-sort="canal">
+    Ordenar por canal
+  </button>
+  <button class="sort" data-sort="sku">
+    Ordenar por sku
+  </button>
+  <button class="sort" data-sort="cantidad">
+    Ordenar por cantidad
+  </button>
+  <button class="sort" data-sort="cliente">
+    Ordenar por cliente
+  </button>
+  <button class="sort" data-sort="proveedor">
+    Ordenar por proveedor
+  </button>
+  <table>
+    <thead>
       <tr>
-        <td><%= oc.idoc %></td>
-        <td><%= oc.idfactura %></td>
-        <td><%= oc.estado %></td>
-        <td><%= oc.fechaRecepcion %></td>
-        <td><%= oc.fechaEntrega %></td>
-        <td><%= oc.canal %></td>
-        <td><%= oc.cliente %></td>
-        <td><%= oc.proveedor %></td>
-        <td><%= oc.sku %></td>
-        <td><%= oc.cantidad %></td>
-        <td><%= oc.cantidadDespachada %></td>
-        <td><%= link_to 'Show', oc %></td>
+        <th>Idoc</th>
+        <th>Idfactura</th>
+        <th>Estado</th>
+        <th>Fecharecepcion</th>
+        <th>Fechaentrega</th>
+        <th>Canal</th>
+        <th>Cliente</th>
+        <th>Proveedor</th>
+        <th>Sku</th>
+        <th>Cantidad</th>
+        <th>Cantidaddespachada</th>
+        <th colspan="3"></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
 
+    <tbody class="list">
+      <% @ocs.each do |oc| %>
+        <tr>
+          <td class="idoc"><%= oc.idoc %></td>
+          <td class="idfactura"><%= oc.idfactura %></td>
+          <td class="estado"><%= oc.estado %></td>
+          <td class="fechaRecepcion"><%= oc.fechaRecepcion %></td>
+          <td class="fechaEntrega"><%= oc.fechaEntrega %></td>
+          <td class="canal"><%= oc.canal %></td>
+          <td class="cliente"><%= oc.cliente %></td>
+          <td class="proveedor"><%= oc.proveedor %></td>
+          <td class="sku"><%= oc.sku %></td>
+          <td class="cantidad"><%= oc.cantidad %></td>
+          <td class="cantidadDespachada"><%= oc.cantidadDespachada %></td>
+          <td><%= link_to 'Show', oc %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 <br>

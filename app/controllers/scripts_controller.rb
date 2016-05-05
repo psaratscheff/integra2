@@ -1,6 +1,14 @@
 class ScriptsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
+  def test1 # Grupo 5: "571262b8a980ba030058ab53"
+    render json: generar_oc(getIdGrupo2, "571262b8a980ba030058ab53", 50, 1, Time.now.tomorrow.to_i.to_s+"000", "ola k ace")
+  end
+
+  def test2 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
+    render json: generar_oc("571262b8a980ba030058ab53",getIdGrupo2, 21, 1, Time.now.tomorrow.to_i.to_s+"000", "ola k ace")
+  end
+
   def verstock
     require 'benchmark'
     benchmark = Benchmark.realtime {
@@ -92,11 +100,15 @@ class ScriptsController < ApplicationController
       render json: {anulada: true, oc: ocAnulada}.to_json #TODO: Tengo demasiados renders de más :$
     end
   end
+
+  private
+
+
   def generar_oc(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Generando OC--------------"
-      url = "http://mare.ing.puc.cl/oc/"
+      url = getLinkServidorCurso + "oc/"
       result = HTTParty.put(url+"crear",
           body:    {
                       cliente: cliente,
@@ -111,6 +123,7 @@ class ScriptsController < ApplicationController
             'Content-Type' => 'application/json'
           })
 
+      puts "(Generar_OC)Respuesta de la contraparte: " + result.body.to_s
       oc = JSON.parse(result.body)
       if !oc["proveedor"] # Validamos que la oc sea válida, probando si tiene el key proveedor
         render json: {"error": "Error: No se pudo recibir la OC"}, status: 503 and return
@@ -119,6 +132,7 @@ class ScriptsController < ApplicationController
       oc = transform_oc(oc)
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
+      puts "error 1015"
       render json: {"error": ex.message}, status: 503 and return
     end
     localOc = Oc.new(oc)
@@ -138,8 +152,8 @@ class ScriptsController < ApplicationController
             headers: {
               'Content-Type' => 'application/json'
             })
-    puts "Respuesta de la contraparte: " + result.to_s
     json = result.body
+    puts "(Enviar_OC)Respuesta de la contraparte: " + json.to_s
     puts "--------OC Enviada, Respuesta Recibida--------------"
     return json
   end
@@ -148,7 +162,7 @@ class ScriptsController < ApplicationController
     puts "--------Anulando OC--------------"+oc.to_s
     idOc = oc['_id']
     idOc = oc['idoc'] if (idOc == nil) # En caso de que oc no haya sido transformada todavía
-    url = "http://mare.ing.puc.cl/oc/"
+    url = getLinkServidorCurso + "oc/"
     result = HTTParty.delete(url + 'anular/' + idOc.to_s,
             body: {
               anulacion: "OC Rechazada por contraparte"
@@ -157,6 +171,7 @@ class ScriptsController < ApplicationController
               'Content-Type' => 'application/json'
             })
     json = result.body
+    puts "(Anular_OC)Respuesta de la contraparte: " + json.to_s
     puts "--------OC Anulada--------------"
     return json
   end
@@ -164,7 +179,7 @@ class ScriptsController < ApplicationController
   #TODO: Borrar?? O sirve para algo??
   def analizar_sftp
     require 'net/sftp' # Utilizar requires dentro de la función que lo utiliza
-    Net::SFTP.start('mare.ing.puc.cl', 'integra2', :password => 'fUgW9wJG') do |sftp|
+    Net::SFTP.start(getLinkServidorCurso, 'integra2', :password => 'fUgW9wJG') do |sftp|
       # download a file or directory from the remote host
       #sftp.download!("/pedidos", "public/pedidos", :recursive => true)
       # list the entries in a directory
@@ -185,7 +200,7 @@ class ScriptsController < ApplicationController
   def test
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
-      url = "http://mare.ing.puc.cl/oc/"
+      url = getLinkServidorCurso + "oc/"
       result = HTTParty.post(url+"recepcionar/"+"57275b33c1ff9b0300017cf1",
           body:    {
                       id: "57275b33c1ff9b0300017cf1"
@@ -204,8 +219,8 @@ class ScriptsController < ApplicationController
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
+      puts "error 1016"
       render json: {"error": ex.message}, status: 503 and return
     end
   end
-
 end

@@ -36,10 +36,14 @@
   <p>Parámetros: Ningungo</p>
   <p>Retorno: <span class="code">{“validado”: boolean, “idfactura”: string}</span></p>
 
-  <li><a href="#">integra2.ing.puc.cl/api/oc/recibir/.:idoc (GET)</a></li>
-  <p>Retorna un JSON informando si se aceptó la OC</p>
-  <p>Parámetros: Ningungo</p>
-  <p>Retorno: <span class="code">{“aceptado”: boolean, “idoc”: string}</span></p>
+  <li><a href="#">integra2.ing.puc.cl/api/pagos/recibir/.:idtrx?idfactura=.:idfactura (GET)</a></li>
+  <p>Retorna un JSON informando si se validó la transacción</p>
+  <p>Parámetros: idfactura (String)</p>
+  <p>Retorno: <span class="code">{“validado”: boolean, “idtrx”: string}</span></p>
 
-  <li>Nos falta ver pagos...</li>
+  <li><a href="#">integra2.ing.puc.cl/api/despachos/recibir/.:idfactura (GET)</a></li>
+  <p>Retorna un JSON informando si ya llegaron los productos despachados acorde a la factura</p>
+  <p>Parámetros: Ninguno</p>
+  <p>Retorno: <span class="code">{“validado”: boolean}</span></p>
+
 </ul>
