@@ -252,6 +252,34 @@ class ApplicationController < ActionController::Base
     return json[0]
   end
 
+
+  def transferir(cuentaOrigen, cuentoDestino, montoTransferencia)
+
+    begin
+      puts "--------Haciendo Transacción--------------"
+      url = getLinkServidorCurso + "banco/trx/"
+      result = HTTParty.put(url,
+              body: {
+                monto: montoTransferencia.to_i,
+                origen: cuentaOrigen,
+                destino: cuentoDestino,
+              }.to_json,
+              headers: {
+                'Content-Type' => 'application/json'
+              })
+      json = JSON.parse(result.body)
+      return json
+    rescue => ex # En caso de excepción retornamos error
+      logger.error ex.message
+      puts "error 1001"
+      render json: {"error": ex.message}, status: 503 and return
+    end
+    
+  end
+
+
+
+
   # ----------------------------------------------------------------------------
   # ------------------------------Almacen---------------------------------------
   # ----------------------------------------------------------------------------
