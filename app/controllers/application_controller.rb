@@ -274,7 +274,7 @@ class ApplicationController < ActionController::Base
       puts "error 1001"
       render json: {"error": ex.message}, status: 503 and return
     end
-    
+
   end
 
 
@@ -336,4 +336,68 @@ class ApplicationController < ActionController::Base
       render json: {"error": ex.message}, status: 503 and return
     end
   end
+
+
+  def mover_producto_almacen(idProducto, almacenDestino)
+
+    begin # Intentamos realizar conexión externa y obtener OC
+      puts "--------Moviendo producto de bodega--------------"
+      url = "http://integracion-2016-dev.herokuapp.com/bodega/"
+      result = HTTParty.post(url+"moveStock",
+              body: {
+                productoId: idProducto,
+                almacenId: almacenDestino,
+              }.to_json,
+              headers: {
+                'Content-Type' => 'application/json',
+                'Authorization' => 'INTEGRACIONgrupo2:'+encode('POST'+idProducto+almacenDestino)
+              })
+      json = JSON.parse(result.body)
+    rescue => ex # En caso de excepción retornamos error
+      logger.error ex.message
+      puts "error 1010"
+      render json: {"error": ex.message}, status: 503 and return
+    end
+
+
+
+  def get_array_productos_almacen(almacenid, sku)
+    require 'httparty'
+    begin # Intentamos realizar conexión externa y obtener OC
+      puts "--------Obteniendo Productos por SKU del Almacen--------------"
+      url = "http://integracion-2016-dev.herokuapp.com/bodega/"
+      result = HTTParty.get(url+"stock"+"?"+"almacenId="+almacenid+"&"+'sku='+sku.to_s,
+              headers: {
+                'Content-Type' => 'application/json',
+                'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenid+sku.to_s)
+              })
+      puts "(Array_Producto_Almacen)Respuesta de la contraparte: " + result.body.to_s
+      json = JSON.parse(result.body)
+      puts "--------Productos Obtenidos por SKU del Almacen--------------"
+      return json
+    rescue => ex # En caso de excepción retornamos error
+      logger.error ex.message
+      puts "error 1011"
+      render json: {"error": ex.message}, status: 503 and return
+    end
+  end
+
+
+
+  # ----------------------------------------------------------------------------
+  # ------------------------------Fábrica---------------------------------------
+  # ----------------------------------------------------------------------------
+
+  def cuentaFabrica()
+    require 'httparty'
+    url = "http://integracion-2016-dev.herokuapp.com/bodega/fabrica/getCuenta"
+    result = HTTParty.get(url,
+            headers: {
+                'Content-Type' => 'application/json',
+                'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET')
+              })
+    json = JSON.parse(result.body)
+    return json[0] #TODO: Revisar si es json[0] o solo json
+  end
+
 end

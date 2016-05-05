@@ -98,7 +98,11 @@ class TasksController <ApplicationController
 		
 			if tengoStock
 
-				#TODO: Mover al almacen de despacho
+
+
+				#TODO: Mover al almacen de despacho los productos necesarios
+	
+
 
 				#Transferir
 				cuentaOrigen = getIdBanco('2')
@@ -132,5 +136,34 @@ class TasksController <ApplicationController
 			    #TODO: Movelos a otras bodegas.
 		end
 	end
+
+
+	def limparBodegaRepecepcion()
+
+		skus = [2,12,21,28,32,25,20,15,37] #Productos que podríamos tener en la bodega
+		almacenId = '571262aaa980ba030058a14e'
+		skus.each do |i|
+			productos = get_array_productos_almacen(almacenId, i)
+			#TODO: Convertir productos a lista, o iterar sobre el json
+			productos.each do |j|
+				idProducto = j['_id'] 
+				mover_producto_almacen(idProducto, '571262aaa980ba030058a150') #TODO: Revisar que almacen no este lleno
+			end
+		end 
+	end 
+
+	def limparBodegaDespacho()
+
+		skus = [2,12,21,28,32,25,20,15,37] #Productos que podríamos tener en la bodega
+		almacenId = '571262aaa980ba030058a14f'
+		skus.each do |i|
+			productos = get_array_productos_almacen(almacenId, i)
+			#TODO: Convertir productos a lista, o iterar sobre el json
+			productos.each do |j|
+				idProducto = j['_id'] 
+				mover_producto_almacen(idProducto, '571262aaa980ba030058a150') #TODO: Revisar que almacen no este lleno
+			end
+		end 
+	end 	
 end
 
