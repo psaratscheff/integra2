@@ -1,5 +1,7 @@
 class TasksController < ApplicationController
 
+
+  # Cuando el metodo este listo hay que agregarle que procese solo las oc que no han sido procesadas ya
   def procesar_sftp
     Net::SFTP.start('mare.ing.puc.cl', 'integra2', :password => 'fUgW9wJG') do |sftp|
       count = 0
@@ -45,16 +47,24 @@ class TasksController < ApplicationController
 
             if validado
               count = count + 1
-              puts "Ordenes procesadas:" + count.to_s
               puts "------------------------> Voy a aceptar la OC"
               aceptar_oc(id)
               # puts "------------------------> He aceptado oc"
-
               # Generar facura para OC
               # puts "------------------------> Voy a generar la factura"
-              generar_factura(id)
+              factura = generar_factura(id)
+              # puts factura.to_s
+              # factura = JSON.parse(factura)
+              # puts factura.to_s
+              idfactura = factura["_id"]
+              puts "------------------------> " + factura.to_s
+              puts "------------------------> " + idfactura.to_s
+
               # puts "------------------------> He generado la factura"
               # Despachar productos
+
+              despacharInternacional(idfactura, factura)
+              puts "------------------------> "
 
 
             else
@@ -70,8 +80,10 @@ class TasksController < ApplicationController
             oc = obtener_oc(id)
 
             oc = transform_oc(oc)
-            # puts "------------------------> oc transformada "
+            puts "------------------------> oc transformada "
             puts oc.to_s
+            oc.delete("rechazo")
+
             localOc = Oc.new(oc)
 
             localOc.save!

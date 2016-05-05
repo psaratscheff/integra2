@@ -11,12 +11,15 @@ class ApplicationController < ActionController::Base
 
   def transform_oc(oc)
     oc.delete("__v")
+    puts oc.to_s
     oc.delete("fechaDespachos")
+    puts oc.to_s
     oc.delete("rechazo")
     oc.delete("precioUnitario")
     oc["idoc"] = oc.delete("_id")
     oc["fechaRecepcion"] = Time.new(oc.delete("created_at")).to_s
     oc["fechaEntrega"] = Time.new(oc.delete("fechaEntrega")).to_s
+  end
 
   #Esta función es para ejecutar código en background, paralelo al http request
   def background(&block)
@@ -290,16 +293,16 @@ class ApplicationController < ActionController::Base
   # ------------------------------Almacen---------------------------------------
   # ----------------------------------------------------------------------------
 
-    def consultar_stock(sku)
-      parsed_json = lista_de_almacenes()
+  def consultar_stock(sku)
+    parsed_json = lista_de_almacenes()
 
-      contador=0
-      parsed_json.each do |almacen|
-        contador += stock_de_almacen(almacen["_id"], sku).count() unless almacen["despacho"] # No consideramos el stock en el almacen de despacho
-      end
-
-      return contador
+    contador=0
+    parsed_json.each do |almacen|
+      contador += stock_de_almacen(almacen["_id"], sku).count() unless almacen["despacho"] # No consideramos el stock en el almacen de despacho
     end
+
+    return contador
+  end
 
   def stock_de_almacen(almacenId, sku)
     require 'httparty'
@@ -390,7 +393,6 @@ class ApplicationController < ActionController::Base
 
 
 
-
   def lista_de_almacenes()
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
@@ -411,4 +413,146 @@ class ApplicationController < ActionController::Base
       render json: {"error": ex.message}, status: 503 and return
     end
   end
+
+
+
+
+    # ----------------------------------------------------------------------------
+    # ------------------------------Despachos---------------------------------------
+    # ----------------------------------------------------------------------------
+
+
+    def despacharInternacional(idfactura, factura)
+      oc = Oc.find_by idfactura: idfactura
+      sku = oc['sku']
+      qty = oc['cantidad']
+      precio = Item.find(sku).Precio_Unitario
+      idoc = oc['idoc']
+      almacenes = lista_de_almacenes()
+      itemsDespachados = 0
+      almacenes.each do |almacen|
+        unless almacen['despacho']
+          return if itemsDespachados == qty
+          productos = get_array_productos_almacen(almacen['_id'], sku)
+          productos.each do |producto|
+            return if itemsDespachados == qty
+            mover_a_despacho(producto) #TODO: IMPLEMENTAR FUNCION
+            # despachar_producto(producto, almacenClienteId, idoc, precio) #TODO: IMPLEMENTAR FUNCION
+            itemsDespachados += 1
+          end
+        end
+      end
+      oc["estado"] = "despachada"
+      oc.save!
+      return true
+    end
+
+      def despachar(idfactura, factura) #TODO: Revisar si este método va aquí
+        oc = Oc.find_by idfactura: idfactura
+        sku = oc['sku']
+        qty = oc['cantidad']
+        precio = Item.find(sku).Precio_Unitario
+        idoc = oc['idoc']
+        grupo = get_grupo_by_id(factura['cliente'])
+        almacenClienteId = get_almacen_id(grupo)
+        almacenes = lista_de_almacenes()
+        itemsDespachados = 0
+        almacenes.each do |almacen|
+          unless almacen['despacho']
+            return if itemsDespachados == qty
+            productos = get_array_productos_almacen(almacen['_id'], sku)
+            productos.each do |producto|
+              return if itemsDespachados == qty
+              mover_a_despacho(producto) #TODO: IMPLEMENTAR FUNCION
+              despachar_producto(producto, almacenClienteId, idoc, precio) #TODO: IMPLEMENTAR FUNCION
+              itemsDespachados += 1
+            end
+          end
+        end
+        oc["estado"] = "despachada"
+        oc.save!
+        return true
+      end
+
+      def mover_a_despacho(producto)
+        require 'httparty'
+        idDespacho = getIdDespacho()
+        idProducto = producto['_id']
+
+        begin # Intentamos realizar conexión externa y obtener OC
+          puts "--------Moviendo Producto a Despacho--------------"
+          url = "http://integracion-2016-dev.herokuapp.com/bodega/"
+          result = HTTParty.post(url+"moveStock",
+                  body: {
+                    productoId: idProducto,
+                    almacenId: idDespacho
+                  }.to_json,
+                  headers: {
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'INTEGRACIONgrupo2:'+encode('POST'+idProducto+idDespacho)
+                  })
+          puts "(Mover_a_Despacho)Respuesta de la contraparte: " + result.body.to_s
+          json = JSON.parse(result.body)
+          puts "--------Producto Movido a Despacho--------------"
+          return json
+        rescue => ex # En caso de excepción retornamos error
+          logger.error ex.message
+          puts "error 1009"
+          render json: {"error": ex.message}, status: 503 and return
+        end
+      end
+
+      def despachar_producto(producto, almacenClienteId, idoc, precio)
+        require 'httparty'
+        idProducto = producto['_id']
+
+        begin # Intentamos realizar conexión externa y obtener OC
+          puts "--------Despachando Producto a Cliente B2B--------------"
+          url = "http://integracion-2016-dev.herokuapp.com/bodega/"
+          result = HTTParty.post(url+"moveStockBodega",
+                  body: {
+                    productoId: idProducto,
+                    almacenId: almacenClienteId,
+                    oc: idoc,
+                    precio: precio.to_i
+                  }.to_json,
+                  headers: {
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'INTEGRACIONgrupo2:'+encode('POST'+idProducto+almacenClienteId)
+                  })
+          puts "(Despachar_Producto)Respuesta de la contraparte: " + result.body.to_s
+          json = JSON.parse(result.body)
+          puts "--------Producto Despachado a Cliente B2B--------------"
+          return json
+        rescue => ex # En caso de excepción retornamos error
+          logger.error ex.message
+          puts "error 1010"
+          render json: {"error": ex.message}, status: 503 and return
+        end
+      end
+
+
+
+
+    def get_array_productos_almacen(almacenid, sku)
+      require 'httparty'
+      begin # Intentamos realizar conexión externa y obtener OC
+        puts "--------Obteniendo Productos por SKU del Almacen--------------"
+        url = "http://integracion-2016-dev.herokuapp.com/bodega/"
+        result = HTTParty.get(url+"stock"+"?"+"almacenId="+almacenid+"&"+'sku='+sku.to_s,
+                headers: {
+                  'Content-Type' => 'application/json',
+                  'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenid+sku.to_s)
+                })
+        puts "(Array_Producto_Almacen)Respuesta de la contraparte: " + result.body.to_s
+        json = JSON.parse(result.body)
+        puts "--------Productos Obtenidos por SKU del Almacen--------------"
+        return json
+      rescue => ex # En caso de excepción retornamos error
+        logger.error ex.message
+        puts "error 1011"
+        render json: {"error": ex.message}, status: 503 and return
+      end
+    end
+
 end
