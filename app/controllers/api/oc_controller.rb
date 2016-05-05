@@ -78,6 +78,7 @@ class Api::OcController < ApplicationController
     end
   end
 
+
   def generar_factura(idoc)
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
@@ -122,72 +123,7 @@ class Api::OcController < ApplicationController
   end
 
 
-  def aceptar_oc(idoc)
-    require 'httparty'
-    begin # Intentamos realizar conexión externa y obtener OC
-      puts "--------Aceptando OC--------------"
-      url = getLinkServidorCurso + "oc/"
-      result = HTTParty.post(url+"recepcionar/"+idoc.to_s,
-              body:    {
-                      id: idoc
-                    }.to_json,
-              headers: {
-                'Content-Type' => 'application/json'
-              })
-      puts "(Recepcionar_OC)Respuesta de la contraparte: " + result.body.to_s
-      json = JSON.parse(result.body)
-      if json.count() > 1
-        puts "--------Error: se retornó más de una OC para el mismo id---------"
-        render json: {"error": "Error2: se retornó más de una OC para el mismo id"}, status: 503 and return
-      elsif !json[0]["proveedor"]
-        puts "-----------------Error: No se pudo recibir la OC--------------------"
-        render json: {"error": "Error: No se pudo recibir la OC"}, status: 503 and return
-      end
-      localOc = Oc.find_by idoc: idoc # Si es que la OC ya estaba en mi base de datos (La generé yo)
-      if localOc == nil
-        puts '-----Añadiendo OC a DB local------'
-        localOc = Oc.new(transform_oc(json[0]))
-      end
-      localOc['estado'] = "aceptado"
-      localOc.save!
-      puts "--------OC Aceptada--------------"
-      return json[0]
-    rescue => ex # En caso de excepción retornamos error
-      logger.error ex.message
-      puts "error 1006"
-      render json: {"error": ex.message}, status: 503 and return
-    end
-  end
 
-  def rechazar_oc(idoc)
-    require 'httparty'
-    begin # Intentamos realizar conexión externa y obtener OC
-      puts "--------Rechazando OC--------------"
-      url = getLinkServidorCurso + "oc/"
-      result = HTTParty.post(url+"rechazar/"+idoc.to_s,
-              body: {
-                rechazo: 'No tenemos stock para el sku solicitado'
-              }.to_json,
-              headers: {
-                'Content-Type' => 'application/json'
-              })
-      puts "(Rechazar_OC)Respuesta de la contraparte: " + result.body.to_s
-      json = JSON.parse(result.body)
-
-      if json.count() > 1
-        raise "Error3: se retornó más de una OC para el mismo id" and return
-      end
-      localOc = Oc.find_by idoc: idoc
-      localOc['estado'] = "rechazado"
-      localOc.save!
-      puts "--------OC Rechazada--------------"
-      return json[0]
-    rescue => ex # En caso de excepción retornamos error
-      logger.error ex.message
-      puts "error 1007"
-      render json: {"error": ex.message}, status: 503 and return
-    end
-  end
 
   # -------------------Funciones de prueba--------------------------
 
