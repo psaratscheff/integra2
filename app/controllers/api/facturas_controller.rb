@@ -5,7 +5,7 @@ class Api::FacturasController < ApplicationController
     puts "------------------------Solicitud de recibir FACTURA recibida----------------------------"
     idFactura = params[:idfactura]
     factura = obtener_factura(idFactura)
-    if validar_factura(idFactura, factura) # Comparando con nuestra base de datos
+    if factura != false && validar_factura(idFactura, factura) # Comparando con nuestra base de datos
       # Seguimos con el tema de la factura en un Thread aparte, para
       # no demorar la entrega de la respuesta
       #background do # Función background definida en ApplicationController
@@ -22,7 +22,7 @@ class Api::FacturasController < ApplicationController
 
   def continuar_con_pago(idFactura, factura)
     trx = pagar_factura(factura)
-    if trx['monto'] != nil
+    if trx != false && trx['monto'] != nil
       puts "-------FACTURA YA PAGADA!!------"
       localOc = Oc.find_by idfactura: idFactura
       localOc["estado"] = "pagada"
@@ -64,7 +64,7 @@ class Api::FacturasController < ApplicationController
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1001: " + ex.message
-      render json: {"error": ex.message}, status: 503 and return
+      render json: {"error": ex.message}, status: 503 and return false
     end
   end
 
@@ -104,7 +104,7 @@ class Api::FacturasController < ApplicationController
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1002: " + ex.message
-      render json: {"error": ex.message}, status: 503 and return
+      render json: {"error": ex.message}, status: 503 and return false
     end
   end
 
@@ -145,7 +145,7 @@ class Api::FacturasController < ApplicationController
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1003: " + ex.message
-      render json: {"error": ex.message}, status: 503 and return
+      render json: {"error": ex.message}, status: 503 and return false
     end
   end
 
