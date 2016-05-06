@@ -2,11 +2,11 @@ class ScriptsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def test5 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    comprar("571262b8a980ba030058ab53", $groupid, 50, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, "571262b8a980ba030058ab53", 50, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
 
   def test8 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    comprar("572aac69bdb6d403005fb049", $groupid, 18, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, "572aac69bdb6d403005fb049", 18, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
 
   def verstock
