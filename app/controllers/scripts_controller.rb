@@ -2,18 +2,22 @@ class ScriptsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def test2t # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    comprar($groupid, $groupid, 2, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, $groupid, 2, 3, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test2f # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    comprar($groupid, $groupid, 1, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, $groupid, 1, 3, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
 
   def test5 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    comprar($groupid, "571262b8a980ba030058ab53", 52, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, hash.key('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
 
   def test8 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    comprar($groupid, "572aac69bdb6d403005fb049", 18, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, hash.key('8'), 18, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+  end
+
+  def test9 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
+    comprar($groupid, hash.key('9'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
 
   def verstock
