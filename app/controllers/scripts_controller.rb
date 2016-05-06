@@ -98,14 +98,13 @@ class ScriptsController < ApplicationController
 
     respuesta = enviar_oc(oc)
     if respuesta['aceptado']
-      # Wuhu! La aceptaron!!
+      puts "------OC ACEPTADA: "+oc.to_s
       localOc = Oc.find_by idoc: oc['_id']
       localOc.estado = "aceptada"
       localOc.save!
       render json: oc #TODO: Tengo demasiados renders de más :$
     else
-      # Buuuu pesaos q&% :(
-      # Debemos anular la OC
+      puts "------OC RECHAZADA: "+oc.to_s
       ocAnulada = anular_oc(oc)
       localOc = Oc.find_by idoc: oc['_id']
       localOc.estado = "anulada por rechazo"
