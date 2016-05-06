@@ -48,8 +48,8 @@ class ApplicationController < ActionController::Base
       yield
       # Luego cierro la conexión a la database que un Thread nuevo siempre abre
       ActiveRecord::Base.connection.close
+      puts "-------------THREAD Finalizado------------------"
     end
-    puts "-------------Nuevo THREAD Finalizado------------------"
   end
 
   # --------------------------------------------------------------------------
