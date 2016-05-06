@@ -13,10 +13,6 @@ Rails.application.routes.draw do
   # => get 'sftp', to: 'api/oc#sftp'
   # => get 'hmactest', to: 'api/oc#hmactest'
   get 'scripts/analizar_sftp'
-  get 'scripts/test2t'
-  get 'scripts/test2f'
-  get 'scripts/test5'
-  get 'scripts/test8'
   get 'scripts/verstock'
 
   get 'tasks/procesar_sftp'
@@ -35,6 +31,22 @@ Rails.application.routes.draw do
     get 'pagos/recibir/:idtrx', to: 'pagos#recibir'
     get 'despachos/recibir/:idfactura', to: 'despachos#recibir'
   end
+
+  # Tests:
+
+  get 'scripts/test2t'
+  get 'scripts/test2f'
+  get 'scripts/test1'
+  get 'scripts/test3'
+  get 'scripts/test4'
+  get 'scripts/test5'
+  get 'scripts/test6'
+  get 'scripts/test7'
+  get 'scripts/test8'
+  get 'scripts/test9'
+  get 'scripts/test10'
+  get 'scripts/test11'
+  get 'scripts/test12'
 end
 
 # Example of regular route:
