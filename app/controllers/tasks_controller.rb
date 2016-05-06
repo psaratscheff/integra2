@@ -1,4 +1,4 @@
-class TasksController <ApplicationController
+class TasksController < ApplicationController
 
 	def producirMateriaPrima(sku): #Solo puede entrar a la funcion si sku = 2,21,32
 		stock = consultar_stock(sku).to_i
@@ -262,6 +262,5 @@ class TasksController <ApplicationController
       end
       render json: {"Proceso terminado exitosamente?": true}
     end
-  end
-
+	end
 end
