@@ -488,13 +488,8 @@ class ApplicationController < ActionController::Base
       if json.count() > 1
         raise "Error3: se retornó más de una OC para el mismo id" and return
       end
-      puts "--------Paso la request--------------"
-
-      puts idoc
       localOc = Oc.find_by idoc: idoc.to_s
-      puts "--------Paso la request--------------"
-
-      localOc.estado = json[0]["rechazado"] #TODO: Verificar nombre estado
+      localOc.estado = "rechazada"
       localOc.save!
       puts "--------OC Rechazada--------------"
       return json[0]
