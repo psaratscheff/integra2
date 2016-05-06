@@ -147,7 +147,7 @@ class ScriptsController < ApplicationController
     idOc = oc['idoc'] if (idOc == nil) # En caso de que oc no haya sido transformada todavía
     if getLinkGrupo(idProveedor) == nil # El grupo no está en nuestro diccionario
       puts "--------------ERROR: ID de grupo inválido--------"
-      return {"aceptado": "false"}.to_json
+      return {"aceptado": false}.to_json
     end
     url = getLinkGrupo(idProveedor)+'api/oc/recibir/'+idOc.to_s
     puts "--------Enviando a: " + url + "-----"
