@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   include HmacHelper # Para utilizar la función de hashing
 
   # Las variables globales se asignan según el ambiente en el que se esté desarrollando
-  if Rails.env.production?
+  if false #Rails.env.production?
     $groupid = "572aac69bdb6d403005fb043"
     $bancoid = "572aac69bdb6d403005fb04f"
     $recepcionid = "572aad41bdb6d403005fb0ba"
@@ -57,7 +57,7 @@ class ApplicationController < ActionController::Base
   # --------------------------------------------------------------------------
 
   def getLinkServidorCurso()
-    if Rails.env.production?
+    if false #Rails.env.production?
       return "http://moto.ing.puc.cl"
     else
       return "http://mare.ing.puc.cl/"
@@ -83,7 +83,7 @@ class ApplicationController < ActionController::Base
   end
 
   def get_grupo_by_id(id)
-    if Rails.env.production?
+    if false #Rails.env.production?
               # ID del grupo => Número del Grupo
       dic = {'572aac69bdb6d403005fb042'=>'1',
             '572aac69bdb6d403005fb043'=>'2',
@@ -117,7 +117,7 @@ class ApplicationController < ActionController::Base
 
   #TODO: Corregir ids y concatenación
   def getLinkGrupoSegunCuenta(idCuenta)
-    if Rails.env.production?
+    if false #Rails.env.production?
             # Cuenta del Grupo => Número del Grupo
       dic = {'572aac69bdb6d403005fb04e'=>'1',
             '572aac69bdb6d403005fb04f'=>'2',
@@ -152,7 +152,7 @@ class ApplicationController < ActionController::Base
 
   #TODO: Corregir ids
   def getIdBanco(grupo)
-    if Rails.env.production?
+    if false #Rails.env.production?
             # Número del Grupo => Cuenta del Grupo
       dic = {'1'=>'572aac69bdb6d403005fb04e',
             '2'=>'572aac69bdb6d403005fb04f',
@@ -186,7 +186,7 @@ class ApplicationController < ActionController::Base
 
    #TODO: Corregir ids
    def get_almacen_id(grupo)
-     if Rails.env.production?
+     if false #Rails.env.production?
              # Número del Grupo => Almacen De Recepcion del Grupo
        dic = {'1'=>'572aad41bdb6d403005fb066',
               '2'=>'572aad41bdb6d403005fb0ba',
@@ -220,7 +220,7 @@ class ApplicationController < ActionController::Base
 
   #TODO: Corregir ids
   def getIdBancoSegunIdGrupo(id)
-    if Rails.env.production?
+    if false #Rails.env.production?
                       # ID del Grupo => Cuenta del Grupo
       dic = {'572aac69bdb6d403005fb042'=>'572aac69bdb6d403005fb04e',
             '572aac69bdb6d403005fb043'=>'572aac69bdb6d403005fb04f',
