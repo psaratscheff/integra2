@@ -165,6 +165,21 @@ class ScriptsController < ApplicationController
     return json, true
   end
 
+  def anular_idoc(idoc)
+    puts "--------Anulando idOC--------------"+idoc.to_s
+    url = getLinkServidorCurso + "oc/"
+    result = HTTParty.delete(url + 'anular/' + idOc.to_s,
+            body: {
+              anulacion: "OC Rechazada por contraparte"
+            }.to_json,
+            headers: {
+              'Content-Type' => 'application/json'
+            })
+    json = JSON.parse(result.body)
+    puts "(Anular_idOC)Respuesta de la contraparte: " + json.to_s
+    puts "--------idOC Anulada--------------"
+    return json
+  end
   def anular_oc(oc)
     puts "--------Anulando OC--------------"+oc.to_s
     idOc = oc['_id']

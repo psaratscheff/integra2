@@ -14,7 +14,7 @@ class Api::FacturasController < ApplicationController
       render json: {"validado": true, "idfactura": idfactura}
     else
       # Ya se hizo el rendering en validar_factura (Es complejo, depende de cosas)
-      #TODO: anular_oc
+      anular_idoc(factura['oc'])
     end
   end
 
