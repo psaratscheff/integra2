@@ -17,7 +17,7 @@ class ScriptsController < ApplicationController
   end
 
   def test9 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    comprar($groupid, hash.key('9'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, hash.key('9'), 20, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
 
   def verstock
