@@ -84,9 +84,14 @@ class ScriptsController < ApplicationController
     oc, localOc = generar_oc(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
     puts "OC GENERADA: " + oc.to_s
 
-    respuesta = enviar_oc(oc)
-    puts "WTF! : "+ respuesta['aceptado'].to_s
-    if respuesta['aceptado']
+    respuesta, valida = enviar_oc(oc)
+    if !valida
+      puts "------No se pudo enviar la OC: " + oc.to_s
+      ocAnulada = anular_oc(oc)
+      localOc.estado = "anulada por error de envío"
+      localOc.save!
+      render json: {anulada: true, oc: ocAnulada}.to_json #TODO: Tengo demasiados renders de más :$
+    elsif respuesta['aceptado']
       puts "------OC ACEPTADA: "+oc.to_s
       localOc.estado = "aceptada"
       localOc.save!
@@ -146,7 +151,7 @@ class ScriptsController < ApplicationController
     idOc = oc['idoc'] if (idOc == nil) # En caso de que oc no haya sido transformada todavía
     if getLinkGrupo(idProveedor) == nil # El grupo no está en nuestro diccionario
       puts "--------------ERROR: ID de grupo inválido--------"
-      return {"aceptado" => false}
+      return {"aceptado" => false}, false
     end
     url = getLinkGrupo(idProveedor)+'api/oc/recibir/'+idOc.to_s
     puts "--------Enviando a: " + url + "-----"
@@ -157,7 +162,7 @@ class ScriptsController < ApplicationController
     json = JSON.parse(result.body)
     puts "(Enviar_OC)Respuesta de la contraparte: " + json.to_s
     puts "--------OC Enviada, Respuesta Recibida--------------"
-    return json
+    return json, true
   end
 
   def anular_oc(oc)
