@@ -80,18 +80,6 @@ class ScriptsController < ApplicationController
     render "verstock"
   end
 
-  def probar_compra
-    cliente = "571262b8a980ba030058ab50" # Mi grupo: 571262b8a980ba030058ab50
-    proveedor = "571262b8a980ba030058ab5a" # Grupo 12
-    cantidad = 10
-    sku = 15 # Avena para el cereal de avena
-    notas = "OC Generada por el grupo 5 :o"
-    # El tiempo de mañana (Un día después de ahora), convertido a int (epoch)
-    # y luego convertido a string y agregado los 000 por los milisegundos.
-    fechaEntrega = Time.now.tomorrow.to_i.to_s+"000"
-    comprar(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-  end
-
   def comprar(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
     oc = generar_oc(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
     puts "OC GENERADA: " + oc.to_s

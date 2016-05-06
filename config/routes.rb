@@ -13,7 +13,6 @@ Rails.application.routes.draw do
   # => get 'sftp', to: 'api/oc#sftp'
   # => get 'hmactest', to: 'api/oc#hmactest'
   get 'scripts/analizar_sftp'
-  get 'scripts/probar_compra'
   get 'scripts/test2t'
   get 'scripts/test2f'
   get 'scripts/test5'
