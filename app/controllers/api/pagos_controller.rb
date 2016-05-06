@@ -45,11 +45,11 @@ class Api::PagosController < ApplicationController
 
   private
 
-  def avisar_a_grupo(grupo, idfactura)
+  def avisar_a_grupo(groupid, idfactura)
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Avisando a Grupo que el Proceso Terminó--------------"
-      url = getLinkServidorGrupo(grupo) + "api/despachos/recibir/"
+      url = getLinkServidorGrupo(get_grupo_by_id(groupid)) + "api/despachos/recibir/"
       result = HTTParty.get(url+idfactura,
               headers: {
                 'Content-Type' => 'application/json'
