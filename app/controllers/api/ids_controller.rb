@@ -13,7 +13,7 @@ class Api::IdsController < ApplicationController
 
   def almacenId
     puts "------------------------Solicitud de ID ALMACEN_ID recibida----------------------------"
-    almId = $recepcionid # Variable global con nuestro BancoId en AppCtrlr
+    almId = $recepcionid # Variable global con nuestro RecepcionId en AppCtrlr
     id = {"id": almId}
     render json: id
   end

@@ -57,7 +57,11 @@ class ApplicationController < ActionController::Base
   # --------------------------------------------------------------------------
 
   def getLinkServidorCurso()
-    return "http://mare.ing.puc.cl/"
+    if Rails.env.production?
+      return "http://moto.ing.puc.cl"
+    else
+      return "http://mare.ing.puc.cl/"
+    end
   end
 
   def getLinkServidorGrupo(numeroGrupo)
@@ -79,92 +83,172 @@ class ApplicationController < ActionController::Base
   end
 
   def get_grupo_by_id(id)
-          # ID del grupo => Número del Grupo
-    dic = {'571262b8a980ba030058ab4f'=>'1',
-          '571262b8a980ba030058ab50'=>'2',
-          '571262b8a980ba030058ab51'=>'3',
-          '571262b8a980ba030058ab52'=>'4',
-          '571262b8a980ba030058ab53'=>'5',
-          '571262b8a980ba030058ab54'=>'6',
-          '571262b8a980ba030058ab55'=>'7',
-          '571262b8a980ba030058ab56'=>'8',
-          '571262b8a980ba030058ab57'=>'9',
-          '571262b8a980ba030058ab58'=>'10',
-          '571262b8a980ba030058ab59'=>'11',
-          '571262b8a980ba030058ab5a'=>'12'}
+    if Rails.env.production?
+              # ID del grupo => Número del Grupo
+      dic = {'572aac69bdb6d403005fb042'=>'1',
+            '572aac69bdb6d403005fb043'=>'2',
+            '572aac69bdb6d403005fb044'=>'3',
+            '572aac69bdb6d403005fb045'=>'4',
+            '572aac69bdb6d403005fb046'=>'5',
+            '572aac69bdb6d403005fb047'=>'6',
+            '572aac69bdb6d403005fb048'=>'7',
+            '572aac69bdb6d403005fb049'=>'8',
+            '572aac69bdb6d403005fb04a'=>'9',
+            '572aac69bdb6d403005fb04b'=>'10',
+            '572aac69bdb6d403005fb04c'=>'11',
+            '572aac69bdb6d403005fb04d'=>'12'}
+    else
+              # ID del grupo => Número del Grupo
+      dic = {'571262b8a980ba030058ab4f'=>'1',
+            '571262b8a980ba030058ab50'=>'2',
+            '571262b8a980ba030058ab51'=>'3',
+            '571262b8a980ba030058ab52'=>'4',
+            '571262b8a980ba030058ab53'=>'5',
+            '571262b8a980ba030058ab54'=>'6',
+            '571262b8a980ba030058ab55'=>'7',
+            '571262b8a980ba030058ab56'=>'8',
+            '571262b8a980ba030058ab57'=>'9',
+            '571262b8a980ba030058ab58'=>'10',
+            '571262b8a980ba030058ab59'=>'11',
+            '571262b8a980ba030058ab5a'=>'12'}
+    end
     return dic[id]
   end
 
   #TODO: Corregir ids y concatenación
   def getLinkGrupoSegunCuenta(idCuenta)
-          # Cuenta del Grupo => Número del Grupo
-    dic = {'571262c3a980ba030058ab5b'=>'1',
-          '571262c3a980ba030058ab5c'=>'2',
-          '571262c3a980ba030058ab5d'=>'3',
-          '571262c3a980ba030058ab5f'=>'4',
-          '571262c3a980ba030058ab61'=>'5',
-          '571262c3a980ba030058ab62'=>'6',
-          '571262c3a980ba030058ab60'=>'7',
-          '571262c3a980ba030058ab5e'=>'8',
-          '571262c3a980ba030068ab66'=>'9',
-          '571262c3a980ba030058ab63'=>'10',
-          '571262c3a980ba030058ab64'=>'11',
-          '571262c3a980ba030068ab65'=>'12'}
+    if Rails.env.production?
+            # Cuenta del Grupo => Número del Grupo
+      dic = {'572aac69bdb6d403005fb04e'=>'1',
+            '572aac69bdb6d403005fb04f'=>'2',
+            '572aac69bdb6d403005fb050'=>'3',
+            '572aac69bdb6d403005fb051'=>'4',
+            '572aac69bdb6d403005fb052'=>'5',
+            '572aac69bdb6d403005fb053'=>'6',
+            '572aac69bdb6d403005fb054'=>'7',
+            '572aac69bdb6d403005fb056'=>'8',
+            '572aac69bdb6d403005fb057'=>'9',
+            '572aac69bdb6d403005fb058'=>'10',
+            '572aac69bdb6d403005fb059'=>'11',
+            '572aac69bdb6d403005fb05a'=>'12'}
+    else
+            # Cuenta del Grupo => Número del Grupo
+      dic = {'571262c3a980ba030058ab5b'=>'1',
+            '571262c3a980ba030058ab5c'=>'2',
+            '571262c3a980ba030058ab5d'=>'3',
+            '571262c3a980ba030058ab5f'=>'4',
+            '571262c3a980ba030058ab61'=>'5',
+            '571262c3a980ba030058ab62'=>'6',
+            '571262c3a980ba030058ab60'=>'7',
+            '571262c3a980ba030058ab5e'=>'8',
+            '571262c3a980ba030068ab66'=>'9',
+            '571262c3a980ba030058ab63'=>'10',
+            '571262c3a980ba030058ab64'=>'11',
+            '571262c3a980ba030068ab65'=>'12'}
+    end
     url = getLinkServidorGrupo(dic[idCuenta])
     return url
   end
 
   #TODO: Corregir ids
-  def getIdBanco(grupo) #TODO: Cambiar ID a los correctos
-          # Número del Grupo => Cuenta del Grupo
-    dic = {'1'=>'571262c3a980ba030058ab5b',
-          '2'=>'571262c3a980ba030058ab5c',
-          '3'=>'571262c3a980ba030058ab5d',
-          '4'=>'571262c3a980ba030058ab5f',
-          '5'=>'571262c3a980ba030058ab61',
-          '6'=>'571262c3a980ba030058ab62',
-          '7'=>'571262c3a980ba030058ab60',
-          '8'=>'571262c3a980ba030058ab5e',
-          '9'=>'571262c3a980ba030068ab66',
-          '10'=>'571262c3a980ba030058ab63',
-          '11'=>'571262c3a980ba030058ab64',
-          '12'=>'571262c3a980ba030068ab65'}
+  def getIdBanco(grupo)
+    if Rails.env.production?
+            # Número del Grupo => Cuenta del Grupo
+      dic = {'1'=>'572aac69bdb6d403005fb04e',
+            '2'=>'572aac69bdb6d403005fb04f',
+            '3'=>'572aac69bdb6d403005fb050',
+            '4'=>'572aac69bdb6d403005fb051',
+            '5'=>'572aac69bdb6d403005fb052',
+            '6'=>'572aac69bdb6d403005fb053',
+            '7'=>'572aac69bdb6d403005fb054',
+            '8'=>'572aac69bdb6d403005fb056',
+            '9'=>'572aac69bdb6d403005fb057',
+            '10'=>'572aac69bdb6d403005fb058',
+            '11'=>'572aac69bdb6d403005fb059',
+            '12'=>'572aac69bdb6d403005fb05a'}
+    else
+            # Número del Grupo => Cuenta del Grupo
+      dic = {'1'=>'571262c3a980ba030058ab5b',
+            '2'=>'571262c3a980ba030058ab5c',
+            '3'=>'571262c3a980ba030058ab5d',
+            '4'=>'571262c3a980ba030058ab5f',
+            '5'=>'571262c3a980ba030058ab61',
+            '6'=>'571262c3a980ba030058ab62',
+            '7'=>'571262c3a980ba030058ab60',
+            '8'=>'571262c3a980ba030058ab5e',
+            '9'=>'571262c3a980ba030068ab66',
+            '10'=>'571262c3a980ba030058ab63',
+            '11'=>'571262c3a980ba030058ab64',
+            '12'=>'571262c3a980ba030068ab65'}
+    end
     return dic[grupo]
    end
 
    #TODO: Corregir ids
-   def get_almacen_id(grupo) #TODO: Cambiar ID a los correctos
-           # Número del Grupo => Almacen De Recepcion del Grupo
-     dic = {'1'=>'571262aaa980ba030058a147',
-            '2'=>'571262aaa980ba030058a14e',
-            '3'=>'3',
-            '4'=>'571262aaa980ba030058a240',
-            '5'=>'5',
-            '6'=>'6',
-            '7'=>'7',
-            '8'=>'571262aaa980ba030058a31e',
-            '9'=>'9',
-            '10'=>'571262aaa980ba030058a40c',
-            '11'=>'571262aaa980ba030058a488',
-            '12'=>'12'}
+   def get_almacen_id(grupo)
+     if Rails.env.production?
+             # Número del Grupo => Almacen De Recepcion del Grupo
+       dic = {'1'=>'572aad41bdb6d403005fb066',
+              '2'=>'572aad41bdb6d403005fb0ba',
+              '3'=>'572aad41bdb6d403005fb1bf',
+              '4'=>'572aad41bdb6d403005fb208',
+              '5'=>'572aad41bdb6d403005fb278',
+              '6'=>'572aad41bdb6d403005fb2d8',
+              '7'=>'572aad41bdb6d403005fb3b9',
+              '8'=>'572aad41bdb6d403005fb416',
+              '9'=>'572aad41bdb6d403005fb4b8',
+              '10'=>'572aad41bdb6d403005fb542',
+              '11'=>'572aad41bdb6d403005fb5b9',
+              '12'=>'572aad42bdb6d403005fb69f'}
+      else
+              # Número del Grupo => Almacen De Recepcion del Grupo
+        dic = {'1'=>'571262aaa980ba030058a147',
+               '2'=>'571262aaa980ba030058a14e',
+               '3'=>'571262aaa980ba030058a1f1',
+               '4'=>'571262aaa980ba030058a240',
+               '5'=>'571262aaa980ba030058a244',
+               '6'=> false,
+               '7'=> false,
+               '8'=>'571262aaa980ba030058a31e',
+               '9'=>'571262aaa980ba030058a3b0',
+               '10'=>'571262aaa980ba030058a40c',
+               '11'=>'571262aaa980ba030058a488',
+               '12'=>'571262aba980ba030058a5c6'}
+     end
      return dic[grupo]
     end
 
   #TODO: Corregir ids
   def getIdBancoSegunIdGrupo(id)
-          # ID del Grupo => Cuenta del Grupo
-    dic = {'571262b8a980ba030058ab4f'=>'571262c3a980ba030058ab5b',
-          '571262b8a980ba030058ab50'=>'571262c3a980ba030058ab5c',
-          '571262b8a980ba030058ab51'=>'571262c3a980ba030058ab5d',
-          '571262b8a980ba030058ab52'=>'571262c3a980ba030058ab5f',
-          '571262b8a980ba030058ab53'=>'571262c3a980ba030058ab61',
-          '571262b8a980ba030058ab54'=>'571262c3a980ba030058ab62',
-          '571262b8a980ba030058ab55'=>'571262c3a980ba030058ab60',
-          '???????????????????'=>'8',
-          '??????????'=>'9',
-          '571262b8a980ba030058ab58'=>'571262c3a980ba030058ab63',
-          '571262b8a980ba030058ab59'=>'571262c3a980ba030058ab64',
-          '571262b8a980ba030058ab5a'=>'571262c3a980ba030068ab65'}
+    if Rails.env.production?
+                      # ID del Grupo => Cuenta del Grupo
+      dic = {'572aac69bdb6d403005fb042'=>'572aac69bdb6d403005fb04e',
+            '572aac69bdb6d403005fb043'=>'572aac69bdb6d403005fb04f',
+            '572aac69bdb6d403005fb044'=>'572aac69bdb6d403005fb050',
+            '572aac69bdb6d403005fb045'=>'572aac69bdb6d403005fb051',
+            '572aac69bdb6d403005fb046'=>'572aac69bdb6d403005fb052',
+            '572aac69bdb6d403005fb047'=>'572aac69bdb6d403005fb053',
+            '572aac69bdb6d403005fb048'=>'572aac69bdb6d403005fb054',
+            '572aac69bdb6d403005fb049'=>'572aac69bdb6d403005fb056',
+            '572aac69bdb6d403005fb04a'=>'572aac69bdb6d403005fb057',
+            '572aac69bdb6d403005fb04b'=>'572aac69bdb6d403005fb058',
+            '572aac69bdb6d403005fb04c'=>'572aac69bdb6d403005fb059',
+            '572aac69bdb6d403005fb04d'=>'572aac69bdb6d403005fb05a'}
+    else
+                      # ID del Grupo => Cuenta del Grupo
+      dic = {'571262b8a980ba030058ab4f'=>'571262c3a980ba030058ab5b',
+            '571262b8a980ba030058ab50'=>'571262c3a980ba030058ab5c',
+            '571262b8a980ba030058ab51'=>'571262c3a980ba030058ab5d',
+            '571262b8a980ba030058ab52'=>'571262c3a980ba030058ab5f',
+            '571262b8a980ba030058ab53'=>'571262c3a980ba030058ab61',
+            '571262b8a980ba030058ab54'=>'571262c3a980ba030058ab62',
+            '571262b8a980ba030058ab55'=>'571262c3a980ba030058ab60',
+            '571262b8a980ba030058ab56'=>'571262c3a980ba030058ab5e',
+            '571262b8a980ba030058ab57'=>'571262c3a980ba030058ab66',
+            '571262b8a980ba030058ab58'=>'571262c3a980ba030058ab63',
+            '571262b8a980ba030058ab59'=>'571262c3a980ba030058ab64',
+            '571262b8a980ba030058ab5a'=>'571262c3a980ba030068ab65'}
+    end
     url = getLinkServidorGrupo(dic[id])
     return url
   end

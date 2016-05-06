@@ -149,7 +149,8 @@ class TasksController <ApplicationController
 			#TODO: Convertir productos a lista, o iterar sobre el json
 			productos.each do |producto|
 				idProducto = producto['_id']
-				mover_producto_almacen(idProducto, $recepcionid) #TODO: Revisar que almacen no este lleno
+				#TODO: Revisar que almacen no este lleno
+				mover_producto_almacen(idProducto, $recepcionid) # Variable global definida en AppCtrlr
 			end
 		end
 	end
