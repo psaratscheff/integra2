@@ -457,7 +457,7 @@ class ApplicationController < ActionController::Base
         render json: {"error": "Error: No se pudo recibir la OC"}, status: 503 and return
       end
       localOc = Oc.find_by idoc: idoc
-      #localOc.estado = json[0]["aceptado"] #TODO: Verificar nombre estado
+      localOc.estado = "aceptada"
       localOc.save!
       puts "--------OC Aceptada--------------"
       return json[0]

@@ -14,8 +14,8 @@ Rails.application.routes.draw do
   # => get 'hmactest', to: 'api/oc#hmactest'
   get 'scripts/analizar_sftp'
   get 'scripts/probar_compra'
-  get 'scripts/test1'
-  get 'scripts/test2'
+  get 'scripts/test5'
+  get 'scripts/test8'
   get 'scripts/verstock'
 
   get 'tasks/procesar_sftp'

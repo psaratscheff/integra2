@@ -1,12 +1,12 @@
 class ScriptsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  def test1 # Grupo 5: "571262b8a980ba030058ab53"
-    render json: generar_oc($groupid, "571262b8a980ba030058ab53", 50, 1, Time.now.tomorrow.to_i.to_s+"000", "ola k ace")
+  def test5 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
+    render json: generar_oc("571262b8a980ba030058ab53", $groupid, 50, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
 
-  def test2 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    render json: generar_oc("571262b8a980ba030058ab53", $groupid, 21, 1, Time.now.tomorrow.to_i.to_s+"000", "ola k ace")
+  def test8 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
+    render json: generar_oc("572aac69bdb6d403005fb049", $groupid, 18, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
 
   def verstock
@@ -88,10 +88,10 @@ class ScriptsController < ApplicationController
   def comprar(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
     oc = generar_oc(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
     puts "OC GENERADA: " + oc.to_s
+
     respuesta = enviar_oc(oc)
     if respuesta['aceptado']
       # Wuhu! La aceptaron!!
-      # Nada que hacer, estamos listos! :)
       render json: oc #TODO: Tengo demasiados renders de más :$
     else
       # Buuuu pesaos q&% :(
@@ -128,13 +128,13 @@ class ScriptsController < ApplicationController
         render json: {"error": "Error: No se pudo recibir la OC"}, status: 503 and return
       end
       puts "--------OC Generada--------------"
-      oc = transform_oc(oc)
+      tOc = transform_oc(oc)
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1015"
       render json: {"error": ex.message}, status: 503 and return
     end
-    localOc = Oc.new(oc)
+    localOc = Oc.new(tOc)
     localOc.save!
 
     return oc
@@ -214,7 +214,7 @@ class ScriptsController < ApplicationController
         raise "Error2: se retornó más de una OC para el mismo id" and return
       end
       localOc = Oc.find_by id: "57275b33c1ff9b0300017cf1"
-      localOc.estado = json[0]["aceptado"] #TODO: Verificar nombre estado
+      localOc.estado = "aceptada"
       localOc.save!
       return json[0]
     rescue => ex # En caso de excepción retornamos error
