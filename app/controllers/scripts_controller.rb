@@ -167,6 +167,9 @@ class ScriptsController < ApplicationController
 
   def anular_idoc(idoc)
     puts "--------Anulando idOC--------------"+idoc.to_s
+    localOc = Oc.find_by idoc: idoc
+    localOc["estado"] = "anulada por rechazo."
+    localOc.save!
     url = getLinkServidorCurso + "oc/"
     result = HTTParty.delete(url + 'anular/' + idOc.to_s,
             body: {
@@ -184,6 +187,9 @@ class ScriptsController < ApplicationController
     puts "--------Anulando OC--------------"+oc.to_s
     idOc = oc['_id']
     idOc = oc['idoc'] if (idOc == nil) # En caso de que oc no haya sido transformada todavía
+    localOc = Oc.find_by idoc: idOc
+    localOc["estado"] = "anulada por rechazo.."
+    localOc.save!
     url = getLinkServidorCurso + "oc/"
     result = HTTParty.delete(url + 'anular/' + idOc.to_s,
             body: {
