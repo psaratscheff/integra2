@@ -2,11 +2,11 @@ class ScriptsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def test5 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    render json: generar_oc("571262b8a980ba030058ab53", $groupid, 50, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar("571262b8a980ba030058ab53", $groupid, 50, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
 
   def test8 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    render json: generar_oc("572aac69bdb6d403005fb049", $groupid, 18, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar("572aac69bdb6d403005fb049", $groupid, 18, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
 
   def verstock
@@ -92,11 +92,17 @@ class ScriptsController < ApplicationController
     respuesta = enviar_oc(oc)
     if respuesta['aceptado']
       # Wuhu! La aceptaron!!
+      localOc = Oc.find_by idoc: oc['_id']
+      localOc.estado = "aceptada"
+      localOc.save!
       render json: oc #TODO: Tengo demasiados renders de más :$
     else
       # Buuuu pesaos q&% :(
       # Debemos anular la OC
       ocAnulada = anular_oc(oc)
+      localOc = Oc.find_by idoc: oc['_id']
+      localOc.estado = "anulada por rechazo"
+      localOc.save!
       render json: {anulada: true, oc: ocAnulada}.to_json #TODO: Tengo demasiados renders de más :$
     end
   end
