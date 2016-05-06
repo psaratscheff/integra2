@@ -78,6 +78,7 @@ class ApplicationController < ActionController::Base
   #TODO: Corregir ids
   def getLinkGrupo(id) #Los IDS están malos, reemplazarlos por los correctos cuando los sepamos
     grupo = get_grupo_by_id(id)
+    return nil if grupo == nil
     url = getLinkServidorGrupo(grupo)
     return url
   end
