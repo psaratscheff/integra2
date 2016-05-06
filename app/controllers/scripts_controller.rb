@@ -163,7 +163,7 @@ class ScriptsController < ApplicationController
             headers: {
               'Content-Type' => 'application/json'
             })
-    json = result.body
+    json = JSON.parse(result.body)
     puts "(Enviar_OC)Respuesta de la contraparte: " + json.to_s
     puts "--------OC Enviada, Respuesta Recibida--------------"
     return json
@@ -181,7 +181,7 @@ class ScriptsController < ApplicationController
             headers: {
               'Content-Type' => 'application/json'
             })
-    json = result.body
+    json = JSON.parse(result.body)
     puts "(Anular_OC)Respuesta de la contraparte: " + json.to_s
     puts "--------OC Anulada--------------"
     return json

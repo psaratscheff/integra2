@@ -117,7 +117,7 @@ class Api::OcController < ApplicationController
               'Content-Type' => 'application/json'
             })
     puts "(Enviar_Factura)Respuesta de la contraparte: " + result.body.to_s
-    json = result.body
+    json = JSON.parse(result.body)
     puts "--------Factura Enviada--------------"
     return json
   end
