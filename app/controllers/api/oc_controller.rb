@@ -30,6 +30,9 @@ class Api::OcController < ApplicationController
 
   def proceder_con_factura(idoc)
     factura = generar_factura(idoc)
+    if !factura
+      return false
+    end
     json = enviarFactura(factura) #Definido un poco más abajo
     # Si es que el key validado no existe en el json de la respuesta o el
     # value es false de ese key, la factura no fue validada
@@ -102,7 +105,7 @@ class Api::OcController < ApplicationController
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1005: " + ex.message
-      render json: {"error": ex.message}, status: 503 and return
+      render json: {"error": ex.message}, status: 503 and return false
     end
   end
 
