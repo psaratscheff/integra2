@@ -31,7 +31,7 @@ class TasksController <ApplicationController
 			#Producir el stock
 			require 'httparty'
 		    begin # Intentamos realizar conexión externa y obtener OC
-		      puts "--------Produciendo Stock --------------"
+		      puts "--------Produciendo Stock (Materia Prima)--------------"
 		      url = "http://integracion-2016-dev.herokuapp.com/bodega/fabrica/fabricar"
 		      result = HTTParty.put(url,
 		          body:    {
@@ -43,8 +43,9 @@ class TasksController <ApplicationController
 		            'Content-Type' => 'application/json',
 		            'Authorization' => 'INTEGRACIONgrupo2:'+encode('PUT'+sku+cantidadLotes+trxId)
 		          })
-
+		      puts "(Produciendo_Stock_Prima_?)Respuesta de la contraparte: " + result.body.to_s
 		      detallesPedido = JSON.parse(result.body)
+					puts "--------Stock Producido (Materia Prima)--------------"
 		    rescue => ex # En caso de excepción retornamos error
 		      logger.error ex.message
 		      puts "error 1015"
@@ -112,7 +113,7 @@ class TasksController <ApplicationController
 				#Producir el stock
 				require 'httparty'
 			    begin # Intentamos realizar conexión externa y obtener OC
-			      puts "--------Produciendo Stock --------------"
+			      puts "--------Produciendo Stock (Item Procesado)--------------"
 			      url = "http://integracion-2016-dev.herokuapp.com/bodega/fabrica/fabricar"
 			      result = HTTParty.put(url,
 			          body:    {
@@ -124,8 +125,9 @@ class TasksController <ApplicationController
 			            'Content-Type' => 'application/json',
 			            'Authorization' => 'INTEGRACIONgrupo2:'+encode('PUT'+sku+cantidadLotes+trxId)
 			          })
-
+			      puts "(Produciendo_Stock_Procesado_?)Respuesta de la contraparte: " + result.body.to_s
 			      detallesPedido = JSON.parse(result.body)
+						puts "--------Stock Producido (Item Procesado)--------------"
 			    rescue => ex # En caso de excepción retornamos error
 			      logger.error ex.message
 			      puts "error 1015"
@@ -133,7 +135,7 @@ class TasksController <ApplicationController
 			    end
 			end
 			    #TODO: Checkear que los pedidos lleguen a nuestra bodega de despacho
-			    #TODO: Movelos a otras bodegas.
+			    #TODO: Moverlos a otras bodegas.
 		end
 	end
 
@@ -141,13 +143,13 @@ class TasksController <ApplicationController
 	def limparBodegaRepecepcion()
 
 		skus = [2,12,21,28,32,25,20,15,37] #Productos que podríamos tener en la bodega
-		almacenId = '571262aaa980ba030058a14e'
-		skus.each do |i|
-			productos = get_array_productos_almacen(almacenId, i)
+		almacenId = $recepcionid #Variable global definida en application_controller
+		skus.each do |sku|
+			productos = get_array_productos_almacen(almacenId, sku)
 			#TODO: Convertir productos a lista, o iterar sobre el json
-			productos.each do |j|
-				idProducto = j['_id']
-				mover_producto_almacen(idProducto, '571262aaa980ba030058a150') #TODO: Revisar que almacen no este lleno
+			productos.each do |producto|
+				idProducto = producto['_id']
+				mover_producto_almacen(idProducto, $recepcionid) #TODO: Revisar que almacen no este lleno
 			end
 		end
 	end
@@ -155,13 +157,13 @@ class TasksController <ApplicationController
 	def limparBodegaDespacho()
 
 		skus = [2,12,21,28,32,25,20,15,37] #Productos que podríamos tener en la bodega
-		almacenId = '571262aaa980ba030058a14f'
-		skus.each do |i|
-			productos = get_array_productos_almacen(almacenId, i)
+		almacenId = $despachoid
+		skus.each do |sku|
+			productos = get_array_productos_almacen(almacenId, sku)
 			#TODO: Convertir productos a lista, o iterar sobre el json
-			productos.each do |j|
-				idProducto = j['_id']
-				mover_producto_almacen(idProducto, '571262aaa980ba030058a150') #TODO: Revisar que almacen no este lleno
+			productos.each do |producto|
+				idProducto = producto['_id']
+				mover_producto_almacen(idProducto, $despachoid) #TODO: Revisar que almacen no este lleno
 			end
 		end
 	end

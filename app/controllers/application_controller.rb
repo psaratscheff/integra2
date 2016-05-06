@@ -4,8 +4,26 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include HmacHelper # Para utilizar la función de hashing
 
-  $groupid = "571262b8a980ba030058ab50"
-  $bancoid = "571262c3a980ba030058ab5c"
+  # Las variables globales se asignan según el ambiente en el que se esté desarrollando
+  if Rails.env.production?
+    $groupid = "572aac69bdb6d403005fb043"
+    $bancoid = "572aac69bdb6d403005fb04f"
+    $recepcionid = "572aad41bdb6d403005fb0ba"
+    $despachoid = "572aad41bdb6d403005fb0bb"
+  else
+    $groupid = "571262b8a980ba030058ab50"
+    $bancoid = "571262c3a980ba030058ab5c"
+    $recepcionid = "571262aaa980ba030058a14e"
+    $despachoid = "571262aaa980ba030058a14f"
+  end
+  ##### Método para obtener el almacenID en vivo
+  #  parsed_json = lista_de_almacenes() # Función definida en ApplicationController
+  #  almId = nil # Necesario declararlo fuera del loop
+  #  parsed_json.each do |almacen|
+  #    almId = almacen["_id"] if almacen["recepcion"] # TODO: y si tenemos más de una bodega de recepcion??
+  #  end
+  #  return almId
+  #####
 
   private
 
@@ -52,28 +70,6 @@ class ApplicationController < ActionController::Base
   # --------------------------------------------------------------------------
   # ------------------------------IDs-----------------------------------------
   # --------------------------------------------------------------------------
-
-  def getIdGrupo2()
-    return "571262b8a980ba030058ab50"
-  end
-
-  def getBancoGrupo2()
-    return "571262c3a980ba030058ab5c"
-  end
-
-  def getRecepcionId()
-    parsed_json = lista_de_almacenes() # Función definida en ApplicationController
-    almId = nil # Necesario declararlo fuera del loop
-    parsed_json.each do |almacen|
-      almId = almacen["_id"] if almacen["recepcion"] # TODO: y si tenemos más de una bodega de recepcion??
-    end
-    return almId
-  end
-
-  def getIdDespacho
-    #TODO: MEJORAR ESTE SISTEMA
-    return "571262aaa980ba030058a14f"
-  end
 
   #TODO: Corregir ids
   def getLinkGrupo(id) #Los IDS están malos, reemplazarlos por los correctos cuando los sepamos
@@ -236,6 +232,7 @@ class ApplicationController < ActionController::Base
               headers: {
                 'Content-Type' => 'application/json'
               })
+      puts "(Generar_Factura)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
       # FORMATO FACTURA: {"__v"=>0, "created_at"=>"2016-05-02T14:57:30.324Z", "updated_at"=>"2016-05-02T14:57:30.324Z", "cliente"=>"571262b8a980ba030058ab50", "proveedor"=>"571262b8a980ba030058ab50", "bruto"=>6033, "iva"=>1147, "total"=>7180, "oc"=>"57276aaec1ff9b0300017d1b", "_id"=>"57276adac1ff9b0300017d1c", "estado"=>"pendiente"}
       localOc = Oc.find_by idoc: idoc
@@ -293,7 +290,7 @@ class ApplicationController < ActionController::Base
   def transferir(cuentaOrigen, cuentoDestino, montoTransferencia)
 
     begin
-      puts "--------Haciendo Transacción--------------"
+      puts "--------Realizando Transacción--------------"
       url = getLinkServidorCurso + "banco/trx/"
       result = HTTParty.put(url,
               body: {
@@ -304,7 +301,9 @@ class ApplicationController < ActionController::Base
               headers: {
                 'Content-Type' => 'application/json'
               })
+      puts "(Transferir)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
+      puts "--------Transacción Realizada--------------"
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
@@ -366,6 +365,7 @@ class ApplicationController < ActionController::Base
               headers: {
                 'Content-Type' => 'application/json'
               })
+      puts "(Aceptar_OC)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
       if json.count() > 1
         render json: {"error": "Error2: se retornó más de una OC para el mismo id"}, status: 503 and return
@@ -398,6 +398,7 @@ class ApplicationController < ActionController::Base
               headers: {
                 'Content-Type' => 'application/json'
               })
+      puts "(Rechazar_OC)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
 
       if json.count() > 1
@@ -445,7 +446,7 @@ class ApplicationController < ActionController::Base
   def mover_producto_almacen(idProducto, almacenDestino)
 
     begin # Intentamos realizar conexión externa y obtener OC
-      puts "--------Moviendo producto de bodega--------------"
+      puts "--------Moviendo Producto de Bodega--------------"
       url = "http://integracion-2016-dev.herokuapp.com/bodega/"
       result = HTTParty.post(url+"moveStock",
               body: {
@@ -456,7 +457,9 @@ class ApplicationController < ActionController::Base
                 'Content-Type' => 'application/json',
                 'Authorization' => 'INTEGRACIONgrupo2:'+encode('POST'+idProducto+almacenDestino)
               })
+      puts "(Mover_Producto_Almacen)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
+      puts "--------Producto de Bodega Movido--------------"
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1010"
@@ -494,13 +497,16 @@ class ApplicationController < ActionController::Base
 
   def cuentaFabrica()
     require 'httparty'
+    puts "--------Obteniendo Cuenta Fabrica--------------"
     url = "http://integracion-2016-dev.herokuapp.com/bodega/fabrica/getCuenta"
     result = HTTParty.get(url,
             headers: {
                 'Content-Type' => 'application/json',
                 'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET')
               })
+    puts "(Cuenta_Fabrica)Respuesta de la contraparte: " + result.body.to_s
     json = JSON.parse(result.body)
+    puts "--------Cuenta Fabrica Obtenida--------------"
     return json[0] #TODO: Revisar si es json[0] o solo json
   end
 
@@ -564,7 +570,7 @@ class ApplicationController < ActionController::Base
 
   def mover_a_despacho(producto)
     require 'httparty'
-    idDespacho = getIdDespacho()
+    idDespacho = $despachoid
     idProducto = producto['_id']
 
     begin # Intentamos realizar conexión externa y obtener OC

@@ -2,11 +2,11 @@ class ScriptsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def test1 # Grupo 5: "571262b8a980ba030058ab53"
-    render json: generar_oc(getIdGrupo2, "571262b8a980ba030058ab53", 50, 1, Time.now.tomorrow.to_i.to_s+"000", "ola k ace")
+    render json: generar_oc($groupid, "571262b8a980ba030058ab53", 50, 1, Time.now.tomorrow.to_i.to_s+"000", "ola k ace")
   end
 
   def test2 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    render json: generar_oc("571262b8a980ba030058ab53",getIdGrupo2, 21, 1, Time.now.tomorrow.to_i.to_s+"000", "ola k ace")
+    render json: generar_oc("571262b8a980ba030058ab53", $groupid, 21, 1, Time.now.tomorrow.to_i.to_s+"000", "ola k ace")
   end
 
   def verstock
@@ -122,7 +122,6 @@ class ScriptsController < ApplicationController
           headers: {
             'Content-Type' => 'application/json'
           })
-
       puts "(Generar_OC)Respuesta de la contraparte: " + result.body.to_s
       oc = JSON.parse(result.body)
       if !oc["proveedor"] # Validamos que la oc sea válida, probando si tiene el key proveedor
@@ -200,6 +199,7 @@ class ScriptsController < ApplicationController
   def test
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
+      puts "Realizando test..."
       url = getLinkServidorCurso + "oc/"
       result = HTTParty.post(url+"recepcionar/"+"57275b33c1ff9b0300017cf1",
           body:    {

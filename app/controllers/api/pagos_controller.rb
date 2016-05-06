@@ -67,8 +67,15 @@ class Api::PagosController < ApplicationController
     #TODO: Implementar: Agregar paso 10 AVSISAR QUE DESPACHAMOS
   end
 
+  def despachar(idfactura, factura) #TODO: Revisar si este método va aquí
+    oc = Oc.find_by idfactura: idfactura
+    sku = oc['sku']
+    qty = oc['cantidad']
+    precio = Item.find(sku).Precio_Unitario
+    idoc = oc['idoc']
+    grupo = get_grupo_by_id(factura['cliente'])
+    almacenClienteId = get_almacen_id(grupo)
 
-<<<<<<< HEAD
     almacenes = lista_de_almacenes()
     itemsDespachados = 0
     almacenes.each do |almacen|
@@ -90,7 +97,7 @@ class Api::PagosController < ApplicationController
 
   def mover_a_despacho(producto)
     require 'httparty'
-    idDespacho = getIdDespacho()
+    idDespacho = $despachoid
     idProducto = producto['_id']
 
     begin # Intentamos realizar conexión externa y obtener OC
@@ -144,7 +151,5 @@ class Api::PagosController < ApplicationController
       render json: {"error": ex.message}, status: 503 and return
     end
   end
-=======
->>>>>>> sftp
 
 end

@@ -113,7 +113,7 @@ class Api::FacturasController < ApplicationController
     if factura == nil
       puts "--------Factura NO Existe---------"
       render json: {"error": "Factura Rechazada, no existe en el sistema del curso", "validado": false, "idfactura": idFactura}, status: 400 and return false # 400 = Bad Request, error del cliente
-    elsif factura['cliente'].to_s != getIdGrupo2()
+    elsif factura['cliente'].to_s != $groupid # Variable global con nuestro GroupId en AppCtrlr
       puts "--------Factura RECHAZADA---------! No soy el cliente de la factura"
       render json: {"error": "Factura Rechazada, la factura no existe o no soy el proveedor de la factura", "validado": false, "idfactura": idFactura}, status: 400 and return false # 400 = Bad Request, error del cliente
     elsif oc == nil
