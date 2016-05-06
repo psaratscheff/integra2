@@ -15,9 +15,9 @@ class Api::OcController < ApplicationController
       aceptar_oc(oc["_id"])
       # Seguimos con el tema de la factura en un Thread aparte, para
       # no demorar la entrega de la respuesta
-      #background do # Función background definida en ApplicationController
+      background do # Función background definida en ApplicationController
         proceder_con_factura(idoc)
-      #end
+      end
       render json: {"aceptado": true, "idoc": oc["_id"]}
     else
       puts "--------Stock Insuficiente--------------"

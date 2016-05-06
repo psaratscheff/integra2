@@ -8,9 +8,9 @@ class Api::FacturasController < ApplicationController
     if factura != false && validar_factura(idFactura, factura) # Comparando con nuestra base de datos
       # Seguimos con el tema de la factura en un Thread aparte, para
       # no demorar la entrega de la respuesta
-      #background do # Función background definida en ApplicationController
+      background do # Función background definida en ApplicationController
         continuar_con_pago(idFactura, factura)
-      #end
+      end
       render json: {"validado": true, "idfactura": idfactura}
     else
       # Ya se hizo el rendering en validar_factura (Es complejo, depende de cosas)
