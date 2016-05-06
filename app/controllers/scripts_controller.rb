@@ -85,16 +85,15 @@ class ScriptsController < ApplicationController
     puts "OC GENERADA: " + oc.to_s
 
     respuesta = enviar_oc(oc)
+    puts "WTF! : "+ respuesta['aceptado'].to_s
     if respuesta['aceptado']
       puts "------OC ACEPTADA: "+oc.to_s
-      localOc = Oc.find_by idoc: oc['_id']
       localOc.estado = "aceptada"
       localOc.save!
       render json: oc #TODO: Tengo demasiados renders de más :$
     else
       puts "------OC RECHAZADA: "+oc.to_s
       ocAnulada = anular_oc(oc)
-      localOc = Oc.find_by idoc: oc['_id']
       localOc.estado = "anulada por rechazo"
       localOc.save!
       render json: {anulada: true, oc: ocAnulada}.to_json #TODO: Tengo demasiados renders de más :$
@@ -147,7 +146,7 @@ class ScriptsController < ApplicationController
     idOc = oc['idoc'] if (idOc == nil) # En caso de que oc no haya sido transformada todavía
     if getLinkGrupo(idProveedor) == nil # El grupo no está en nuestro diccionario
       puts "--------------ERROR: ID de grupo inválido--------"
-      return {"aceptado": false}.to_json
+      return JSON.parse({"aceptado": false})
     end
     url = getLinkGrupo(idProveedor)+'api/oc/recibir/'+idOc.to_s
     puts "--------Enviando a: " + url + "-----"

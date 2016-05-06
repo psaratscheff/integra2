@@ -294,8 +294,7 @@ class ApplicationController < ActionController::Base
     oc["idoc"] = oc.delete("_id")
     created_at = oc.delete("created_at")
     fechaEntrega = oc.delete("fechaEntrega")
-    puts "Created_at: " + created_at
-    puts "fechaEntrega: " + fechaEntrega
+    #TODO: restar 3 horas para quedar en GMT-3 o informar diferencia en /ocs
     oc["fechaRecepcion"] = created_at.to_s
     oc["fechaEntrega"] = fechaEntrega.to_s
     return oc
