@@ -81,7 +81,7 @@ class ScriptsController < ApplicationController
   end
 
   def comprar(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    oc = generar_oc(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
+    oc, localOc = generar_oc(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
     puts "OC GENERADA: " + oc.to_s
 
     respuesta = enviar_oc(oc)
@@ -137,7 +137,7 @@ class ScriptsController < ApplicationController
     localOc = Oc.new(tOc)
     localOc.save!
 
-    return oc
+    return oc, localOc
   end
 
   def enviar_oc(oc)
