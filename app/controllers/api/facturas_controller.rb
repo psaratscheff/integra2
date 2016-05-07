@@ -5,7 +5,7 @@ class Api::FacturasController < ApplicationController
     puts "------------------------Solicitud de recibir FACTURA recibida----------------------------"
     idFactura = params[:idfactura]
     factura = obtener_factura(idFactura)
-    if factura != false && validar_factura(idFactura, factura) # Comparando con nuestra base de datos
+    if !!factura && validar_factura(idFactura, factura) # Comparando con nuestra base de datos
       # Seguimos con el tema de la factura en un Thread aparte, para
       # no demorar la entrega de la respuesta
       background do # Función background definida en ApplicationController
@@ -13,7 +13,7 @@ class Api::FacturasController < ApplicationController
       end
       render json: {"validado": true, "idfactura": idfactura}
     else
-      # Ya se hizo el rendering en validar_factura (Es complejo, depende de cosas)
+      # IMPORTANTE: Ya se hizo el rendering en validar_factura (Es complejo, depende de cosas)
       anular_idoc(factura['oc'])
     end
   end
