@@ -6,7 +6,19 @@ end
 
 desc "Procesar OC internacionales - sftp"
 task :procesar_oc_sftp do
-  url = "http://localhost:3000/tasks/procesar_sftp"
+  url = "http://integra2.ing.puc.cl/tasks/procesar_sftp"
+  HTTParty.get(url)
+end
+
+desc "Fabricar Materia Prima"
+task :fabricar_materia_prima do
+  url = "http://integra2.ing.puc.cl/tasks/producirMateriaPrima/2"
+  HTTParty.get(url)
+
+  url = "http://integra2.ing.puc.cl/tasks/producirMateriaPrima/21"
+  HTTParty.get(url)
+
+  url = "http://integra2.ing.puc.cl/tasks/producirMateriaPrima/32"
   HTTParty.get(url)
 end
 

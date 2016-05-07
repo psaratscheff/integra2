@@ -657,7 +657,7 @@ class ApplicationController < ActionController::Base
     puts "(Cuenta_Fabrica)Respuesta de la contraparte: " + result.body.to_s
     json = JSON.parse(result.body)
     puts "--------Cuenta Fabrica Obtenida--------------"
-    return json[0] #TODO: Revisar si es json[0] o solo json
+    return json['cuentaId'] #TODO: Revisar si es json[0] o solo json
   end
 
 

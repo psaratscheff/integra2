@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   get 'scripts/analizar_sftp'
 
   get 'tasks/procesar_sftp'
+  get 'tasks/producirMateriaPrima/:sku', to: 'tasks#producirMP'
 
   # utilizar el namespace, es lo mismo que agregar /api/ a la ruta:
   # => get 'api/documentacion', to: 'documentacion#index'

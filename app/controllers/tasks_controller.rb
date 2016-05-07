@@ -94,6 +94,11 @@ class TasksController < ApplicationController
 		end
 	end
 
+	def producirMP
+		sku = params[:sku]
+		producirMateriaPrima(sku)
+	end
+
 	def producirMateriaPrima(sku) #Solo puede entrar a la funcion si sku = 2,21,32
 		stock = consultar_stock(sku).to_i
 
@@ -115,7 +120,7 @@ class TasksController < ApplicationController
 
 		if stock <= minSku
 			cantidadProducir = maxSku-stock
-			cantidadLotes =  (cantidadProducir/tamañoLote) #La parte entera del numero
+			cantidadLotes =  (cantidadProducir/tamanoLote) #La parte entera del numero
 			costoPedido = cantidadLotes*costoLote
 			#Hacer la transacccion
 			cuentaOrigen = getIdBanco('2')
@@ -129,13 +134,13 @@ class TasksController < ApplicationController
 	      url = "http://integracion-2016-dev.herokuapp.com/bodega/fabrica/fabricar"
 	      result = HTTParty.put(url,
 	          body:    {
-	                      sku: sku,
+	                      sku: sku.to_s,
 	                      trxId: trxId, #TODO: Revisar sintexis
 	                      cantidad: cantidadLotes #TODO: Revisar si son lotes o unidades
 	                    }.to_json,
 	          headers: {
 	            'Content-Type' => 'application/json',
-	            'Authorization' => 'INTEGRACIONgrupo2:'+encode('PUT'+sku+cantidadLotes+trxId)
+	            'Authorization' => 'INTEGRACIONgrupo2:'+encode('PUT'+sku.to_s+cantidadLotes.to_s+trxId)
 	          })
 	      puts "(Produciendo_Stock_Prima_?)Respuesta de la contraparte: " + result.body.to_s
 	      detallesPedido = JSON.parse(result.body)
@@ -145,10 +150,10 @@ class TasksController < ApplicationController
 	      puts "error 1015"
 	      render json: {"error": ex.message}, status: 503 and return
 	    end
-
 	    #TODO: Checkear que los pedidos lleguen a nuestra bodega de despacho
 	    #TODO: Movelos a otras bodegas.
 		end
+		render json: {"Success": true}
 	end
 
 	def producirProductosElaborados(sku) #Solo puede entrar a la funcion si sku = 12 o 28
@@ -176,7 +181,7 @@ class TasksController < ApplicationController
 		if stock <= minSku
 
 			cantidadProducir = maxSku-stock
-			cantidadLotes =  (cantidadProducir/tamañoLote) #La parte entera del numero
+			cantidadLotes =  (cantidadProducir/tamanoLote) #La parte entera del numero
 			costoPedido = cantidadLotes*costoLote
 
 			#Reviso si tengo el stock de materias primas necesario
@@ -207,13 +212,13 @@ class TasksController < ApplicationController
 					url = "http://integracion-2016-dev.herokuapp.com/bodega/fabrica/fabricar"
 					result = HTTParty.put(url,
 																body:    {
-																						sku: sku,
+																						sku: sku.to_s,
 																						trxId: trxId, #TODO: Revisar sintexis
 																						cantidad: cantidadLotes #TODO: Revisar si son lotes o unidades
 																					}.to_json,
 																headers: {
 																	'Content-Type' => 'application/json',
-																	'Authorization' => 'INTEGRACIONgrupo2:'+encode('PUT'+sku+cantidadLotes+trxId)
+											            'Authorization' => 'INTEGRACIONgrupo2:'+encode('PUT'+sku.to_s+cantidadLotes.to_s+trxId)
 																})
 					detallesPedido = JSON.parse(result.body)
 				rescue => ex # En caso de excepción retornamos error
