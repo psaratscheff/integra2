@@ -76,17 +76,14 @@ class TasksController < ApplicationController
 							oc = obtener_oc(id)
 
 							oc = transform_oc(oc)
-							puts "------------------------> oc transformada "
-							puts oc.to_s
+							puts "------------------------> oc transformada: " + oc.to_s
 							oc.delete("rechazo")
 
 							localOc = Oc.new(oc)
-
 							localOc.save!
 							count = count + 1
 							puts "Ordenes procesadas:" + count.to_s
-							puts "------------------------> Voy a rechazar la OC porque no tengo stock o no soy proveedor"
-							puts id.to_s
+							puts "------------------------> Voy a rechazar la OC porque no tengo stock o no soy proveedor: " + id.to_s
 							rechazar_oc(id)
 							# puts "------------------------> He rechazado la OC"
 						end
