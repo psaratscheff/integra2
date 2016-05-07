@@ -7,17 +7,38 @@ class ScriptsController < ApplicationController
   def test2f # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
     comprar($groupid, $groupid, 1, 3, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
-
+  def test1 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
+    render nothing: true #comprar($groupid, hash.key('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+  end
+  def test3 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
+    render nothing: true #comprar($groupid, hash.key('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+  end
+  def test4 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
+    render nothing: true #comprar($groupid, hash.key('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+  end
   def test5 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
     comprar($groupid, hash.key('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
-
+  def test6 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
+    render nothing: true #comprar($groupid, hash.key('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+  end
+  def test7 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
+    render nothing: true #comprar($groupid, hash.key('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+  end
   def test8 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
     comprar($groupid, hash.key('8'), 18, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
-
   def test9 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
     comprar($groupid, hash.key('9'), 20, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+  end
+  def test10 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
+    render nothing: true #comprar($groupid, hash.key('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+  end
+  def test11 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
+    render nothing: true #comprar($groupid, hash.key('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+  end
+  def test12 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
+    render nothing: true #comprar($groupid, hash.key('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
 
   def verstock
