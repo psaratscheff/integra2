@@ -134,8 +134,26 @@ class ScriptsController < ApplicationController
     end
   end
 
-  private
+  def analizar_sftp
+    require 'net/sftp' # Utilizar requires dentro de la función que lo utiliza
+    Net::SFTP.start(getLinkServidorCurso, 'integra2', :password => 'fUgW9wJG') do |sftp|
+      # download a file or directory from the remote host
+      #sftp.download!("/pedidos", "public/pedidos", :recursive => true)
+      # list the entries in a directory
+      sftp.dir.foreach("/pedidos") do |entry|
+        if entry.name[0]!="."
+          data = sftp.download!("/pedidos/"+entry.name)
+          id = three_letters = data[/<id>(.*?)<\/id>/m, 1]
+          sku = three_letters = data[/<sku>(.*?)<\/sku>/m, 1]
+          qty = three_letters = data[/<qty>(.*?)<\/qty>/m, 1]
+          puts "ID: "+id+" // sku: "+ sku + " // qty: "+qty
+        end
+      end
+    end
+    render json: {"Proceso terminado exitosamente?": true}
+  end
 
+  private
 
   def generar_oc(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
     require 'httparty'
@@ -192,54 +210,5 @@ class ScriptsController < ApplicationController
     puts "(Enviar_OC)Respuesta de la contraparte: " + json.to_s
     puts "--------OC Enviada, Respuesta Recibida--------------"
     return json, true
-  end
-
-  #TODO: Borrar?? O sirve para algo??
-  def analizar_sftp
-    require 'net/sftp' # Utilizar requires dentro de la función que lo utiliza
-    Net::SFTP.start(getLinkServidorCurso, 'integra2', :password => 'fUgW9wJG') do |sftp|
-      # download a file or directory from the remote host
-      #sftp.download!("/pedidos", "public/pedidos", :recursive => true)
-      # list the entries in a directory
-      sftp.dir.foreach("/pedidos") do |entry|
-        if entry.name[0]!="."
-          data = sftp.download!("/pedidos/"+entry.name)
-          id = three_letters = data[/<id>(.*?)<\/id>/m, 1]
-          sku = three_letters = data[/<sku>(.*?)<\/sku>/m, 1]
-          qty = three_letters = data[/<qty>(.*?)<\/qty>/m, 1]
-          puts "ID: "+id+" // sku: "+ sku + " // qty: "+qty
-        end
-      end
-    end
-    render json: {"Proceso terminado exitosamente?": true}
-  end
-
-  #TODO: Borrar?? O sirve para algo??
-  def test
-    require 'httparty'
-    begin # Intentamos realizar conexión externa y obtener OC
-      puts "Realizando test..."
-      url = getLinkServidorCurso + "oc/"
-      result = HTTParty.post(url+"recepcionar/"+"57275b33c1ff9b0300017cf1",
-          body:    {
-                      id: "57275b33c1ff9b0300017cf1"
-                    }.to_json,
-              headers: {
-                'Content-Type' => 'application/json'
-              })
-      json = JSON.parse(result.body)
-      puts json.to_s
-      if json.count() > 1
-        raise "Error2: se retornó más de una OC para el mismo id" and return
-      end
-      localOc = Oc.find_by id: "57275b33c1ff9b0300017cf1"
-      localOc.estado = "aceptada"
-      localOc.save!
-      return json[0]
-    rescue => ex # En caso de excepción retornamos error
-      logger.error ex.message
-      puts "error 1016"
-      render json: {"error": ex.message}, status: 503 and return
-    end
   end
 end
