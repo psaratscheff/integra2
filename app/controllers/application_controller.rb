@@ -381,6 +381,44 @@ class ApplicationController < ActionController::Base
     return json[0]
   end
 
+  def anular_idoc(idoc)
+    puts "--------Anulando idOC--------------"+idoc.to_s
+    localOc = Oc.find_by idoc: idoc
+    localOc["estado"] = "anulada por rechazo."
+    localOc.save!
+    url = getLinkServidorCurso + "oc/"
+    result = HTTParty.delete(url + 'anular/' + idoc.to_s,
+            body: {
+              anulacion: "OC Rechazada por contraparte"
+            }.to_json,
+            headers: {
+              'Content-Type' => 'application/json'
+            })
+    json = JSON.parse(result.body)
+    puts "(Anular_idOC)Respuesta de la contraparte: " + json.to_s
+    puts "--------idOC Anulada--------------"
+    return json
+  end
+  def anular_oc(oc)
+    puts "--------Anulando OC--------------"+oc.to_s
+    idOc = oc['_id']
+    idOc = oc['idoc'] if (idOc == nil) # En caso de que oc no haya sido transformada todavía
+    localOc = Oc.find_by idoc: idOc
+    localOc["estado"] = "anulada por rechazo.."
+    localOc.save!
+    url = getLinkServidorCurso + "oc/"
+    result = HTTParty.delete(url + 'anular/' + idOc.to_s,
+            body: {
+              anulacion: "OC Rechazada por contraparte"
+            }.to_json,
+            headers: {
+              'Content-Type' => 'application/json'
+            })
+    json = JSON.parse(result.body)
+    puts "(Anular_OC)Respuesta de la contraparte: " + json.to_s
+    puts "--------OC Anulada--------------"
+    return json
+  end
   #-----------------------------------------------------------------------------
   # ------------------------------Transacción-----------------------------------
   # ----------------------------------------------------------------------------

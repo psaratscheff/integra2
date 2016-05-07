@@ -11,10 +11,9 @@ class Api::FacturasController < ApplicationController
       background do # Función background definida en ApplicationController
         continuar_con_pago(idFactura, factura)
       end
-      render json: {"validado": true, "idfactura": idfactura}
+      render json: {"validado": true, "idfactura": idFactura}
     else
       # IMPORTANTE: Ya se hizo el rendering en validar_factura (Es complejo, depende de cosas)
-      anular_idoc(factura['oc'])
     end
   end
 
