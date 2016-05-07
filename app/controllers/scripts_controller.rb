@@ -17,7 +17,7 @@ class ScriptsController < ApplicationController
     render nothing: true #comprar($groupid, hash.key('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test5 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    comprar($groupid, hash.key('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, get_id_by_group('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test6 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
     render nothing: true #comprar($groupid, hash.key('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
@@ -26,10 +26,10 @@ class ScriptsController < ApplicationController
     render nothing: true #comprar($groupid, hash.key('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test8 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    comprar($groupid, hash.key('8'), 18, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, get_id_by_group('8'), 18, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test9 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    comprar($groupid, hash.key('9'), 20, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, get_id_by_group('9'), 20, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test10 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
     render nothing: true #comprar($groupid, hash.key('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")

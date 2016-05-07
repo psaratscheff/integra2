@@ -116,6 +116,39 @@ class ApplicationController < ActionController::Base
     return dic[id]
   end
 
+  def get_id_by_group(group)
+    if false #Rails.env.production?
+              # ID del grupo => Número del Grupo
+      dic = {'572aac69bdb6d403005fb042'=>'1',
+            '572aac69bdb6d403005fb043'=>'2',
+            '572aac69bdb6d403005fb044'=>'3',
+            '572aac69bdb6d403005fb045'=>'4',
+            '572aac69bdb6d403005fb046'=>'5',
+            '572aac69bdb6d403005fb047'=>'6',
+            '572aac69bdb6d403005fb048'=>'7',
+            '572aac69bdb6d403005fb049'=>'8',
+            '572aac69bdb6d403005fb04a'=>'9',
+            '572aac69bdb6d403005fb04b'=>'10',
+            '572aac69bdb6d403005fb04c'=>'11',
+            '572aac69bdb6d403005fb04d'=>'12'}
+    else
+              # ID del grupo => Número del Grupo
+      dic = {'571262b8a980ba030058ab4f'=>'1',
+            '571262b8a980ba030058ab50'=>'2',
+            '571262b8a980ba030058ab51'=>'3',
+            '571262b8a980ba030058ab52'=>'4',
+            '571262b8a980ba030058ab53'=>'5',
+            '571262b8a980ba030058ab54'=>'6',
+            '571262b8a980ba030058ab55'=>'7',
+            '571262b8a980ba030058ab56'=>'8',
+            '571262b8a980ba030058ab57'=>'9',
+            '571262b8a980ba030058ab58'=>'10',
+            '571262b8a980ba030058ab59'=>'11',
+            '571262b8a980ba030058ab5a'=>'12'}
+    end
+    return dic.key(group)
+  end
+
   #TODO: Corregir ids y concatenación
   def getLinkGrupoSegunCuenta(idCuenta)
     if false #Rails.env.production?
