@@ -1,6 +1,10 @@
 class ScriptsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
+  def log
+    render file: "/home/administrator/integra2/shared/log/puma.stdout.log"
+  end
+
   def test2t # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
     comprar($groupid, $groupid, 2, 3, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
@@ -8,37 +12,37 @@ class ScriptsController < ApplicationController
     comprar($groupid, $groupid, 1, 3, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test1 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    render nothing: true #comprar($groupid, hash.key('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, get_id_by_group('1'), 1, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test3 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    render nothing: true #comprar($groupid, hash.key('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, get_id_by_group('3'), 1, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test4 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    render nothing: true #comprar($groupid, hash.key('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, get_id_by_group('4'), 1, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test5 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
     comprar($groupid, get_id_by_group('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test6 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    render nothing: true #comprar($groupid, hash.key('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, get_id_by_group('6'), 1, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test7 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    render nothing: true #comprar($groupid, hash.key('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, get_id_by_group('7'), 1, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test8 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
     comprar($groupid, get_id_by_group('8'), 18, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test9 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    comprar($groupid, get_id_by_group('9'), 20, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, get_id_by_group('9'), 1, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test10 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    render nothing: true #comprar($groupid, hash.key('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, get_id_by_group('10'), 1, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test11 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    render nothing: true #comprar($groupid, hash.key('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, get_id_by_group('11'), 1, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test12 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    render nothing: true #comprar($groupid, hash.key('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, get_id_by_group('12'), 1, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
 
   def verstock
