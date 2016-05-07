@@ -1,7 +1,7 @@
 class TasksController < ApplicationController
 	# Cuando el metodo este listo hay que agregarle que procese solo las oc que no han sido procesadas ya
 	def procesar_sftp
-		puts "------------INICIANDO PROCESO EN BACKGROUND----------------"
+		puts "------------INICIANDO PROCESO SFTP EN BACKGROUND----------------"
 		background do # Función background definida en ApplicationController
 			Net::SFTP.start('mare.ing.puc.cl', 'integra2', :password => 'fUgW9wJG') do |sftp|
 				count = 0
@@ -9,7 +9,7 @@ class TasksController < ApplicationController
 				#sftp.download!("/pedidos", "public/pedidos", :recursive => true)
 				# list the entries in a directory
 				sftp.dir.foreach("/pedidos") do |entry|
-					if entry.name[0]!="."
+					if entry.name[0]!="." && (((Time.now.to_i - 3600).to_s + "000").to_i - 3600000 < entry.name.split('.')[0].to_i)
 						data = sftp.download!("/pedidos/"+entry.name)
 						id = three_letters = data[/<id>(.*?)<\/id>/m, 1]
 						sku = three_letters = data[/<sku>(.*?)<\/sku>/m, 1]
@@ -131,7 +131,7 @@ class TasksController < ApplicationController
 			require 'httparty'
 	    begin # Intentamos realizar conexión externa y obtener OC
 	      puts "--------Produciendo Stock (Materia Prima)--------------"
-	      url = "http://integracion-2016-dev.herokuapp.com/bodega/fabrica/fabricar"
+	      url = "http://integracion-2016-prod.herokuapp.com/bodega/fabrica/fabricar"
 	      result = HTTParty.put(url,
 	          body:    {
 	                      sku: sku.to_s,
@@ -209,7 +209,7 @@ class TasksController < ApplicationController
 				require 'httparty'
 				begin # Intentamos realizar conexión externa y obtener OC
 					puts "--------Produciendo Stock --------------"
-					url = "http://integracion-2016-dev.herokuapp.com/bodega/fabrica/fabricar"
+					url = "http://integracion-2016-prod.herokuapp.com/bodega/fabrica/fabricar"
 					result = HTTParty.put(url,
 																body:    {
 																						sku: sku.to_s,

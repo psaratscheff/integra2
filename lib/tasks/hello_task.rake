@@ -7,6 +7,7 @@ end
 desc "Procesar OC internacionales - sftp"
 task :procesar_oc_sftp do
   url = "http://integra2.ing.puc.cl/tasks/procesar_sftp"
+  #url = "http://localhost:3000/tasks/procesar_sftp"
   HTTParty.get(url)
 end
 
@@ -25,7 +26,7 @@ end
 #
 # desc "Procesar OC internacionales"
 # task :procesar_sftp do
-#   url = "http://integracion-2016-dev.herokuapp.com/bodega/"
+#   url = "http://integracion-2016-prod.herokuapp.com/bodega/"
 #   result = HTTParty.get(url+"almacenes",
 #           headers: {
 #             'Content-Type' => 'application/json',
@@ -46,7 +47,7 @@ end
 #         stock = 0
 #
 #         lista_de_almacenes.each do |almacen|
-#           url = "http://integracion-2016-dev.herokuapp.com/bodega/"
+#           url = "http://integracion-2016-prod.herokuapp.com/bodega/"
 #           result = HTTParty.get(url+"stock"+"?almacenId="+almacen["_id"]+"&"+"sku="+sku.to_s,
 #                   headers: {
 #                     'Content-Type' => 'application/json',
