@@ -22,6 +22,6 @@ every 2.hours do
   rake 'procesar_oc_sftp'
 end
 
-every 1.hours do
+every 5.hours do
   rake 'fabricar_materia_prima'
 end

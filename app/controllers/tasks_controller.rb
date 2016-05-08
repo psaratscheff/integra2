@@ -135,6 +135,7 @@ class TasksController < ApplicationController
 			trx = transferir(cuentaOrigen,cuentaDestino,costoPedido)   #Definida en Application Controller
 			trxId = trx['_id']
 			#Producir el stock
+			cantidadSolicitar = cantidadLotes*tamanoLote
 			require 'httparty'
 	    begin # Intentamos realizar conexión externa y obtener OC
 	      puts "--------Produciendo Stock (Materia Prima)--------------"
@@ -143,11 +144,11 @@ class TasksController < ApplicationController
 	          body:    {
 	                      sku: sku.to_s,
 	                      trxId: trxId, #TODO: Revisar sintexis
-	                      cantidad: cantidadLotes #TODO: Revisar si son lotes o unidades
+	                      cantidad: cantidadSolicitar #TODO: Revisar si son lotes o unidades
 	                    }.to_json,
 	          headers: {
 	            'Content-Type' => 'application/json',
-	            'Authorization' => 'INTEGRACIONgrupo2:'+encode('PUT'+sku.to_s+cantidadLotes.to_s+trxId)
+	            'Authorization' => 'INTEGRACIONgrupo2:'+encode('PUT'+sku.to_s+cantidadSolicitar.to_s+trxId)
 	          })
 	      puts "(Produciendo_Stock_Prima_?)Respuesta de la contraparte: " + result.body.to_s
 	      detallesPedido = JSON.parse(result.body)
