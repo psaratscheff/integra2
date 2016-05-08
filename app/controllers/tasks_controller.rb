@@ -139,8 +139,8 @@ class TasksController < ApplicationController
 			require 'httparty'
 	    begin # Intentamos realizar conexión externa y obtener OC
 	      puts "--------Produciendo Stock (Materia Prima)--------------"
-	      url = "http://integracion-2016-prod.herokuapp.com/bodega/fabrica/fabricar"
-	      result = HTTParty.put(url,
+				url = $urlBodega + 'fabrica/fabricar'
+				result = HTTParty.put(url,
 	          body:    {
 	                      sku: sku.to_s,
 	                      trxId: trxId, #TODO: Revisar sintexis
@@ -217,7 +217,8 @@ class TasksController < ApplicationController
 				require 'httparty'
 				begin # Intentamos realizar conexión externa y obtener OC
 					puts "--------Produciendo Stock --------------"
-					url = "http://integracion-2016-prod.herokuapp.com/bodega/fabrica/fabricar"
+					url = $urlBodega + 'fabrica/fabricar'
+
 					result = HTTParty.put(url,
 																body:    {
 																						sku: sku.to_s,
