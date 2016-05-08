@@ -3,7 +3,14 @@ class TasksController < ApplicationController
 	def procesar_sftp
 		puts "------------INICIANDO PROCESO SFTP EN BACKGROUND----------------"
 		background do # Función background definida en ApplicationController
-			Net::SFTP.start('mare.ing.puc.cl', 'integra2', :password => 'fUgW9wJG') do |sftp|
+			if $ambiente
+					urlServidor = 'moto.ing.puc.cl'
+					pass = '7ezT4Mz6'
+			else
+					urlServidor = 'mare.ing.puc.cl'
+					pass = 'fUgW9wJG'
+			end
+			Net::SFTP.start(urlServidor, 'integra2', :password => pass) do |sftp|
 				count = 0
 				# download a file or directory from the remote host
 				#sftp.download!("/pedidos", "public/pedidos", :recursive => true)

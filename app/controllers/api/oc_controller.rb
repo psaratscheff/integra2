@@ -6,6 +6,8 @@ class Api::OcController < ApplicationController
     puts "------------------------Solicitud de recibir OC recibida----------------------------"
     idoc = params[:idoc]
     oc = obtener_oc(idoc) # Función definida en ApplicationController
+    puts oc.to_s
+    puts "Pasare esto"
     unless oc["cantidad"]
       puts "---------LA OC SOLICITADA NO EXISTE!-------"
       render json: {"error": "La OC solicitada no existe", "aceptado": false, "idoc": idoc, msgCurso: oc}, status: 400 and return

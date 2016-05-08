@@ -4,8 +4,16 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include HmacHelper # Para utilizar la función de hashing
 
+  $ambiente = true
+
+  if $ambiente
+    urlBodega = "http://integracion-2016-dev.herokuapp.com/bodega/"
+  else
+    urlBodega = "http://integracion-2016-prod.herokuapp.com/bodega/"
+  end
+
   # Las variables globales se asignan según el ambiente en el que se esté desarrollando
-  if Rails.env.production?
+  if $ambiente
     $groupid = "572aac69bdb6d403005fb043"
     $bancoid = "572aac69bdb6d403005fb04f"
     $recepcionid = "572aad41bdb6d403005fb0ba"
@@ -57,8 +65,8 @@ class ApplicationController < ActionController::Base
   # --------------------------------------------------------------------------
 
   def getLinkServidorCurso()
-    if Rails.env.production?
-      return "http://moto.ing.puc.cl"
+    if $ambiente
+      return "http://moto.ing.puc.cl/"
     else
       return "http://mare.ing.puc.cl/"
     end
@@ -84,7 +92,7 @@ class ApplicationController < ActionController::Base
   end
 
   def get_grupo_by_id(id)
-    if Rails.env.production?
+    if $ambiente
               # ID del grupo => Número del Grupo
       dic = {'572aac69bdb6d403005fb042'=>'1',
             '572aac69bdb6d403005fb043'=>'2',
@@ -117,7 +125,7 @@ class ApplicationController < ActionController::Base
   end
 
   def get_id_by_group(group)
-    if Rails.env.production?
+    if $ambiente
               # ID del grupo => Número del Grupo
       dic = {'572aac69bdb6d403005fb042'=>'1',
             '572aac69bdb6d403005fb043'=>'2',
@@ -151,7 +159,7 @@ class ApplicationController < ActionController::Base
 
   #TODO: Corregir ids y concatenación
   def getLinkGrupoSegunCuenta(idCuenta)
-    if Rails.env.production?
+    if $ambiente
             # Cuenta del Grupo => Número del Grupo
       dic = {'572aac69bdb6d403005fb04e'=>'1',
             '572aac69bdb6d403005fb04f'=>'2',
@@ -186,7 +194,7 @@ class ApplicationController < ActionController::Base
 
   #TODO: Corregir ids
   def getIdBanco(grupo)
-    if Rails.env.production?
+    if $ambiente
             # Número del Grupo => Cuenta del Grupo
       dic = {'1'=>'572aac69bdb6d403005fb04e',
             '2'=>'572aac69bdb6d403005fb04f',
@@ -220,7 +228,7 @@ class ApplicationController < ActionController::Base
 
    #TODO: Corregir ids
    def get_almacen_id(grupo)
-     if Rails.env.production?
+     if $ambiente
              # Número del Grupo => Almacen De Recepcion del Grupo
        dic = {'1'=>'572aad41bdb6d403005fb066',
               '2'=>'572aad41bdb6d403005fb0ba',
@@ -254,7 +262,7 @@ class ApplicationController < ActionController::Base
 
   #TODO: Corregir ids
   def getIdBancoSegunIdGrupo(id)
-    if Rails.env.production?
+    if $ambiente
                       # ID del Grupo => Cuenta del Grupo
       dic = {'572aac69bdb6d403005fb042'=>'572aac69bdb6d403005fb04e',
             '572aac69bdb6d403005fb043'=>'572aac69bdb6d403005fb04f',
@@ -490,8 +498,7 @@ class ApplicationController < ActionController::Base
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
     puts "--------Obteniendo Stock de Almacen--------------"
-      url = "http://integracion-2016-prod.herokuapp.com/bodega/"
-      result = HTTParty.get(url+"stock"+"?almacenId="+almacenId+"&"+"sku="+sku.to_s,
+      result = HTTParty.get($urlBodega+"stock"+"?almacenId="+almacenId+"&"+"sku="+sku.to_s,
               headers: {
                 'Content-Type' => 'application/json',
                 'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenId+sku.to_s)
@@ -576,8 +583,8 @@ class ApplicationController < ActionController::Base
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Obteniendo Lista de Almacenes--------------"
-      url = "http://integracion-2016-prod.herokuapp.com/bodega/"
-      result = HTTParty.get(url+"almacenes",
+
+      result = HTTParty.get($urlBodega +"almacenes",
               headers: {
                 'Content-Type' => 'application/json',
                 'Authorization' => 'INTEGRACIONgrupo2:z7gr473SiTMjSW8v+J6lqUwqIGo='
@@ -597,8 +604,7 @@ class ApplicationController < ActionController::Base
 
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Moviendo Producto de Bodega--------------"
-      url = "http://integracion-2016-prod.herokuapp.com/bodega/"
-      result = HTTParty.post(url+"moveStock",
+      result = HTTParty.post($urlBodega+"moveStock",
               body: {
                 productoId: idProducto,
                 almacenId: almacenDestino,

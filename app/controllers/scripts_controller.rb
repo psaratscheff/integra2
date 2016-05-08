@@ -136,6 +136,7 @@ class ScriptsController < ApplicationController
 
   def analizar_sftp
     require 'net/sftp' # Utilizar requires dentro de la función que lo utiliza
+    # Password en desarrollo: fUgW9wJG/ Password en producción: 7ezT4Mz6
     Net::SFTP.start(getLinkServidorCurso, 'integra2', :password => 'fUgW9wJG') do |sftp|
       # download a file or directory from the remote host
       #sftp.download!("/pedidos", "public/pedidos", :recursive => true)
