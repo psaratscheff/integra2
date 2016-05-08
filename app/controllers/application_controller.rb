@@ -7,9 +7,9 @@ class ApplicationController < ActionController::Base
   $ambiente = true
 
   if $ambiente
-    $urlBodega = "http://integracion-2016-dev.herokuapp.com/bodega/"
-  else
     $urlBodega = "http://integracion-2016-prod.herokuapp.com/bodega/"
+  else
+    $urlBodega = "http://integracion-2016-dev.herokuapp.com/bodega/"
   end
 
   # Las variables globales se asignan según el ambiente en el que se esté desarrollando
@@ -587,7 +587,6 @@ class ApplicationController < ActionController::Base
       result = HTTParty.get($urlBodega +"almacenes",
               headers: {
                 'Content-Type' => 'application/json',
-                # 'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET')
                 'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET')
               })
       puts "(Lista_de_Almacenes)Respuesta de la contraparte: " + result.body.to_s
