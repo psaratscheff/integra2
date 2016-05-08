@@ -99,8 +99,9 @@ class Api::OcController < ApplicationController
       puts "(Generar_Factura)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
       # FORMATO FACTURA: {"__v"=>0, "created_at"=>"2016-05-02T14:57:30.324Z", "updated_at"=>"2016-05-02T14:57:30.324Z", "cliente"=>"571262b8a980ba030058ab50", "proveedor"=>"571262b8a980ba030058ab50", "bruto"=>6033, "iva"=>1147, "total"=>7180, "oc"=>"57276aaec1ff9b0300017d1b", "_id"=>"57276adac1ff9b0300017d1c", "estado"=>"pendiente"}
+      puts "Actualizando factura de id: "+idoc+" // idfactura: "+json["_id"]
       localOc = Oc.find_by idoc: idoc
-      localOc.idfactura = json["_id"]
+      localOc['idfactura'] = json["_id"]
       localOc.save!
       puts "--------Factura Generada--------------"
       return json
