@@ -7,7 +7,7 @@ end
 desc "Procesar OC internacionales - sftp"
 task :procesar_oc_sftp do
   url = "http://integra2.ing.puc.cl/tasks/procesar_sftp"
-  #url = "http://localhost:3000/tasks/procesar_sftp"
+  # url = "http://localhost:3000/tasks/procesar_sftp"
   HTTParty.get(url)
 end
 

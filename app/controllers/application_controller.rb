@@ -7,9 +7,9 @@ class ApplicationController < ActionController::Base
   $ambiente = true
 
   if $ambiente
-    urlBodega = "http://integracion-2016-dev.herokuapp.com/bodega/"
+    $urlBodega = "http://integracion-2016-dev.herokuapp.com/bodega/"
   else
-    urlBodega = "http://integracion-2016-prod.herokuapp.com/bodega/"
+    $urlBodega = "http://integracion-2016-prod.herokuapp.com/bodega/"
   end
 
   # Las variables globales se asignan según el ambiente en el que se esté desarrollando
@@ -349,7 +349,7 @@ class ApplicationController < ActionController::Base
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Generando Factura--------------"
-      url = "http://mare.ing.puc.cl/facturas/"
+      url = getLinkServidorCurso + "facturas/"
       result = HTTParty.put(url,
               body: {
                 oc: idoc
@@ -496,12 +496,13 @@ class ApplicationController < ActionController::Base
 
   def stock_de_almacen(almacenId, sku)
     require 'httparty'
+    puts "Almacen id= " + almacenId.to_s
     begin # Intentamos realizar conexión externa y obtener OC
     puts "--------Obteniendo Stock de Almacen--------------"
       result = HTTParty.get($urlBodega+"stock"+"?almacenId="+almacenId+"&"+"sku="+sku.to_s,
               headers: {
                 'Content-Type' => 'application/json',
-                'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenId+sku.to_s)
+                'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenId.to_s+sku.to_s)
               })
       puts "(Stock_de_Almacen)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
@@ -519,7 +520,7 @@ class ApplicationController < ActionController::Base
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Aceptando OC--------------"
-      url = "http://mare.ing.puc.cl/oc/"
+      url = getLinkServidorCurso + "oc/"
       result = HTTParty.post(url+"recepcionar/"+idoc.to_s,
               body:    {
                       id: idoc
@@ -552,7 +553,7 @@ class ApplicationController < ActionController::Base
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Rechazando OC--------------"
       puts idoc.to_s
-      url = "http://mare.ing.puc.cl/oc/"
+      url = getLinkServidorCurso + "oc/"
       result = HTTParty.post(url+"rechazar/"+idoc.to_s,
               body: {
                 rechazo: 'No tenemos stock para el sku solicitado'
@@ -583,10 +584,10 @@ class ApplicationController < ActionController::Base
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Obteniendo Lista de Almacenes--------------"
-
       result = HTTParty.get($urlBodega +"almacenes",
               headers: {
                 'Content-Type' => 'application/json',
+                # 'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET')
                 'Authorization' => 'INTEGRACIONgrupo2:z7gr473SiTMjSW8v+J6lqUwqIGo='
               })
       puts "(Lista_de_Almacenes)Respuesta de la contraparte: " + result.body.to_s
@@ -611,7 +612,7 @@ class ApplicationController < ActionController::Base
               }.to_json,
               headers: {
                 'Content-Type' => 'application/json',
-                'Authorization' => 'INTEGRACIONgrupo2:'+encode('POST'+idProducto+almacenDestino)
+                'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET')
               })
       puts "(Mover_Producto_Almacen)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
@@ -628,8 +629,7 @@ class ApplicationController < ActionController::Base
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Obteniendo Productos por SKU del Almacen--------------"
-      url = "http://integracion-2016-prod.herokuapp.com/bodega/"
-      result = HTTParty.get(url+"stock"+"?"+"almacenId="+almacenid+"&"+'sku='+sku.to_s,
+      result = HTTParty.get($urlBodega+"stock"+"?"+"almacenId="+almacenid+"&"+'sku='+sku.to_s,
               headers: {
                 'Content-Type' => 'application/json',
                 'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenid+sku.to_s)
@@ -654,7 +654,8 @@ class ApplicationController < ActionController::Base
   def cuentaFabrica()
     require 'httparty'
     puts "--------Obteniendo Cuenta Fabrica--------------"
-    url = "http://integracion-2016-prod.herokuapp.com/bodega/fabrica/getCuenta"
+    url = $urlBodega + "fabrica/getCuenta"
+
     result = HTTParty.get(url,
             headers: {
                 'Content-Type' => 'application/json',
@@ -731,8 +732,7 @@ class ApplicationController < ActionController::Base
 
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Moviendo Producto a Despacho--------------"
-      url = "http://integracion-2016-prod.herokuapp.com/bodega/"
-      result = HTTParty.post(url+"moveStock",
+      result = HTTParty.post($urlBodega+"moveStock",
               body: {
                 productoId: idProducto,
                 almacenId: idDespacho
@@ -758,8 +758,7 @@ class ApplicationController < ActionController::Base
 
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Despachando Producto a Cliente B2B--------------"
-      url = "http://integracion-2016-prod.herokuapp.com/bodega/"
-      result = HTTParty.post(url+"moveStockBodega",
+      result = HTTParty.post($urlBodega+"moveStockBodega",
               body: {
                 productoId: idProducto,
                 almacenId: almacenClienteId,
@@ -785,8 +784,7 @@ class ApplicationController < ActionController::Base
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Obteniendo Productos por SKU del Almacen--------------"
-      url = "http://integracion-2016-prod.herokuapp.com/bodega/"
-      result = HTTParty.get(url+"stock"+"?"+"almacenId="+almacenid+"&"+'sku='+sku.to_s,
+      result = HTTParty.get($urlBodega+"stock"+"?"+"almacenId="+almacenid+"&"+'sku='+sku.to_s,
               headers: {
                 'Content-Type' => 'application/json',
                 'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenid+sku.to_s)
