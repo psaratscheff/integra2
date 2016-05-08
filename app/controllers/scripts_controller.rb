@@ -2,7 +2,7 @@ class ScriptsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def log
-    render file: "/home/administrator/integra2/shared/log/puma.stdout.log"
+    render text: File.read('/home/administrator/integra2/shared/log/puma.stdout.log')
   end
 
   def test2t # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
