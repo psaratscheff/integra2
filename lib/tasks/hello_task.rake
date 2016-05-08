@@ -8,23 +8,38 @@ end
 
 desc "Procesar OC internacionales - sftp"
 task :procesar_oc_sftp do
-  url = "http://integra2.ing.puc.cl/tasks/procesar_sftp"
-  # url = "http://localhost:3000/tasks/procesar_sftp"
+  if $ambiente
+    url = "http://integra2.ing.puc.cl/tasks/procesar_sftp"
+  else
+    url = "http://localhost:3000/tasks/procesar_sftp"
+  end
   HTTParty.get(url)
 end
 
 desc "Fabricar Materia Prima"
 task :fabricar_materia_prima do
-  url = "http://integra2.ing.puc.cl/tasks/producirMateriaPrima/2"
-  # url = "http://localhost:3000/tasks/producirMateriaPrima/2"
+  puts "---------------GET Funcion PRODUCIR SKU 2-------------------"
+  if $ambiente
+    url = "http://integra2.ing.puc.cl/tasks/producirMateriaPrima/2"
+  else
+    url = "http://localhost:3000/tasks/producirMateriaPrima/2"
+  end
   HTTParty.get(url)
 
-  url = "http://integra2.ing.puc.cl/tasks/producirMateriaPrima/21"
-  # url = "http://localhost:3000/tasks/producirMateriaPrima/21"
+  puts "---------------GET Funcion PRODUCIR SKU 21-------------------"
+  if $ambiente
+    url = "http://integra2.ing.puc.cl/tasks/producirMateriaPrima/21"
+  else
+    url = "http://localhost:3000/tasks/producirMateriaPrima/21"
+  end
   HTTParty.get(url)
 
-  url = "http://integra2.ing.puc.cl/tasks/producirMateriaPrima/32"
-  # url = "http://localhost:3000/tasks/producirMateriaPrima/32"
+  puts "---------------GET Funcion PRODUCIR SKU 32-------------------"
+  if $ambiente
+    url = "http://integra2.ing.puc.cl/tasks/producirMateriaPrima/32"
+  else
+    url = "http://localhost:3000/tasks/producirMateriaPrima/32"
+  end
   HTTParty.get(url)
 end
 
