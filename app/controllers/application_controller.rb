@@ -588,7 +588,7 @@ class ApplicationController < ActionController::Base
               headers: {
                 'Content-Type' => 'application/json',
                 # 'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET')
-                'Authorization' => 'INTEGRACIONgrupo2:z7gr473SiTMjSW8v+J6lqUwqIGo='
+                'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET')
               })
       puts "(Lista_de_Almacenes)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
