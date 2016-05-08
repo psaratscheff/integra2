@@ -152,7 +152,7 @@ class TasksController < ApplicationController
 	          })
 	      puts "(Produciendo_Stock_Prima_?)Respuesta de la contraparte: " + result.body.to_s
 	      detallesPedido = JSON.parse(result.body)
-				puts "--------Stock Producido (Materia Prima)--------------"
+				puts "--------Stock Producido (Materia Prima)--------------" + detallesPedido.to_s
 	    rescue => ex # En caso de excepción retornamos error
 	      logger.error ex.message
 	      puts "error 1015"
@@ -215,6 +215,7 @@ class TasksController < ApplicationController
 				trxId = trx['_id']
 				#Producir el stock
 				require 'httparty'
+				cantidadSolicitar = cantidadLotes*tamanoLote
 				begin # Intentamos realizar conexión externa y obtener OC
 					puts "--------Produciendo Stock --------------"
 					url = $urlBodega + 'fabrica/fabricar'
@@ -223,19 +224,22 @@ class TasksController < ApplicationController
 																body:    {
 																						sku: sku.to_s,
 																						trxId: trxId, #TODO: Revisar sintexis
-																						cantidad: cantidadLotes #TODO: Revisar si son lotes o unidades
+																						cantidad: cantidadSolicitar #TODO: Revisar si son lotes o unidades
 																					}.to_json,
 																headers: {
 																	'Content-Type' => 'application/json',
-											            'Authorization' => 'INTEGRACIONgrupo2:'+encode('PUT'+sku.to_s+cantidadLotes.to_s+trxId)
+											            'Authorization' => 'INTEGRACIONgrupo2:'+encode('PUT'+sku.to_s+cantidadSolicitar.to_s+trxId)
 																})
 					detallesPedido = JSON.parse(result.body)
+					puts "--------Stock Producido (Producto Procesado)--------------" + detallesPedido.to_s
 				rescue => ex # En caso de excepción retornamos error
 					logger.error ex.message
 					puts "error 1015"
 					render json: {"error": ex.message}, status: 503 and return
 				end
+
 			end
+
 			    #TODO: Checkear que los pedidos lleguen a nuestra bodega de despacho
 			    #TODO: Moverlos a otras bodegas.
 		end
