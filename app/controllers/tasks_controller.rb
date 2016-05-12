@@ -2,7 +2,7 @@ class TasksController < ApplicationController
 	# Cuando el metodo este listo hay que agregarle que procese solo las oc que no han sido procesadas ya
 	def procesar_sftp
 		puts "------------INICIANDO PROCESO SFTP EN BACKGROUND----------------"
-		#background do # Función background definida en ApplicationController
+		background do # Función background definida en ApplicationController
 			if $ambiente
 					urlServidor = 'moto.ing.puc.cl'
 					pass = '7ezT4Mz6'
@@ -102,9 +102,8 @@ class TasksController < ApplicationController
 			rescue => ex # En caso de excepción retornamos error
 	      logger.error ex.message
 	      puts "error 1050: " + ex.message
-	      render json: {"error": ex.message}, status: 503 and return false
 	    end
-		#end
+		end
 		render html: "Solicitud de procesamiento enviada..."
 	end
 
