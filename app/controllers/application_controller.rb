@@ -801,4 +801,58 @@ class ApplicationController < ActionController::Base
     end
   end
 
+
+
+      # ----------------------------------------------------------------------------
+      # ------------------------------ e-commerce ----------------------------------
+      # ----------------------------------------------------------------------------
+
+        #TODO Editar url y api_key
+        $url = 'http://localhost:3000/'
+        $api_key = '7feaafd5f6a177bb6df222b4e63a77cbb1e643bb03a30f95'
+
+        # Metodo que obtiene el id del producto dado el SKU
+        def get_id_from_sku(sku)
+          require 'httparty'
+          url = $url + "api/v1/products"
+          result = HTTParty.put(url,
+                  headers: {
+                    'X-Spree-Token' => $api_key
+                  })
+          json = JSON.parse(result.body)
+          # puts json.to_s
+          for i in 0..json["products"].count
+            # puts json["products"][i]["master"]["sku"].to_s
+            if json["products"][i]["master"]["sku"].to_s == sku
+              return json["products"][i]["id"].to_s
+            end
+          end
+        end
+
+        # Metodo que cambia el stock de cierto producto.
+        # El parametro que se le debe entregar es en cuanto cambia el producto, si se suma '20', si se resta '-20'
+        def edit_stock_from_sku(sku, stock_plus_or_minus)
+          require 'httparty'
+          id = get_id_from_sku(sku)
+          url = $url + "api/v1/stock_locations/1/stock_items/" + id
+          result = HTTParty.put(url,
+                  headers: {
+                    'X-Spree-Token' => $api_key,
+                    'Content-Type' => 'application/json'
+                  },
+                  body: {
+                    stock_item: {
+                      count_on_hand: stock_plus_or_minus
+                    }
+                  }.to_json)
+          json = JSON.parse(result.body)
+          puts json.to_s
+
+        rescue => ex # En caso de excepción retornamos error
+          puts "error 1002: " + ex.message
+          render json: {"error": ex.message}, status: 503 and return false
+        end
+
+
+
 end
