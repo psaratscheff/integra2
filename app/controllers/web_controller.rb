@@ -5,16 +5,15 @@ class WebController < ApplicationController
 
     total = cantidad * Item.find(sku).Precio_Unitario
 
-    #boleta = emitirBoleta($groupid, 'b2c', total)
+    boleta = emitirBoleta($groupid, 'b2c', total)
 
-    #idBoleta = boleta['_id']
-    idBoleta = '5753583adcdfd40300732880'
+    idBoleta = boleta['_id']
     urlFail = 'http://integra2.ing.puc.cl/handle_payment/fail'
     urlOk = 'http://integra2.ing.puc.cl/handle_payment/success'
 
     url = urlWebPay(idBoleta, urlFail, urlOk).to_s
 
-    render html: { sku: sku, cantidad: cantidad, total: total, idBoleta: idBoleta, url: url }
+    redirect_to url
   end
 
   def success
