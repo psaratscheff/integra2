@@ -1,6 +1,26 @@
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};
+
 var ready;
 ready = function() {
   $("#add-to-cart-button").html('Comprar');
+
+  var stock_error = getUrlParameter('enough-stock');
+  if (stock_error == 'false') {
+    alert('Lo lamento, ¡No tenemos suficiente stock!');
+  };
 
   $("#add-to-cart-button").on("click", function(e) {
 
@@ -10,6 +30,9 @@ ready = function() {
     var productTitle;
 
     productTitle = $('.product-title').html();
+    cantidad = $('#quantity').val();
+    url = window.location;
+
     if (productTitle == 'Cereal Avena') {
       sku = 12;
     } else if (productTitle == 'Cuero') {
@@ -21,9 +44,8 @@ ready = function() {
     } else if (productTitle == 'Tela de lino') {
       sku = 28;
     }
-    cantidad = $('#quantity').val();
 
-    window.location = "http://localhost:3000/handle_payment?sku=" + sku + "&cantidad=" + cantidad;
+    window.location = "http://localhost:3000/handle_payment?sku=" + sku + "&cantidad=" + cantidad + "&url=" + url;
   });
 }
 

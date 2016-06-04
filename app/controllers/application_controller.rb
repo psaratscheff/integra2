@@ -318,6 +318,14 @@ class ApplicationController < ActionController::Base
     almacen.productos.where(estado: 'disponible', sku: sku)
   end
 
+  def stock_disponible(sku)
+    stock = 0
+    Almacen.all.each do |almacen|
+      stock += almacen.productos.where(estado: 'disponible', sku: sku).count
+    end
+    return stock
+  end
+
   def cambiar_estado_producto(producto, nuevo_estado)
     producto.estado = nuevo_estado
   end
