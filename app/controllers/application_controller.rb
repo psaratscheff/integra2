@@ -468,7 +468,7 @@ class ApplicationController < ActionController::Base
     puts "--------OC Anulada--------------"
     return json
   end
-  
+
   #-----------------------------------------------------------------------------
   # ------------------------------Transacción-----------------------------------
   # ----------------------------------------------------------------------------
@@ -491,9 +491,6 @@ class ApplicationController < ActionController::Base
     return json[0]
   end
 
-
-<<<<<<< HEAD
-=======
   def transferir(cuentaOrigen, cuentoDestino, montoTransferencia)
 
     begin
@@ -519,10 +516,6 @@ class ApplicationController < ActionController::Base
     end
 
   end
-
-
-
->>>>>>> e2bbc6acd6c515fae89cba707d4b1b19ce06d4d0
 
   # ----------------------------------------------------------------------------
   # ------------------------------Almacen---------------------------------------
