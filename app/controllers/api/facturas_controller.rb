@@ -5,16 +5,15 @@ class Api::FacturasController < ApplicationController
     puts "------------------------Solicitud de recibir FACTURA recibida----------------------------"
     idFactura = params[:idfactura]
     factura = obtener_factura(idFactura)
-    if validar_factura(idFactura, factura) # Comparando con nuestra base de datos
+    if !!factura && validar_factura(idFactura, factura) # Comparando con nuestra base de datos
       # Seguimos con el tema de la factura en un Thread aparte, para
       # no demorar la entrega de la respuesta
-      #background do # Función background definida en ApplicationController
+      background do # Función background definida en ApplicationController
         continuar_con_pago(idFactura, factura)
-      #end
-      render json: {"validado": true, "idfactura": idfactura}
+      end
+      render json: {"validado": true, "idfactura": idFactura}
     else
-      # Ya se hizo el rendering en validar_factura (Es complejo, depende de cosas)
-      #TODO: anular_oc
+      # IMPORTANTE: Ya se hizo el rendering en validar_factura (Es complejo, depende de cosas)
     end
   end
 
@@ -22,7 +21,7 @@ class Api::FacturasController < ApplicationController
 
   def continuar_con_pago(idFactura, factura)
     trx = pagar_factura(factura)
-    if trx['monto'] != nil
+    if trx != false && trx['monto'] != nil
       puts "-------FACTURA YA PAGADA!!------"
       localOc = Oc.find_by idfactura: idFactura
       localOc["estado"] = "pagada"
@@ -63,8 +62,8 @@ class Api::FacturasController < ApplicationController
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
-      puts "error 1001"
-      render json: {"error": ex.message}, status: 503 and return
+      puts "error 1001: " + ex.message
+      render json: {"error": ex.message}, status: 503 and return false
     end
   end
 
@@ -103,8 +102,8 @@ class Api::FacturasController < ApplicationController
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
-      puts "error 1002"
-      render json: {"error": ex.message}, status: 503 and return
+      puts "error 1002: " + ex.message
+      render json: {"error": ex.message}, status: 503 and return false
     end
   end
 
@@ -113,7 +112,7 @@ class Api::FacturasController < ApplicationController
     if factura == nil
       puts "--------Factura NO Existe---------"
       render json: {"error": "Factura Rechazada, no existe en el sistema del curso", "validado": false, "idfactura": idFactura}, status: 400 and return false # 400 = Bad Request, error del cliente
-    elsif factura['cliente'].to_s != getIdGrupo2()
+    elsif factura['cliente'].to_s != $groupid # Variable global con nuestro GroupId en AppCtrlr
       puts "--------Factura RECHAZADA---------! No soy el cliente de la factura"
       render json: {"error": "Factura Rechazada, la factura no existe o no soy el proveedor de la factura", "validado": false, "idfactura": idFactura}, status: 400 and return false # 400 = Bad Request, error del cliente
     elsif oc == nil
@@ -144,8 +143,8 @@ class Api::FacturasController < ApplicationController
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
-      puts "error 1003"
-      render json: {"error": ex.message}, status: 503 and return
+      puts "error 1003: " + ex.message
+      render json: {"error": ex.message}, status: 503 and return false
     end
   end
 

@@ -32,24 +32,25 @@ class Api::PagosController < ApplicationController
     end
     # Seguimos con el tema de la factura en un Thread aparte, para
     # no demorar la entrega de la respuesta
-    #background do # Función background definida en ApplicationController
+    background do # Función background definida en ApplicationController
       localOc = Oc.find_by idfactura: idfactura
       localOc["estado"] = "pagada"
       localOc.save!
       #TODO: MARCAR FACTURA PAGADA EN EL SISTEMA DEL CURSO!!
       despachado = despachar(idfactura, factura) #Función definida en application_controller
       avisar_a_grupo(factura['cliente'], idfactura)
-    #end
+    end
     render json: {"validado": true, "idtrx": idtrx.to_s}
   end
 
   private
 
-  def avisar_a_grupo(grupo, idfactura)
+  def avisar_a_grupo(groupid, idfactura)
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Avisando a Grupo que el Proceso Terminó--------------"
-      url = getLinkServidorGrupo(grupo) + "api/despachos/recibir/"
+      url = getLinkServidorGrupo(get_grupo_by_id(groupid)) + "api/despachos/recibir/" + idfactura
+      puts "--------Enviando aviso a: " + url.to_s
       result = HTTParty.get(url+idfactura,
               headers: {
                 'Content-Type' => 'application/json'
@@ -61,7 +62,7 @@ class Api::PagosController < ApplicationController
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
-      puts "error 1008"
+      puts "error 1008: " + ex.message
       render json: {"error": ex.message}, status: 503 and return
     end
     #TODO: Implementar: Agregar paso 10 AVSISAR QUE DESPACHAMOS
@@ -97,12 +98,12 @@ class Api::PagosController < ApplicationController
 
   def mover_a_despacho(producto)
     require 'httparty'
-    idDespacho = getIdDespacho()
+    idDespacho = $despachoid
     idProducto = producto['_id']
 
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Moviendo Producto a Despacho--------------"
-      url = "http://integracion-2016-dev.herokuapp.com/bodega/"
+      url = "http://integracion-2016-prod.herokuapp.com/bodega/"
       result = HTTParty.post(url+"moveStock",
               body: {
                 productoId: idProducto,
@@ -118,7 +119,7 @@ class Api::PagosController < ApplicationController
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
-      puts "error 1009"
+      puts "error 1009: " + ex.message
       render json: {"error": ex.message}, status: 503 and return
     end
   end
@@ -129,7 +130,7 @@ class Api::PagosController < ApplicationController
 
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Despachando Producto a Cliente B2B--------------"
-      url = "http://integracion-2016-dev.herokuapp.com/bodega/"
+      url = "http://integracion-2016-prod.herokuapp.com/bodega/"
       result = HTTParty.post(url+"moveStockBodega",
               body: {
                 productoId: idProducto,
@@ -148,27 +149,6 @@ class Api::PagosController < ApplicationController
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1010"
-      render json: {"error": ex.message}, status: 503 and return
-    end
-  end
-
-  def get_array_productos_almacen(almacenid, sku)
-    require 'httparty'
-    begin # Intentamos realizar conexión externa y obtener OC
-      puts "--------Obteniendo Productos por SKU del Almacen--------------"
-      url = "http://integracion-2016-dev.herokuapp.com/bodega/"
-      result = HTTParty.get(url+"stock"+"?"+"almacenId="+almacenid+"&"+'sku='+sku.to_s,
-              headers: {
-                'Content-Type' => 'application/json',
-                'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenid+sku.to_s)
-              })
-      puts "(Array_Producto_Almacen)Respuesta de la contraparte: " + result.body.to_s
-      json = JSON.parse(result.body)
-      puts "--------Productos Obtenidos por SKU del Almacen--------------"
-      return json
-    rescue => ex # En caso de excepción retornamos error
-      logger.error ex.message
-      puts "error 1011"
       render json: {"error": ex.message}, status: 503 and return
     end
   end

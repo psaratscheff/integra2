@@ -13,10 +13,9 @@ Rails.application.routes.draw do
   # => get 'sftp', to: 'api/oc#sftp'
   # => get 'hmactest', to: 'api/oc#hmactest'
   get 'scripts/analizar_sftp'
-  get 'scripts/probar_compra'
-  get 'scripts/test1'
-  get 'scripts/test2'
-  get 'scripts/verstock'
+
+  get 'tasks/procesar_sftp'
+  get 'tasks/producirMateriaPrima/:sku', to: 'tasks#producirMP'
 
   # utilizar el namespace, es lo mismo que agregar /api/ a la ruta:
   # => get 'api/documentacion', to: 'documentacion#index'
@@ -32,6 +31,23 @@ Rails.application.routes.draw do
     get 'pagos/recibir/:idtrx', to: 'pagos#recibir'
     get 'despachos/recibir/:idfactura', to: 'despachos#recibir'
   end
+
+  # Tests:
+  get '/verstock', to: 'scripts#verstock'
+  get '/log', to: 'scripts#log'
+  get '/test2t', to: 'scripts#test2t'
+  get '/test2f', to: 'scripts#test2f'
+  get '/test1', to: 'scripts#test1'
+  get '/test3', to: 'scripts#test3'
+  get '/test4', to: 'scripts#test4'
+  get '/test5', to: 'scripts#test5'
+  get '/test6', to: 'scripts#test6'
+  get '/test7', to: 'scripts#test7'
+  get '/test8', to: 'scripts#test8'
+  get '/test9', to: 'scripts#test9'
+  get '/test10', to: 'scripts#test10'
+  get '/test11', to: 'scripts#test11'
+  get '/test12', to: 'scripts#test12'
 end
 
 # Example of regular route:
