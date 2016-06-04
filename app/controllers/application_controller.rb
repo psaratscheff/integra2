@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include HmacHelper # Para utilizar la función de hashing
 
-  $ambiente = true
+  $ambiente = false
 
   if $ambiente
     $urlBodega = "http://integracion-2016-prod.herokuapp.com/bodega/"
@@ -446,8 +446,12 @@ class ApplicationController < ActionController::Base
   # ----------------------------------------------------------------------------
 
   def urlWebPay(idBoleta, urlFail, urlOk)
-    url  = 'http://integracion-2016-dev.herokuapp.com/web/pagoenlinea'+
-      '?callbackUrl='+urlOk+' &cancelUrl='+urlFail+'&boletaId='+idBoleta
+    if $ambiente
+      base_url = 'http://integracion-2016-prod.herokuapp.com/web/pagoenlinea'
+    else
+      base_url = 'http://integracion-2016-dev.herokuapp.com/web/pagoenlinea'
+    end
+    url  = base_url + '?callbackUrl='+uriEncode(urlOk).to_s+'&cancelUrl='+uriEncode(urlFail).to_s+'&boletaId='+idBoleta
     return url
   end
 
