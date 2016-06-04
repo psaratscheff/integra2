@@ -22,13 +22,37 @@
 
 <p>
   <strong>Espacioutilizado:</strong>
-  <%= @almacen.espacioUtilizado %>
+  <%= @almacen.productos.count %>
 </p>
 
 <p>
   <strong>Id:</strong>
   <%= @almacen._id %>
 </p>
+
+<table>
+  <thead>
+    <tr>
+      <th>SKU</th>
+      <th>Cantidad</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% skus = [] %>
+    <% @almacen.productos.each do |producto| %>
+      <% if skus.include?(producto.sku) %>
+        <% next %>
+      <% else %>
+        <% skus << producto.sku %>
+        <tr>
+          <td><%= producto.sku %></td>
+          <td><%= @almacen.productos.where(sku: producto.sku).count %></td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
 
 <%= link_to 'Edit', edit_almacen_path(@almacen) %> |
 <%= link_to 'Back', almacens_path %>
