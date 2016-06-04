@@ -36,7 +36,7 @@ class ScriptsController < ApplicationController
     comprar($groupid, get_id_by_group('9'), 1, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test10 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    comprar($groupid, get_id_by_group('10'), 1, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, get_id_by_group('10'), 9, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 2")
   end
   def test11 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
     comprar($groupid, get_id_by_group('11'), 1, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
