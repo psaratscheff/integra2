@@ -18,6 +18,7 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   root 'welcome#index'
+  get '/welcome', to: 'welcome#index'
 
   # Estas rutas solo sirven para testear resulado en la terminal
   # => get 'sftp', to: 'api/oc#sftp'
