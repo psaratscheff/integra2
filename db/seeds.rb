@@ -106,5 +106,5 @@ Sku: 10, Descripcion: "Pan Marraqueta", Tipo: "Producto procesado", Grupo: "7", 
 p "Created #{Item.count} items"
 
 # Comentar esto una vez ya ejecutado una vez
-Spree::Core::Engine.load_seed if defined?(Spree::Core)
-Spree::Auth::Engine.load_seed if defined?(Spree::Auth)
+# Spree::Core::Engine.load_seed if defined?(Spree::Core)
+# Spree::Auth::Engine.load_seed if defined?(Spree::Auth)
