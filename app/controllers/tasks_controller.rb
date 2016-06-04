@@ -162,12 +162,12 @@ class TasksController < ApplicationController
 	    rescue => ex # En caso de excepción retornamos error
 	      logger.error ex.message
 	      puts "error 1015"
-	      render json: {"error": ex.message}, status: 503 and return
+	      render json: { error: ex.message }, status: 503 and return
 	    end
 	    #TODO: Checkear que los pedidos lleguen a nuestra bodega de despacho
 	    #TODO: Movelos a otras bodegas.
 		end
-		render json: {"Success": true}
+		render json: { success: true}
 	end
 
 	def producirProductosElaborados(sku) #Solo puede entrar a la funcion si sku = 12 o 28
@@ -186,9 +186,9 @@ class TasksController < ApplicationController
 		  materiasPrimas[0] = 37.to_s #Lino
 		end
 
-		cantidadMateriaPrimaPorLote = {'25':133,'20':147,'15':113,'37':440}
-		minSku = 800 #TODO: Elegir minimo y maximo
-		maxSku = 1200 #Todos los productos tendran el mismo maximo
+		cantidadMateriaPrimaPorLote = {'25':133,'20':147,'15':113,'37':440} # TODO: Funciona?
+		minSku = 800 # TODO: Elegir minimo y maximo
+		maxSku = 1200 # Todos los productos tendran el mismo maximo
 		costoLote = costoProduccionUnidad*tamanoLote
 
 
@@ -241,7 +241,7 @@ class TasksController < ApplicationController
 				rescue => ex # En caso de excepción retornamos error
 					logger.error ex.message
 					puts "error 1015"
-					render json: {"error": ex.message}, status: 503 and return
+					render json: { error: ex.message }, status: 503 and return
 				end
 
 			end

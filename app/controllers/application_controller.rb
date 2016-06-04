@@ -14,8 +14,8 @@ class ApplicationController < ActionController::Base
 
   # Las variables globales se asignan según el ambiente en el que se esté desarrollando
   if $ambiente
-    $groupid = "572aac69bdb6d403005fb043"
-    $bancoid = "572aac69bdb6d403005fb04f"
+    $groupid = '572aac69bdb6d403005fb043'
+    $bancoid = '572aac69bdb6d403005fb04f'
     $recepcionid = "572aad41bdb6d403005fb0ba"
     $despachoid = "572aad41bdb6d403005fb0bb"
   else
@@ -174,19 +174,21 @@ class ApplicationController < ActionController::Base
             '572aac69bdb6d403005fb059'=>'11',
             '572aac69bdb6d403005fb05a'=>'12'}
     else
-            # Cuenta del Grupo => Número del Grupo
-      dic = {'571262c3a980ba030058ab5b'=>'1',
-            '571262c3a980ba030058ab5c'=>'2',
-            '571262c3a980ba030058ab5d'=>'3',
-            '571262c3a980ba030058ab5f'=>'4',
-            '571262c3a980ba030058ab61'=>'5',
-            '571262c3a980ba030058ab62'=>'6',
-            '571262c3a980ba030058ab60'=>'7',
-            '571262c3a980ba030058ab5e'=>'8',
-            '571262c3a980ba030068ab66'=>'9',
-            '571262c3a980ba030058ab63'=>'10',
-            '571262c3a980ba030058ab64'=>'11',
-            '571262c3a980ba030068ab65'=>'12'}
+      # Cuenta del Grupo => Numero del Grupo
+      dic = {
+        '571262c3a980ba030058ab5b' => '1',
+        '571262c3a980ba030058ab5c' => '2',
+        '571262c3a980ba030058ab5d' => '3',
+        '571262c3a980ba030058ab5f' => '4',
+        '571262c3a980ba030058ab61' => '5',
+        '571262c3a980ba030058ab62' => '6',
+        '571262c3a980ba030058ab60' => '7',
+        '571262c3a980ba030058ab5e' => '8',
+        '571262c3a980ba030068ab66' => '9',
+        '571262c3a980ba030058ab63' => '10',
+        '571262c3a980ba030058ab64' => '11',
+        '571262c3a980ba030068ab65' => '12'
+      }
     end
     url = getLinkServidorGrupo(dic[idCuenta])
     return url
@@ -322,7 +324,7 @@ class ApplicationController < ActionController::Base
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1012"
-      render json: {"error": ex.message}, status: 503 and return
+      render json: { error: ex.message }, status: 503 and return
     end
   end
 
@@ -369,7 +371,7 @@ class ApplicationController < ActionController::Base
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1005: " + ex.message
-      render json: {"error": ex.message}, status: 503 and return false
+      render json: { error: ex.message }, status: 503 and return false
     end
   end
 
@@ -512,7 +514,7 @@ class ApplicationController < ActionController::Base
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1001: " + ex.message
-      render json: {"error": ex.message}, status: 503 and return
+      render json: { error: ex.message }, status: 503 and return
     end
 
   end
@@ -549,7 +551,7 @@ class ApplicationController < ActionController::Base
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1013"
-      render json: {"error": ex.message}, status: 503 and return
+      render json: { error: ex.message }, status: 503 and return
     end
   end
 
@@ -569,9 +571,9 @@ class ApplicationController < ActionController::Base
       puts "(Aceptar_OC)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
       if json.count() > 1
-        render json: {"error": "Error2: se retornó más de una OC para el mismo id"}, status: 503 and return
+        render json: { error: "Error2: se retornó más de una OC para el mismo id"}, status: 503 and return
       elsif !json[0]["proveedor"]
-        render json: {"error": "Error: No se pudo recibir la OC"}, status: 503 and return
+        render json: { error: "Error: No se pudo recibir la OC"}, status: 503 and return
       end
       localOc = Oc.find_by idoc: idoc
       localOc.estado = "aceptada"
@@ -580,7 +582,7 @@ class ApplicationController < ActionController::Base
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
-      render json: {"error": ex.message}, status: 503 and return
+      render json: { error: ex.message }, status: 503 and return
     end
   end
 
@@ -612,7 +614,7 @@ class ApplicationController < ActionController::Base
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
-      render json: {"error": ex.message}, status: 503 and return
+      render json: { error: ex.message }, status: 503 and return
     end
   end
 
@@ -634,7 +636,7 @@ class ApplicationController < ActionController::Base
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1014"
-      render json: {"error": ex.message}, status: 503 and return
+      render json: { error: ex.message }, status: 503 and return
     end
   end
 
@@ -657,7 +659,7 @@ class ApplicationController < ActionController::Base
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1010"
-      render json: {"error": ex.message}, status: 503 and return
+      render json: { error: ex.message }, status: 503 and return
     end
   end
 
@@ -678,7 +680,7 @@ class ApplicationController < ActionController::Base
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1011"
-      render json: {"error": ex.message}, status: 503 and return
+      render json: { error: ex.message }, status: 503 and return
     end
   end
 
@@ -785,7 +787,7 @@ class ApplicationController < ActionController::Base
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1009: " + ex.message
-      render json: {"error": ex.message}, status: 503 and return
+      render json: { error: ex.message }, status: 503 and return
     end
   end
 
@@ -813,7 +815,7 @@ class ApplicationController < ActionController::Base
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1010"
-      render json: {"error": ex.message}, status: 503 and return
+      render json: { error: ex.message }, status: 503 and return
     end
   end
 
@@ -833,62 +835,57 @@ class ApplicationController < ActionController::Base
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1011"
-      render json: {"error": ex.message}, status: 503 and return
+      render json: { error: ex.message }, status: 503 and return
     end
   end
 
+  # ----------------------------------------------------------------------------
+  # ------------------------------ e-commerce ----------------------------------
+  # ----------------------------------------------------------------------------
 
+  #TODO Editar url y api_key
+  $url = 'http://localhost:3000/'
+  $api_key = ENV['SPREE_API_KEY']
 
-      # ----------------------------------------------------------------------------
-      # ------------------------------ e-commerce ----------------------------------
-      # ----------------------------------------------------------------------------
+  # Metodo que obtiene el id del producto dado el SKU
+  def get_id_from_sku(sku)
+    require 'httparty'
+    url = $url + "api/v1/products"
+    result = HTTParty.put(url,
+            headers: {
+              'X-Spree-Token' => $api_key
+            })
+    json = JSON.parse(result.body)
+    # puts json.to_s
+    for i in 0..json["products"].count
+      # puts json["products"][i]["master"]["sku"].to_s
+      if json["products"][i]["master"]["sku"].to_s == sku
+        return json["products"][i]["id"].to_s
+      end
+    end
+  end
 
-        #TODO Editar url y api_key
-        $url = 'http://localhost:3000/'
-        $api_key = ENV[SPREE_API_KEY]
+  # Metodo que cambia el stock de cierto producto.
+  # El parametro que se le debe entregar es en cuanto cambia el producto, si se suma '20', si se resta '-20'
+  def edit_stock_from_sku(sku, stock_plus_or_minus)
+    require 'httparty'
+    id = get_id_from_sku(sku)
+    url = $url + "api/v1/stock_locations/1/stock_items/" + id
+    result = HTTParty.put(url,
+            headers: {
+              'X-Spree-Token' => $api_key,
+              'Content-Type' => 'application/json'
+            },
+            body: {
+              stock_item: {
+                count_on_hand: stock_plus_or_minus
+              }
+            }.to_json)
+    json = JSON.parse(result.body)
+    puts json.to_s
 
-        # Metodo que obtiene el id del producto dado el SKU
-        def get_id_from_sku(sku)
-          require 'httparty'
-          url = $url + "api/v1/products"
-          result = HTTParty.put(url,
-                  headers: {
-                    'X-Spree-Token' => $api_key
-                  })
-          json = JSON.parse(result.body)
-          # puts json.to_s
-          for i in 0..json["products"].count
-            # puts json["products"][i]["master"]["sku"].to_s
-            if json["products"][i]["master"]["sku"].to_s == sku
-              return json["products"][i]["id"].to_s
-            end
-          end
-        end
-
-        # Metodo que cambia el stock de cierto producto.
-        # El parametro que se le debe entregar es en cuanto cambia el producto, si se suma '20', si se resta '-20'
-        def edit_stock_from_sku(sku, stock_plus_or_minus)
-          require 'httparty'
-          id = get_id_from_sku(sku)
-          url = $url + "api/v1/stock_locations/1/stock_items/" + id
-          result = HTTParty.put(url,
-                  headers: {
-                    'X-Spree-Token' => $api_key,
-                    'Content-Type' => 'application/json'
-                  },
-                  body: {
-                    stock_item: {
-                      count_on_hand: stock_plus_or_minus
-                    }
-                  }.to_json)
-          json = JSON.parse(result.body)
-          puts json.to_s
-
-        rescue => ex # En caso de excepción retornamos error
-          puts "error 1002: " + ex.message
-          render json: {"error": ex.message}, status: 503 and return false
-        end
-
-
-
+  rescue => ex # En caso de excepción retornamos error
+    puts "error 1002: " + ex.message
+    render json: { error: ex.message }, status: 503 and return false
+  end
 end

@@ -63,7 +63,7 @@ class Api::FacturasController < ApplicationController
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1001: " + ex.message
-      render json: {"error": ex.message}, status: 503 and return false
+      render json: { error: ex.message }, status: 503 and return false
     end
   end
 
@@ -103,7 +103,7 @@ class Api::FacturasController < ApplicationController
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1002: " + ex.message
-      render json: {"error": ex.message}, status: 503 and return false
+      render json: { error: ex.message }, status: 503 and return false
     end
   end
 
@@ -144,7 +144,7 @@ class Api::FacturasController < ApplicationController
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1003: " + ex.message
-      render json: {"error": ex.message}, status: 503 and return false
+      render json: { error: ex.message }, status: 503 and return false
     end
   end
 

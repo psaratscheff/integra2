@@ -151,7 +151,7 @@ class ScriptsController < ApplicationController
         end
       end
     end
-    render json: {"Proceso terminado exitosamente?": true}
+    render json: { procesar_sftp_success: true }
   end
 
   private
@@ -177,14 +177,14 @@ class ScriptsController < ApplicationController
       puts "(Generar_OC)Respuesta de la contraparte: " + result.body.to_s
       oc = JSON.parse(result.body)
       if !oc["proveedor"] # Validamos que la oc sea válida, probando si tiene el key proveedor
-        render json: {"error": "Error: No se pudo recibir la OC"}, status: 503 and return
+        render json: { error: "Error: No se pudo recibir la OC" }, status: 503 and return
       end
       puts "--------OC Generada--------------"
       tOc = transform_oc(oc)
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1015"
-      render json: {"error": ex.message}, status: 503 and return
+      render json: { error: ex.message }, status: 503 and return
     end
     localOc = Oc.new(tOc)
     localOc.save!

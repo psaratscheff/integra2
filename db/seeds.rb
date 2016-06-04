@@ -130,7 +130,7 @@ def create_product(name, price, sku, cost_price)
     # return json[0]
   rescue => ex # En caso de excepción retornamos error
     puts "error 1002: " + ex.message
-    render json: {"error": ex.message}, status: 503 and return false
+    render json: { error: ex.message }, status: 503 and return false
   end
 
 
