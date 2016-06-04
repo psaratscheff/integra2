@@ -665,6 +665,19 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def productos_almacen(almacenId)
+  skus = [2,12,15,20,21,25,28,32,37]
+  productos = []
+  skus.each do |sku|
+    listaProductos = stock_de_almacen(almacenId,sku)
+    listaProductos.each do |producto|
+      productos.append(producto)
+    end
+  end
+
+  return productos
+  end
+
   def mover_producto_almacen(idProducto, almacenDestino)
 
     begin # Intentamos realizar conexión externa y obtener OC
@@ -676,7 +689,7 @@ class ApplicationController < ActionController::Base
               }.to_json,
               headers: {
                 'Content-Type' => 'application/json',
-                'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET')
+                'Authorization' => 'INTEGRACIONgrupo2:'+encode('POST'+idProducto+almacenDestino)
               })
       puts "(Mover_Producto_Almacen)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
