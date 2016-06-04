@@ -231,6 +231,47 @@ class ApplicationController < ActionController::Base
   end
 
   #-----------------------------------------------------------------------------
+  # -------------------------------Boleta-------------------------------------
+  # ----------------------------------------------------------------------------
+
+  def emitirBoleta(proveedor, cliente, total)
+    puts "---Emitiendo Boleta---"
+    url = getLinkServidorCurso + "facturas/boleta/"
+
+    result = HTTParty.put(url,
+           body:    {
+                   proveedor: proveedor,
+                   cliente: cliente,
+                   total: total
+                 }.to_json,
+           headers: {
+             'Content-Type' => 'application/json'
+           })
+    json = JSON.parse(result.body)
+    idBoleta = json['_id']
+    puts "---Boleta de id #{idBoleta} emitida---"
+    return json
+  end
+
+  #-----------------------------------------------------------------------------
+  # -------------------------------Webpay-------------------------------------
+  # ----------------------------------------------------------------------------
+
+  def urlWebPay(idBoleta, urlFail, urlOk)
+    url  = 'http://integracion-2016-dev.herokuapp.com/web/pagoenlinea'+
+      '?callbackUrl='+urlOk+' &cancelUrl='+urlFail+'&boletaId='+idBoleta
+    return url
+  end
+
+  def uriEncode(url)
+    require 'uri'
+    urlCodificada = URI.escape(url, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
+    return urlCodificada
+  end
+
+
+
+  #-----------------------------------------------------------------------------
   # ------------------------------Transacción-----------------------------------
   # ----------------------------------------------------------------------------
 
