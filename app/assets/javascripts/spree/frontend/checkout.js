@@ -45,7 +45,7 @@ ready = function() {
       sku = 28;
     }
 
-    window.location = "http://localhost:3000/handle_payment?sku=" + sku + "&cantidad=" + cantidad + "&url=" + url;
+    window.location = "http://integra2.ing.puc.cl/handle_payment?sku=" + sku + "&cantidad=" + cantidad + "&url=" + url;
   });
 }
 
