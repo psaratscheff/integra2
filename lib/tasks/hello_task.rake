@@ -4,7 +4,29 @@ task :say_hi do
   #result = HTTParty.get("http://localhost:3000/api/documentacion")
 end
 
+desc 'Poblar Spree con productos'
+task :populate_spree do
+  $api_key = ENV['SPREE_API_KEY']
+  $url = 'http://integra2.ing.puc.cl/'
 
+  def create_product(name, price, sku, cost_price)
+    require 'httparty'
+    url = $url + "api/v1/products?product[name]=" + name + "&product[price]=" + price + "&product[shipping_category_id]=1" + "&product[sku]=" + sku + "&product[cost_price]=" + cost_price
+    result = HTTParty.post(url,
+            headers: {
+              'X-Spree-Token' => $api_key
+            })
+    puts "Producto agregado:" + result.body.to_s
+    jsonID = JSON.parse(result.body)['id']
+    puts "Id asignado: " + jsonID.to_s
+  end
+
+  create_product('Huevo', '718', '2', '513')
+  create_product('Cereal Avena', '7413', '12', '2518')
+  create_product('Algodon', '1462', '21', '1157')
+  create_product('Tela de lino', '2382', '28', '1138')
+  create_product('Cuero', '1135', '32', '996')
+end
 
 desc "Procesar OC internacionales - sftp"
 task :procesar_oc_sftp do

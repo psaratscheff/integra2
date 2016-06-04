@@ -108,27 +108,3 @@ p "Created #{Item.count} items"
 # Comentar esto una vez ya ejecutado una vez
 Spree::Core::Engine.load_seed if defined?(Spree::Core)
 Spree::Auth::Engine.load_seed if defined?(Spree::Auth)
-
-=begin
-#TODO Editar url (localhost:3000) y api_key a la key del admin
-$api_key = ENV['SPREE_API_KEY']
-$url = 'http://localhost:3000/'
-
-def create_product(name, price, sku, cost_price)
-  require 'httparty'
-  url = $url + "api/v1/products?product[name]=" + name + "&product[price]=" + price + "&product[shipping_category_id]=1" + "&product[sku]=" + sku + "&product[cost_price]=" + cost_price
-  result = HTTParty.post(url,
-          headers: {
-            'X-Spree-Token' => $api_key
-          })
-  puts "Producto agregado:" + result.body.to_s
-  jsonID = JSON.parse(result.body)['id']
-  puts "Id asignado: " + jsonID.to_s
-end
-
-create_product('Huevo', '718', '2', '513')
-create_product('Cereal Avena', '7413', '12', '2518')
-create_product('Algodon', '1462', '21', '1157')
-create_product('Tela de lino', '2382', '28', '1138')
-create_product('Cuero', '1135', '32', '996')
-=end
