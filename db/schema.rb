@@ -11,10 +11,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160526230648) do
+ActiveRecord::Schema.define(version: 20160604161746) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "almacens", force: :cascade do |t|
+    t.boolean  "pulmon"
+    t.boolean  "despacho"
+    t.boolean  "recepcion"
+    t.integer  "espacioTotal"
+    t.integer  "espacioUtilizado"
+    t.string   "_id"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  create_table "facturas", force: :cascade do |t|
+    t.string   "_id"
+    t.string   "proveedor"
+    t.string   "cliente"
+    t.string   "valorTotal"
+    t.string   "estadoPago"
+    t.string   "idoc"
+    t.string   "comentario"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",                      null: false
@@ -63,6 +86,24 @@ ActiveRecord::Schema.define(version: 20160526230648) do
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
   end
+
+  create_table "pagos", force: :cascade do |t|
+    t.string   "_id"
+    t.string   "cuentaOrigen"
+    t.string   "cuentaDestino"
+    t.integer  "monto"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  create_table "productos", force: :cascade do |t|
+    t.string  "_id"
+    t.integer "sku"
+    t.string  "estado"
+    t.integer "almacen_id"
+  end
+
+  add_index "productos", ["almacen_id"], name: "index_productos_on_almacen_id", using: :btree
 
   create_table "spree_addresses", force: :cascade do |t|
     t.string   "firstname"

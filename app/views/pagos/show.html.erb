@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Id:</strong>
+  <%= @pago._id %>
+</p>
+
+<p>
+  <strong>Cuentaorigen:</strong>
+  <%= @pago.cuentaOrigen %>
+</p>
+
+<p>
+  <strong>Cuentadestino:</strong>
+  <%= @pago.cuentaDestino %>
+</p>
+
+<p>
+  <strong>Monto:</strong>
+  <%= @pago.monto %>
+</p>
+
+<%= link_to 'Edit', edit_pago_path(@pago) %> |
+<%= link_to 'Back', pagos_path %>

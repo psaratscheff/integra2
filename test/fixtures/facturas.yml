@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  _id: MyString
+  proveedor: MyString
+  cliente: MyString
+  valorTotal: MyString
+  estadoPago: MyString
+  idoc: MyString
+  comentario: MyString
+
+two:
+  _id: MyString
+  proveedor: MyString
+  cliente: MyString
+  valorTotal: MyString
+  estadoPago: MyString
+  idoc: MyString
+  comentario: MyString

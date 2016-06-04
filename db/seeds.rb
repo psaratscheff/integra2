@@ -112,7 +112,7 @@ p "Created #{Item.count} items"
 
 
 #TODO Editar url (localhost:3000) y api_key a la key del admin
-$api_key = '7feaafd5f6a177bb6df222b4e63a77cbb1e643bb03a30f95'
+$api_key = ENV['SPREE_API_KEY']
 $url = 'http://localhost:3000/'
 
 def create_product(name, price, sku, cost_price)

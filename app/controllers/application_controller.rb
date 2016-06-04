@@ -298,6 +298,31 @@ class ApplicationController < ActionController::Base
   end
 
   # ----------------------------------------------------------------------------
+  # ---------------- FUNCIONES DE ACTUALIZACION LOCAL --------------------------
+  # ----------------------------------------------------------------------------
+
+  def agregar_producto(producto, almacen)
+    almacen.productos << producto
+  end
+
+  def quitar_producto(producto, almacen)
+    almacen.productos.delete(producto)
+  end
+
+  def mover_producto(producto, almacen_destino)
+    quitar_producto(producto, producto.almacen)
+    almacen_destino.productos << producto
+  end
+
+  def productos_disponibles(almacen, sku)
+    almacen.productos.where(estado: 'disponible', sku: sku)
+  end
+
+  def cambiar_estado_producto(producto, nuevo_estado)
+    producto.estado = nuevo_estado
+  end
+
+  # ----------------------------------------------------------------------------
   # -----------------------------------OCs--------------------------------------
   # ----------------------------------------------------------------------------
 

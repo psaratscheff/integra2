@@ -1,0 +1,41 @@
+<%= form_for(@almacen) do |f| %>
+  <% if @almacen.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@almacen.errors.count, "error") %> prohibited this almacen from being saved:</h2>
+
+      <ul>
+      <% @almacen.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :pulmon %><br>
+    <%= f.check_box :pulmon %>
+  </div>
+  <div class="field">
+    <%= f.label :despacho %><br>
+    <%= f.check_box :despacho %>
+  </div>
+  <div class="field">
+    <%= f.label :recepcion %><br>
+    <%= f.check_box :recepcion %>
+  </div>
+  <div class="field">
+    <%= f.label :espacioTotal %><br>
+    <%= f.number_field :espacioTotal %>
+  </div>
+  <div class="field">
+    <%= f.label :espacioUtilizado %><br>
+    <%= f.text_field :espacioUtilizado %>
+  </div>
+  <div class="field">
+    <%= f.label :_id %><br>
+    <%= f.text_field :_id %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

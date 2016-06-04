@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Pulmon:</strong>
+  <%= @almacen.pulmon %>
+</p>
+
+<p>
+  <strong>Despacho:</strong>
+  <%= @almacen.despacho %>
+</p>
+
+<p>
+  <strong>Recepcion:</strong>
+  <%= @almacen.recepcion %>
+</p>
+
+<p>
+  <strong>Espaciototal:</strong>
+  <%= @almacen.espacioTotal %>
+</p>
+
+<p>
+  <strong>Espacioutilizado:</strong>
+  <%= @almacen.espacioUtilizado %>
+</p>
+
+<p>
+  <strong>Id:</strong>
+  <%= @almacen._id %>
+</p>
+
+<%= link_to 'Edit', edit_almacen_path(@almacen) %> |
+<%= link_to 'Back', almacens_path %>

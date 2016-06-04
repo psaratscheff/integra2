@@ -1,0 +1,2 @@
+module AlmacensHelper
+end
