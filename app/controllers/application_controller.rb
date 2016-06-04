@@ -683,6 +683,19 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def productos_almacen(almacenId)
+  skus = [2,12,15,20,21,25,28,32,37]
+  productos = []
+  skus.each do |sku|
+    listaProductos = stock_de_almacen(almacenId,sku)
+    listaProductos.each do |producto|
+      productos.append(producto)
+    end
+  end
+
+  return productos
+  end
+
   def mover_producto_almacen(idProducto, almacenDestino)
 
     begin # Intentamos realizar conexión externa y obtener OC
@@ -694,7 +707,7 @@ class ApplicationController < ActionController::Base
               }.to_json,
               headers: {
                 'Content-Type' => 'application/json',
-                'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET')
+                'Authorization' => 'INTEGRACIONgrupo2:'+encode('POST'+idProducto+almacenDestino)
               })
       puts "(Mover_Producto_Almacen)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
@@ -769,7 +782,8 @@ class ApplicationController < ActionController::Base
         productos = get_array_productos_almacen(almacen['_id'], sku)
         productos.each do |producto|
           return if itemsDespachados == qty
-          mover_a_despacho(producto) #TODO: IMPLEMENTAR FUNCION
+          idProducto = producto['_id']
+          mover_a_despacho(idProducto) #TODO: IMPLEMENTAR FUNCION
           # despachar_producto(producto, almacenClienteId, idoc, precio) #TODO: IMPLEMENTAR FUNCION
           itemsDespachados += 1
         end
@@ -796,7 +810,8 @@ class ApplicationController < ActionController::Base
         productos = get_array_productos_almacen(almacen['_id'], sku)
         productos.each do |producto|
           return if itemsDespachados == qty
-          mover_a_despacho(producto) #TODO: IMPLEMENTAR FUNCION
+          idProducto = producto['_id']
+          mover_a_despacho(idProducto) #TODO: IMPLEMENTAR FUNCION
           despachar_producto(producto, almacenClienteId, idoc, precio) #TODO: IMPLEMENTAR FUNCION
           itemsDespachados += 1
         end
@@ -807,10 +822,10 @@ class ApplicationController < ActionController::Base
     return true
   end
 
-  def mover_a_despacho(producto)
+  def mover_a_despacho(idProducto)
     require 'httparty'
     idDespacho = $despachoid
-    idProducto = producto['_id']
+
 
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Moviendo Producto a Despacho--------------"
