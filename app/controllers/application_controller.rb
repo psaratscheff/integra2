@@ -845,7 +845,7 @@ class ApplicationController < ActionController::Base
 
         #TODO Editar url y api_key
         $url = 'http://localhost:3000/'
-        $api_key = '7feaafd5f6a177bb6df222b4e63a77cbb1e643bb03a30f95'
+        $api_key = ENV[SPREE_API_KEY]
 
         # Metodo que obtiene el id del producto dado el SKU
         def get_id_from_sku(sku)
