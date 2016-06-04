@@ -85,7 +85,8 @@ class Api::PagosController < ApplicationController
         productos = get_array_productos_almacen(almacen['_id'], sku)
         productos.each do |producto|
           return if itemsDespachados == qty
-          mover_a_despacho(producto) #TODO: IMPLEMENTAR FUNCION
+          idProducto = producto['_id']
+          mover_a_despacho(idProducto) #TODO: IMPLEMENTAR FUNCION
           despachar_producto(producto, almacenClienteId, idoc, precio) #TODO: IMPLEMENTAR FUNCION
           itemsDespachados += 1
         end
@@ -96,10 +97,10 @@ class Api::PagosController < ApplicationController
     return true
   end
 
-  def mover_a_despacho(producto)
+  def mover_a_despacho(idProducto)
     require 'httparty'
     idDespacho = $despachoid
-    idProducto = producto['_id']
+
 
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Moviendo Producto a Despacho--------------"
