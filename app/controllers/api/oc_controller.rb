@@ -6,6 +6,8 @@ class Api::OcController < ApplicationController
     puts "------------------------Solicitud de recibir OC recibida----------------------------"
     idoc = params[:idoc]
     oc = obtener_oc(idoc) # Función definida en ApplicationController
+    puts oc.to_s
+    puts "Pasare esto"
     unless oc["cantidad"]
       puts "---------LA OC SOLICITADA NO EXISTE!-------"
       render json: {"error": "La OC solicitada no existe", "aceptado": false, "idoc": idoc, msgCurso: oc}, status: 400 and return
@@ -15,9 +17,9 @@ class Api::OcController < ApplicationController
       aceptar_oc(oc["_id"])
       # Seguimos con el tema de la factura en un Thread aparte, para
       # no demorar la entrega de la respuesta
-      #background do # Función background definida en ApplicationController
+      background do # Función background definida en ApplicationController
         proceder_con_factura(idoc)
-      #end
+      end
       render json: {"aceptado": true, "idoc": oc["_id"]}
     else
       puts "--------Stock Insuficiente--------------"
@@ -30,6 +32,9 @@ class Api::OcController < ApplicationController
 
   def proceder_con_factura(idoc)
     factura = generar_factura(idoc)
+    if !factura
+      return false
+    end
     json = enviarFactura(factura) #Definido un poco más abajo
     # Si es que el key validado no existe en el json de la respuesta o el
     # value es false de ese key, la factura no fue validada
@@ -73,35 +78,8 @@ class Api::OcController < ApplicationController
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
-      puts "error 1004"
-      render json: {"error": ex.message}, status: 503 and return
-    end
-  end
-
-  def generar_factura(idoc)
-    require 'httparty'
-    begin # Intentamos realizar conexión externa y obtener OC
-      puts "--------Generando Factura--------------"
-      url = getLinkServidorCurso + "facturas/"
-      result = HTTParty.put(url,
-              body: {
-                oc: idoc
-              }.to_json,
-              headers: {
-                'Content-Type' => 'application/json'
-              })
-      puts "(Generar_Factura)Respuesta de la contraparte: " + result.body.to_s
-      json = JSON.parse(result.body)
-      # FORMATO FACTURA: {"__v"=>0, "created_at"=>"2016-05-02T14:57:30.324Z", "updated_at"=>"2016-05-02T14:57:30.324Z", "cliente"=>"571262b8a980ba030058ab50", "proveedor"=>"571262b8a980ba030058ab50", "bruto"=>6033, "iva"=>1147, "total"=>7180, "oc"=>"57276aaec1ff9b0300017d1b", "_id"=>"57276adac1ff9b0300017d1c", "estado"=>"pendiente"}
-      localOc = Oc.find_by idoc: idoc
-      localOc.idfactura = json["_id"]
-      localOc.save!
-      puts "--------Factura Generada--------------"
-      return json
-    rescue => ex # En caso de excepción retornamos error
-      logger.error ex.message
-      puts "error 1005"
-      render json: {"error": ex.message}, status: 503 and return
+      puts "error 1004: " + ex.message
+      render json: {"error": ex.message}, status: 503 and return false
     end
   end
 
@@ -116,78 +94,13 @@ class Api::OcController < ApplicationController
               'Content-Type' => 'application/json'
             })
     puts "(Enviar_Factura)Respuesta de la contraparte: " + result.body.to_s
-    json = result.body
+    json = JSON.parse(result.body)
     puts "--------Factura Enviada--------------"
     return json
   end
 
 
-  def aceptar_oc(idoc)
-    require 'httparty'
-    begin # Intentamos realizar conexión externa y obtener OC
-      puts "--------Aceptando OC--------------"
-      url = getLinkServidorCurso + "oc/"
-      result = HTTParty.post(url+"recepcionar/"+idoc.to_s,
-              body:    {
-                      id: idoc
-                    }.to_json,
-              headers: {
-                'Content-Type' => 'application/json'
-              })
-      puts "(Recepcionar_OC)Respuesta de la contraparte: " + result.body.to_s
-      json = JSON.parse(result.body)
-      if json.count() > 1
-        puts "--------Error: se retornó más de una OC para el mismo id---------"
-        render json: {"error": "Error2: se retornó más de una OC para el mismo id"}, status: 503 and return
-      elsif !json[0]["proveedor"]
-        puts "-----------------Error: No se pudo recibir la OC--------------------"
-        render json: {"error": "Error: No se pudo recibir la OC"}, status: 503 and return
-      end
-      localOc = Oc.find_by idoc: idoc # Si es que la OC ya estaba en mi base de datos (La generé yo)
-      if localOc == nil
-        puts '-----Añadiendo OC a DB local------'
-        localOc = Oc.new(transform_oc(json[0]))
-      end
-      localOc['estado'] = "aceptado"
-      localOc.save!
-      puts "--------OC Aceptada--------------"
-      return json[0]
-    rescue => ex # En caso de excepción retornamos error
-      logger.error ex.message
-      puts "error 1006"
-      render json: {"error": ex.message}, status: 503 and return
-    end
-  end
 
-  def rechazar_oc(idoc)
-    require 'httparty'
-    begin # Intentamos realizar conexión externa y obtener OC
-      puts "--------Rechazando OC--------------"
-      url = getLinkServidorCurso + "oc/"
-      result = HTTParty.post(url+"rechazar/"+idoc.to_s,
-              body: {
-                rechazo: 'No tenemos stock para el sku solicitado'
-              }.to_json,
-              headers: {
-                'Content-Type' => 'application/json'
-              })
-      puts "(Rechazar_OC)Respuesta de la contraparte: " + result.body.to_s
-      json = JSON.parse(result.body)
-
-      if json.count() > 1
-        raise "Error3: se retornó más de una OC para el mismo id" and return
-      end
-      localOc = Oc.find_by idoc: idoc
-      localOc['estado'] = "rechazado"
-      localOc.save!
-      puts "--------OC Rechazada--------------"
-      return json[0]
-    rescue => ex # En caso de excepción retornamos error
-      logger.error ex.message
-      puts "error 1007"
-      render json: {"error": ex.message}, status: 503 and return
-    end
-  end
 
   # -------------------Funciones de prueba--------------------------
 

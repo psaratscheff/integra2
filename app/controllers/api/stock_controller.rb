@@ -10,9 +10,3 @@ class Api::StockController < ApplicationController
   end
 
 end
-
-#result = HTTParty.post(url+"stock",
-#    body: { almacenId: almacenId,
-#            sku: sku.to_s}.to_json,
-#    headers: { 'Content-Type' => 'application/json',
-#                  'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenId+sku.to_s)} )

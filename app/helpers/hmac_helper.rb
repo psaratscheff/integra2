@@ -3,8 +3,11 @@ module HmacHelper
   def encode(base)
     require 'base64'
     require 'hmac-sha1'
-    
-    key="O9$vSnqQ3Cm&5jZ"
+    if $ambiente
+      key="79m7j#daV&q8eF"
+    else
+      key="O9$vSnqQ3Cm&5jZ"
+    end
   	result = Base64.encode64((HMAC::SHA1.new(key) << base).digest).strip
   	return result
   end

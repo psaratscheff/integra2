@@ -4,12 +4,12 @@ Proyecto semestral del curso Taller de Integración | IIC3103 - Sección 1 | 1' 
 Busca simular un sistema automático de compra-venta entre distintos grupos mediante APIs y una vista web que permite comprar con un sistema simulado tipo webpay.
 ## Installation
 #### Prerequisites
-Postgresql: sudo apt-get install postgresql postgresql-contrib libpq-dev
+Postgresql: sudo apt-get install postgresql postgresql-contrib libpq-prod
 
 #### Configuration
 Create user railsapp with password nicolas on postgresql
 
-Ejecutar `rake db:create` // Si recibes el error "psql: FATAL: Peer authentication failed for user" --> http://stackoverflow.com/questions/17443379/psql-fatal-peer-authentication-failed-for-user-dev
+Ejecutar `rake db:create` // Si recibes el error "psql: FATAL: Peer authentication failed for user" --> http://stackoverflow.com/questions/17443379/psql-fatal-peer-authentication-failed-for-user-prod
 
 ## Usage
 ####IDs del grupo

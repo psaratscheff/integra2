@@ -50,6 +50,10 @@ gem 'whenever', require: false # (Instalar manualmente en el servidor)
 # Para utilizar tablas hermosas de manera extremadamente fácil
 gem 'listjs-rails'
 
+gem 'spree', '~> 3.1.0.rc1'
+gem 'spree_auth_devise', '~> 3.1.0.rc1'
+gem 'spree_gateway', '~> 3.1.0.rc1'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
