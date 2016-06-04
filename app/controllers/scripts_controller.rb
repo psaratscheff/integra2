@@ -15,34 +15,34 @@ class ScriptsController < ApplicationController
     comprar($groupid, get_id_by_group('1'), 1, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test3 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    comprar($groupid, get_id_by_group('3'), 1, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, get_id_by_group('3'), 6, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test4 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    comprar($groupid, get_id_by_group('4'), 1, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, get_id_by_group('4'), 38, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test5 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    comprar($groupid, get_id_by_group('5'), 52, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, get_id_by_group('5'), 42, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test6 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    comprar($groupid, get_id_by_group('6'), 1, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, get_id_by_group('6'), 25, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test7 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    comprar($groupid, get_id_by_group('7'), 1, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, get_id_by_group('7'), 1, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test8 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    comprar($groupid, get_id_by_group('8'), 18, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, get_id_by_group('8'), 37, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test9 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    comprar($groupid, get_id_by_group('9'), 1, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, get_id_by_group('9'), 20, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test10 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    comprar($groupid, get_id_by_group('10'), 9, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 2")
+    comprar($groupid, get_id_by_group('10'), 3, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 2")
   end
   def test11 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    comprar($groupid, get_id_by_group('11'), 1, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, get_id_by_group('11'), 4, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
   def test12 # (cliente, proveedor, sku, cantidad, fechaEntrega, notas)
-    comprar($groupid, get_id_by_group('12'), 1, 2, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
+    comprar($groupid, get_id_by_group('12'), 15, 1, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 5")
   end
 
   def verstock
