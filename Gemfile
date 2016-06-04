@@ -47,7 +47,7 @@ gem 'puma'
 gem 'net-sftp'
 # Para realizar tareas por schedule
 gem 'whenever', require: false # (Instalar manualmente en el servidor)
-# Para utilizar tablas hermosas de manera extremadamente fácil
+# Para utilizar tablas hermosas de manera extremadamente facil
 gem 'listjs-rails'
 
 gem 'spree', '~> 3.1.0.rc1'
