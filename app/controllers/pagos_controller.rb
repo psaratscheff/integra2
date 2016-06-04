@@ -5,6 +5,7 @@ class PagosController < ApplicationController
   # GET /pagos.json
   def index
     @pagos = Pago.all
+    @saldo = obtener_saldo.to_s
   end
 
   # GET /pagos/1

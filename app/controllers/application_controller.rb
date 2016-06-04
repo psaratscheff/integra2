@@ -497,14 +497,32 @@ class ApplicationController < ActionController::Base
   end
 
   #-----------------------------------------------------------------------------
-  # ------------------------------Transacción-----------------------------------
+  # --------------------------------BANCO---------------------------------------
   # ----------------------------------------------------------------------------
+
+  def obtener_saldo
+    require 'httparty'
+    puts "--------Obteniendo Saldo--------------"
+    url = getLinkServidorCurso + "banco/cuenta/"
+    result = HTTParty.get(url +  + $bancoid,
+            headers: {
+              'Content-Type' => 'application/json'
+            })
+    puts "(Obtener_Saldo)Respuesta de la contraparte: " + result.body.to_s
+    json = JSON.parse(result.body)
+
+    if json.count() > 1
+      raise "Error: se retornó más de una respuesta para el mismo id"
+    end
+    puts "--------Saldo Obtenido--------------"
+    return json[0]['saldo']
+  end
 
   def obtener_transaccion(idtrx)
     require 'httparty'
     puts "--------Obteniendo Transacción--------------"
     url = getLinkServidorCurso + "banco/"
-    result = HTTParty.get(url++'trx/' + idtrx.to_s,
+    result = HTTParty.get(url + 'trx/' + idtrx.to_s,
             headers: {
               'Content-Type' => 'application/json'
             })
