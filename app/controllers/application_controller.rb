@@ -566,6 +566,11 @@ class ApplicationController < ActionController::Base
   # ------------------------------Almacen---------------------------------------
   # ----------------------------------------------------------------------------
 
+  def cantidadProductosAlmacen(almacenId)
+    productos = productos_almacen(almacenId)
+    return productos.count()
+  end
+
   def consultar_stock(sku)
     parsed_json = lista_de_almacenes()
 
