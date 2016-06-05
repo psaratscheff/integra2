@@ -627,13 +627,13 @@ class ApplicationController < ActionController::Base
                 'Content-Type' => 'application/json',
                 'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenId.to_s+sku.to_s)
               })
-      puts "(Stock_de_Almacen)Respuesta de la contraparte: " + result.body.to_s
+      puts "(Stock_de_Almacen_Limited)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
       puts "--------Stock de Almacen Obtenido--------------"
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
-      puts "error 1013"
+      puts "error 11093"
       render json: { error: ex.message }, status: 503 and return
     end
   end
