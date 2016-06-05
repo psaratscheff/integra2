@@ -600,8 +600,8 @@ class ApplicationController < ActionController::Base
     require 'httparty'
     puts "Almacen id= " + almacenId.to_s
     begin # Intentamos realizar conexión externa y obtener OC
-    puts "--------Obteniendo Stock de Almacen--------------"
-      result = HTTParty.get($urlBodega+"stock"+"?almacenId="+almacenId+"&"+"sku="+sku.to_s,
+    puts "--------Obteniendo Stock de Almacen---- :" + $urlBodega+"stock"+"?almacenId="+almacenId.to_s+"&sku="+sku.to_s
+      result = HTTParty.get($urlBodega+"stock"+"?almacenId="+almacenId.to_s+"&sku="+sku.to_s,
               headers: {
                 'Content-Type' => 'application/json',
                 'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenId.to_s+sku.to_s)
@@ -636,9 +636,14 @@ class ApplicationController < ActionController::Base
       elsif !json[0]["proveedor"]
         render json: { error: "Error: No se pudo recibir la OC"}, status: 503 and return
       end
-      localOc = Oc.find_by idoc: idoc
-      localOc.estado = "aceptada"
-      localOc.save!
+      local_oc = Oc.find_by idoc: idoc
+      if local_oc != nil
+        local_oc.estado = "aceptada"
+      else
+        oc = transform_oc(obtener_oc(idoc))
+        local_oc = Oc.new(oc)
+      end
+      local_oc.save!
       puts "--------OC Aceptada--------------"
       return json[0]
     rescue => ex # En caso de excepción retornamos error
@@ -720,7 +725,7 @@ class ApplicationController < ActionController::Base
       result = HTTParty.post($urlBodega+"moveStock",
               body: {
                 productoId: idProducto,
-                almacenId: almacenDestino,
+                almacenId: almacenDestino
               }.to_json,
               headers: {
                 'Content-Type' => 'application/json',
@@ -728,13 +733,16 @@ class ApplicationController < ActionController::Base
               })
       puts "(Mover_Producto_Almacen)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
-      Producto.find_by(_id: idProducto).almacen = Almacen.find_by(_id: almacenDestino)
+      producto = Producto.find_by(_id: idProducto)
+      if producto != nil
+        producto.almacen = Almacen.find_by(_id: almacenDestino)
+      end
       puts "--------Producto de Bodega Movido--------------"
       return json if true # SIEMPRE RETORNA NIL, no podemos verificar exito :(
       return false
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
-      puts "error 1010"
+      puts "error 1010:" + ex.message
       render json: { error: ex.message }, status: 503 and return
     end
   end
@@ -808,8 +816,9 @@ class ApplicationController < ActionController::Base
               })
       puts "(Despacho_Delete_Producto)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
+      producto = Producto.find_by(_id: producto_id)
+      producto.delete if producto != nil
       puts "--------Despachado DELETE--------------"
-      Producto.find_by(_id: producto_id).delete
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
@@ -851,7 +860,7 @@ class ApplicationController < ActionController::Base
     idDespacho = $despachoid
 
     begin # Intentamos realizar conexión externa y obtener OC
-      puts "--------Moviendo Producto a Despacho--------------"
+      puts "--------Moviendo Producto a Despacho----- idProducto: " + idProducto + "// idDespacho: "+ idDespacho
       result = HTTParty.post($urlBodega+"moveStock",
               body: {
                 productoId: idProducto,
@@ -863,7 +872,10 @@ class ApplicationController < ActionController::Base
               })
       puts "(Mover_a_Despacho)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
-      Producto.find_by(_id: idProducto).almacen = Almacen.find_by(_id: idDespacho)
+      producto = Producto.find_by(_id: idProducto)
+      if producto != nil
+        producto.almacen = Almacen.find_by(_id: idDespacho)
+      end
       puts "--------Producto Movido a Despacho--------------"
       return json
     rescue => ex # En caso de excepción retornamos error

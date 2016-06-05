@@ -36,25 +36,28 @@ class WebController < ApplicationController
   end
 
   def success
+    puts '-----------Despachando Producto B2C----------------------------------'
     id_boleta = params[:id_boleta]
     direccion = params[:direccion]
     sku = params[:sku]
     cantidad = params[:cantidad]
 
+    puts '--Despacho--B2C--id_boleta: ' + id_boleta + '--direccion: ' + direccion + '--sku: ' + sku + '--cantidad: ' + cantidad + '--'
     almacenes = lista_de_almacenes
-    itemsDespachados = 0
+    items_despachados = 0
     almacenes.each do |almacen|
-      unless almacen['despacho']
-        return if itemsDespachados == cantidad
-        productos = stock_de_almacen(almacen['_id'], sku)
-        productos.each do |producto|
-          return if itemsDespachados == cantidad
-          idProducto = producto['_id']
-          mover_a_despacho(idProducto)
-          despachar_delete_producto(idProducto, direccion, Item.find(sku).Precio_Unitario, id_boleta)
-          itemsDespachados += 1
-        end
+
+      break if items_despachados >= cantidad.to_i
+      next if almacen['despacho']
+      productos = stock_de_almacen(almacen['_id'], sku)
+      productos.each do |producto|
+        break if items_despachados == cantidad.to_i
+        id_producto = producto['_id']
+        mover_a_despacho(id_producto)
+        despachar_delete_producto(id_producto, direccion, Item.find(sku.to_i).Precio_Unitario, id_boleta)
+        items_despachados += 1
       end
     end
+    puts '-------------Producto B2C Despachado!--------------------------------'
   end
 end

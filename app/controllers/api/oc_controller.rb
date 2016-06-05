@@ -10,7 +10,7 @@ class Api::OcController < ApplicationController
     puts "Pasare esto"
     unless oc["cantidad"]
       puts "---------LA OC SOLICITADA NO EXISTE!-------"
-      render json: {"error": "La OC solicitada no existe", "aceptado": false, "idoc": idoc, msgCurso: oc}, status: 400 and return
+      render json: {error: "La OC solicitada no existe", aceptado: false, idoc: idoc, msgCurso: oc}, status: 400 and return
     end
     if consultar_stock(oc["sku"]) >= oc["cantidad"]
       puts "--------Suficiente Stock--------------"
@@ -20,11 +20,11 @@ class Api::OcController < ApplicationController
       background do # Función background definida en ApplicationController
         proceder_con_factura(idoc)
       end
-      render json: {"aceptado": true, "idoc": oc["_id"]}
+      render json: {aceptado: true, idoc: oc["_id"]}
     else
       puts "--------Stock Insuficiente--------------"
       rechazar_oc(oc["_id"])
-      render json: {"aceptado": false, "idoc": oc["_id"]}
+      render json: {aceptado: false, idoc: oc["_id"]}
     end
   end
 
