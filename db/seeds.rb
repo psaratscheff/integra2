@@ -110,6 +110,7 @@ p "Existen #{Item.count} items"
 
 if Almacen.count == 0
   p 'No se encontraron almacenes... Sincronizando con servidor'
+  Producto.destroy_all
   almacenes = lista_de_almacenes
   almacenes.each do |a|
     p 'Creando almacen...'
@@ -121,7 +122,8 @@ if Almacen.count == 0
     almacen.save!
     productos = productos_almacen(almacen._id)
     productos.each do |pr|
-      producto = Producto.new(_id: pr['_id'], sku: pr['sku'], estado: 'disponible', almacen_id: almacen._id)
+      producto = Producto.new(_id: pr['_id'], sku: pr['sku'], estado: 'disponible')
+      producto.almacen = almacen
       producto.save!
     end
   end
