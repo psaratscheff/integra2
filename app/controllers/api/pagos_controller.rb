@@ -103,7 +103,7 @@ class Api::PagosController < ApplicationController
 
 
     begin # Intentamos realizar conexión externa y obtener OC
-      puts "--------Moviendo Producto a Despacho--------------"
+      puts "--------Moviendo Producto a Despacho PAGOS--------------"
       url = "http://integracion-2016-prod.herokuapp.com/bodega/"
       result = HTTParty.post(url+"moveStock",
               body: {
@@ -114,14 +114,15 @@ class Api::PagosController < ApplicationController
                 'Content-Type' => 'application/json',
                 'Authorization' => 'INTEGRACIONgrupo2:'+encode('POST'+idProducto+idDespacho)
               })
-      puts "(Mover_a_Despacho)Respuesta de la contraparte: " + result.body.to_s
+      puts "(Mover_a_Despacho PAGOS)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
-      Producto.find_by(_id: idProducto).almacen = Almacen.find_by(_id: idDespacho)
-      puts "--------Producto Movido a Despacho--------------"
+      producto =Producto.find_by(_id: idProducto)
+      producto.almacen = Almacen.find_by(_id: idDespacho) if producto != nil
+      puts "--------Producto Movido a Despacho PAGOS--------------"
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
-      puts "error 1009: " + ex.message
+      puts "error 1009pagos1009: " + ex.message
       render json: { error: ex.message }, status: 503 and return
     end
   end
@@ -146,7 +147,8 @@ class Api::PagosController < ApplicationController
               })
       puts "(Despachar_Producto)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
-      Producto.find_by(_id: producto_id).delete
+      producto = Producto.find_by(_id: producto_id)
+      producto.delete if producto != nil
       puts "--------Producto Despachado a Cliente B2B--------------"
       return json
     rescue => ex # En caso de excepción retornamos error

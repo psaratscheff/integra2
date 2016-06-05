@@ -904,7 +904,8 @@ class ApplicationController < ActionController::Base
               })
       puts "(Despachar_Producto)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
-      Producto.find_by(_id: idProducto).delete
+      producto = Producto.find_by(_id: idProducto)
+      producto.delete if producto != nil
       puts "--------Producto Despachado a Cliente B2B--------------"
       return json
     rescue => ex # En caso de excepción retornamos error
