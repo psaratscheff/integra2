@@ -7,11 +7,12 @@ class WebController < ApplicationController
   end
 
   def procesar_compra
+    puts "-------------Procesando Compra-----------"
     sku = params[:sku]
-    cantidad = params[:cantidad].to_i
+    cantidad = params[:cantidad].to_s
     direccion = params[:direccion]
 
-    if stock_disponible(sku) < cantidad
+    if stock_disponible(sku) < cantidad.to_i
       url = params[:url]
       if url.include?('?')
         redirect_to params[:url] and return
@@ -20,19 +21,18 @@ class WebController < ApplicationController
       end
     end
 
-    total = cantidad * Item.find(sku).Precio_Unitario
-    monto_bruto =  total / 1.19
-    iva = monto_bruto * 0.19
+    total = (cantidad.to_i * Item.find(sku).Precio_Unitario).to_s
+    monto_bruto = (total.to_i / 1.19).to_i.to_s
+    iva = (monto_bruto.to_i * 0.19).to_i.to_s
 
     boleta = emitirBoleta($groupid, 'b2c', total)
 
     id_boleta = boleta['_id']
     url_fail = 'http://integra2.ing.puc.cl/spree' + '?success=false'
     url_ok = 'http://integra2.ing.puc.cl/spree' + '?success=true&idBoleta=' + id_boleta + '&montoBruto=' + monto_bruto + '&iva=' + iva + '&total=' + total + '&direccion=' + direccion + '&sku=' + sku + '&cantidad=' + cantidad
-
     url = urlWebPay(id_boleta, url_fail, url_ok)
-
     redirect_to url
+    puts "-------------Compra Procesada-----------"
   end
 
   def success
