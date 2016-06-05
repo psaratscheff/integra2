@@ -115,12 +115,12 @@ if Almacen.count == 0
   almacenes.each do |a|
     p 'Creando almacen...'
     almacen = Almacen.new(_id: a['_id'],
-                          espacioTotal: a['espacioTotal'],
+                          espacioTotal: a['totalSpace'],
                           recepcion: a['recepcion'],
                           despacho: a['despacho'],
                           pulmon: a['pulmon'])
     almacen.save!
-    productos = productos_almacen(almacen._id)
+    productos = productos_almacen(a['_id'])
     productos.each do |pr|
       producto = Producto.new(_id: pr['_id'], sku: pr['sku'], estado: 'disponible')
       producto.almacen = almacen
