@@ -826,7 +826,7 @@ class ApplicationController < ActionController::Base
               }.to_json,
               headers: {
                 'Content-Type' => 'application/json',
-                'Authorization' => 'INTEGRACIONgrupo2:'+encode('DELETE'+producto_id+direccion+precio+idoc)
+                'Authorization' => 'INTEGRACIONgrupo2:'+encode('DELETE'+producto_id.to_s+direccion.to_s+precio.to_s+idoc.to_s)
               })
       puts "(Despacho_Delete_Producto)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
