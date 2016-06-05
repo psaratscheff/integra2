@@ -58,6 +58,9 @@ class WebController < ApplicationController
         items_despachados += 1
       end
     end
+    respond_to do |format|
+      format.js
+    end
     puts '-------------Producto B2C Despachado!--------------------------------'
   end
 end
