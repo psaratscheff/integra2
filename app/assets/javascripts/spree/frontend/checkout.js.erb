@@ -31,7 +31,7 @@ ready = function() {
         type: "GET",
         url: "/handle_payment/despachar_producto/264f93gfwygf7sdfyb/" + idBoleta + "?direccion=" + direccion + "&sku=" + sku + "&cantidad=" + cantidad,
         success: function(data) {
-          $('#despachado').html("<h1>¡Producto despachado!<h1>");
+          $(document).ready($('#despachado').html("<h1>¡Producto despachado!<h1>"));
         }
       });
   } else if (success === 'false') {
