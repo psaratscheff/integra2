@@ -778,8 +778,8 @@ class ApplicationController < ActionController::Base
         productos.each do |producto|
           return if itemsDespachados == qty
           idProducto = producto['_id']
-          mover_a_despacho(idProducto) #TODO: IMPLEMENTAR FUNCION
-          # despachar_producto(producto, almacenClienteId, idoc, precio) #TODO: IMPLEMENTAR FUNCION
+          mover_a_despacho(idProducto)
+          despachar_delete_producto(idProducto, 'internacional', precio, idoc)
           itemsDespachados += 1
         end
       end
@@ -787,6 +787,33 @@ class ApplicationController < ActionController::Base
     oc["estado"] = "despachada"
     oc.save!
     return true
+  end
+
+  def despachar_delete_producto(producto_id, direccion, precio, idoc)
+    require 'httparty'
+    begin
+      puts "--------Despachando DELETE--------------"
+      result = HTTParty.delete($urlBodega+"stock",
+              body: {
+                productId: producto_id,
+                direccion: direccion,
+                precio: precio,
+                oc: idoc
+              }.to_json,
+              headers: {
+                'Content-Type' => 'application/json',
+                'Authorization' => 'INTEGRACIONgrupo2:'+encode('DELETE'+producto_id+direccion+precio+idoc)
+              })
+      puts "(Despacho_Delete_Producto)Respuesta de la contraparte: " + result.body.to_s
+      json = JSON.parse(result.body)
+      puts "--------Despachado DELETE--------------"
+      Producto.find_by(_id: producto_id).delete
+      return json
+    rescue => ex # En caso de excepción retornamos error
+      logger.error ex.message
+      puts "error 1009: " + ex.message
+      render json: { error: ex.message }, status: 503 and return
+    end
   end
 
   def despachar(idfactura, factura) #TODO: Revisar si este método va aquí
@@ -806,8 +833,8 @@ class ApplicationController < ActionController::Base
         productos.each do |producto|
           return if itemsDespachados == qty
           idProducto = producto['_id']
-          mover_a_despacho(idProducto) #TODO: IMPLEMENTAR FUNCION
-          despachar_producto(producto, almacenClienteId, idoc, precio) #TODO: IMPLEMENTAR FUNCION
+          mover_a_despacho(idProducto) # TODO: IMPLEMENTAR FUNCION
+          despachar_producto(producto, almacenClienteId, idoc, precio) # TODO: IMPLEMENTAR FUNCION
           itemsDespachados += 1
         end
       end
