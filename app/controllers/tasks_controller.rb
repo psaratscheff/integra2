@@ -255,7 +255,7 @@ class TasksController < ApplicationController
 		skus = [params[:sku]]
 		almacenId = $recepcionid #Variable global definida en application_controller
 		skus.each do |sku|
-			productos = stock_de_almacen_limited(almacenId, sku, 10)
+			productos = stock_de_almacen(almacenId, sku).limit(10)
 			productos.each do |pr|
 				if producto = mover_producto_almacen(pr['_id'], $bodegaid) # Variable global definida en AppCtrlr
 					producto = Producto.new(_id: pr['_id'], sku: sku, estado: 'disponible', almacen_id: $bodegaid)

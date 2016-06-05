@@ -617,28 +617,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def stock_de_almacen_limited(almacenId, sku, limit)
-    require 'httparty'
-    puts "Almacen id= " + almacenId.to_s
-    begin # Intentamos realizar conexión externa y obtener OC
-    puts "--------Obteniendo Stock de Almacen--------------"
-      result = HTTParty.get($urlBodega+"stock"+"?almacenId="+almacenId+"&sku="+sku.to_s+"&limit="+limit.to_s,
-              headers: {
-                'Content-Type' => 'application/json',
-                'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenId.to_s+sku.to_s+limit.to_s)
-              })
-      puts "(Stock_de_Almacen_Limited)Respuesta de la contraparte: " + result.body.to_s
-      json = JSON.parse(result.body)
-      puts "--------Stock de Almacen Obtenido--------------"
-      return json
-    rescue => ex # En caso de excepción retornamos error
-      logger.error ex.message
-      puts "error 11093"
-      render json: { error: ex.message }, status: 503 and return
-    end
-  end
-
-
   def aceptar_oc(idoc)
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
