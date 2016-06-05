@@ -9,6 +9,7 @@ class WebController < ApplicationController
   def procesar_compra
     sku = params[:sku]
     cantidad = params[:cantidad].to_i
+    direccion = params[:direccion]
 
     if stock_disponible(sku) < cantidad
       url = params[:url]
@@ -20,23 +21,17 @@ class WebController < ApplicationController
     end
 
     total = cantidad * Item.find(sku).Precio_Unitario
+    monto_bruto =  total / 1.19
+    iva = monto_bruto * 0.19
 
     boleta = emitirBoleta($groupid, 'b2c', total)
 
     id_boleta = boleta['_id']
-    url_fail = 'http://integra2.ing.puc.cl/handle_payment/fail'
-    url_ok = 'http://integra2.ing.puc.cl/handle_payment/success'
+    url_fail = 'http://integra2.ing.puc.cl/spree' + '?success=false'
+    url_ok = 'http://integra2.ing.puc.cl/spree' + '?success=true&idBoleta=' + id_boleta + '&montoBruto=' + monto_bruto + '&iva=' + iva + '&total=' + total + '&direccion=' + direccion
 
     url = urlWebPay(id_boleta, url_fail, url_ok)
 
     redirect_to url
-  end
-
-  def success
-    render html: 'WUHU! Compra realizada :D'
-  end
-
-  def fail
-    render html: 'Tu compra ha fallado porque eres rasca ¬¬'
   end
 end

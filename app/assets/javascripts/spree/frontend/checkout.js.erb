@@ -15,10 +15,43 @@ var getUrlParameter = function getUrlParameter(sParam) {
 
 var ready;
 ready = function() {
+  //---------------------------PAGINA INICIO------------------------------------
+  var success = getUrlParameter('success');
+  var idBoleta = getUrlParameter('idBoleta');
+  var montoBruto = getUrlParameter('montoBruto');
+  var iva = getUrlParameter('iva');
+  var total = getUrlParameter('total');
+  var direccion = getUrlParameter('direccion');
+  if (success === 'true') {
+    $('[data-hook="homepage_products"]').html(`
+      <h1 class='product-title' itemprop='name'> Tu Compra fue realizada con éxito.</h1>
+          <h3> Información de tu boleta </h3>
+          <div class='well' itemprop='description' data-hook='description'>
+            <b> ID Boleta: </b> ` + idBoleta + `
+            <br />
+            <b> Monto Bruto: </b> ` + montoBruto + `
+            <br />
+            <b> IVA: </b> ` + iva + `
+            <br />
+            <b> Total: </b> ` + total + `
+            <br />
+            <b> Direccion: </b> ` + direccion + `
+          </div>`
+    );
+  } else if (success === 'false') {
+    $('[data-hook="homepage_products"]').html(`
+      <h1 class='product-title' itemprop='name'>No se pudo completar tu compra.</h1>
+          <div class='well' itemprop='description' data-hook='description'>
+            No te preocupes, el éxito es ir de fracaso en fracaso sin desesperarse...
+          </div>`
+    );
+  }
+
+  //--------------------------PAGINA PRODUCTO-----------------------------------
   $("#add-to-cart-button").html('Comprar');
 
   var stock_error = getUrlParameter('enough-stock');
-  if (stock_error == 'false') {
+  if (stock_error === 'false') {
     alert('Lo lamento, ¡No tenemos suficiente stock!');
   };
 
@@ -37,18 +70,37 @@ ready = function() {
   } else if (productTitle == 'Tela de lino') {
     sku = 28;
   }
-  //$.ajax({
-  //    type: "GET",
-  //    url: "/web/load_product/" + sku
-  //  });
+  $.ajax({
+      dataType: "json",
+      type: "GET",
+      url: "/api/consultar/" + sku,
+      success: function(data) {
+        $('#awesome').html(data.stock);
+      }
+    });
+  $('#product-price').after(`
+    <h6>Stock</h6>
+    <span id="awesome" class="lead price selling" itemprop="price">`
+    + `loading...` +
+    `</span>
+    <br />
+    <h6>Dirección de despacho</h6>
+    <input id="direccion_input" type="text" name="address">`
+  );
 
   $("#add-to-cart-button").on("click", function(e) {
     e.preventDefault();
     var cantidad;
+    var direccion;
     cantidad = $('#quantity').val();
+    direccion = $('#direccion_input').val();
     url = window.location;
 
-    window.location = "http://integra2.ing.puc.cl/handle_payment?sku=" + sku + "&cantidad=" + cantidad + "&url=" + url;
+    if (direccion === '') {
+      alert('Debes ingresar una dirección!');
+    } else {
+      window.location = "http://integra2.ing.puc.cl/handle_payment?sku=" + sku + "&cantidad=" + cantidad + "&url=" + url + '&direccion=' + direccion;
+    }
   });
 }
 
