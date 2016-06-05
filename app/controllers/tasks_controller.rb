@@ -280,4 +280,38 @@ class TasksController < ApplicationController
 		end
 		render json: { success: true }
 	end
+
+	def limpiarBodegaRepecepcionBackground
+		background do
+			skus = [2,12,21,28,32,25,20,15,37] #Productos que podríamos tener en la bodega
+			almacenId = $recepcionid #Variable global definida en application_controller
+			skus.each do |sku|
+				productos = stock_de_almacen(almacenId, sku)
+				productos.each do |pr|
+					if producto = mover_producto_almacen(pr['_id'], $bodegaid) # Variable global definida en AppCtrlr
+						producto = Producto.new(_id: pr['_id'], sku: sku, estado: 'disponible', almacen_id: $bodegaid)
+						almacen = Almacen.find_by(_id: $bodegaid)
+						agregar_producto(producto, almacen)
+					end
+				end
+			end
+		end
+		render json: { success: true }
+	end
+
+	def limpiarBodegaDespachoBackground
+		background do
+			skus = [2,12,21,28,32,25,20,15,37] #Productos que podríamos tener en la bodega
+			almacenId = $despachoid
+			skus.each do |sku|
+				while (productos = stock_de_almacen(almacenId, sku)).count > 0
+					productos.each do |producto|
+						idProducto = producto['_id']
+						mover_producto_almacen(idProducto, '572aad41bdb6d403005fb0bc')
+					end
+				end
+			end
+		end
+		render json: { success: true }
+	end
 end
