@@ -116,6 +116,7 @@ class Api::PagosController < ApplicationController
               })
       puts "(Mover_a_Despacho)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
+      Producto.find_by(_id: idProducto).almacen = Almacen.find_by(_id: idDespacho)
       puts "--------Producto Movido a Despacho--------------"
       return json
     rescue => ex # En caso de excepción retornamos error
@@ -145,6 +146,7 @@ class Api::PagosController < ApplicationController
               })
       puts "(Despachar_Producto)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
+      Producto.find_by(_id: producto_id).delete
       puts "--------Producto Despachado a Cliente B2B--------------"
       return json
     rescue => ex # En caso de excepción retornamos error

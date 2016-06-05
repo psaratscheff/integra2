@@ -622,7 +622,7 @@ class ApplicationController < ActionController::Base
       puts "--------Aceptando OC--------------"
       url = getLinkServidorCurso + "oc/"
       result = HTTParty.post(url+"recepcionar/"+idoc.to_s,
-              body:    {
+                    body:    {
                       id: idoc
                     }.to_json,
               headers: {
@@ -727,8 +727,9 @@ class ApplicationController < ActionController::Base
               })
       puts "(Mover_Producto_Almacen)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
+      Producto.find_by(_id: idProducto).almacen = Almacen.find_by(_id: almacenDestino)
       puts "--------Producto de Bodega Movido--------------"
-      return json if true # TODO: FIX THIS!!!
+      return json if true # SIEMPRE RETORNA NIL, no podemos verificar exito :(
       return false
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
@@ -848,7 +849,6 @@ class ApplicationController < ActionController::Base
     require 'httparty'
     idDespacho = $despachoid
 
-
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Moviendo Producto a Despacho--------------"
       result = HTTParty.post($urlBodega+"moveStock",
@@ -862,6 +862,7 @@ class ApplicationController < ActionController::Base
               })
       puts "(Mover_a_Despacho)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
+      Producto.find_by(_id: idProducto).almacen = Almacen.find_by(_id: idDespacho)
       puts "--------Producto Movido a Despacho--------------"
       return json
     rescue => ex # En caso de excepción retornamos error
@@ -890,6 +891,7 @@ class ApplicationController < ActionController::Base
               })
       puts "(Despachar_Producto)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
+      Producto.find_by(_id: idProducto).delete
       puts "--------Producto Despachado a Cliente B2B--------------"
       return json
     rescue => ex # En caso de excepción retornamos error

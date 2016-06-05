@@ -7,7 +7,7 @@ end
 desc 'Poblar Spree con productos'
 task :populate_spree do
   $api_key = ENV['SPREE_API_KEY']
-  $url = 'http://integra2.ing.puc.cl/'
+  $url = 'http://integra2.ing.puc.cl/spree/'
 
   def create_product(name, price, sku, cost_price)
     require 'httparty'
