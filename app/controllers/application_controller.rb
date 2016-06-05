@@ -18,11 +18,13 @@ class ApplicationController < ActionController::Base
     $bancoid = '572aac69bdb6d403005fb04f'
     $recepcionid = "572aad41bdb6d403005fb0ba"
     $despachoid = "572aad41bdb6d403005fb0bb"
+    $bodegaid = '572aad41bdb6d403005fb0bc'
   else
     $groupid = "571262b8a980ba030058ab50"
     $bancoid = "571262c3a980ba030058ab5c"
     $recepcionid = "571262aaa980ba030058a14e"
     $despachoid = "571262aaa980ba030058a14f"
+    $bodegaid = '571262aaa980ba030058a150'
   end
   ##### Método para obtener el almacenID en vivo
   #  parsed_json = lista_de_almacenes() # Función definida en ApplicationController
@@ -549,7 +551,6 @@ class ApplicationController < ActionController::Base
   end
 
   def transferir(cuentaOrigen, cuentoDestino, montoTransferencia)
-
     begin
       puts "--------Realizando Transacción--------------"
       url = getLinkServidorCurso + "banco/trx/"
@@ -571,7 +572,6 @@ class ApplicationController < ActionController::Base
       puts "error 1001: " + ex.message
       render json: { error: ex.message }, status: 503 and return
     end
-
   end
 
   # ----------------------------------------------------------------------------
@@ -701,16 +701,15 @@ class ApplicationController < ActionController::Base
   end
 
   def productos_almacen(almacenId)
-  skus = [2,12,15,20,21,25,28,32,37]
-  productos = []
-  skus.each do |sku|
-    listaProductos = stock_de_almacen(almacenId,sku)
-    listaProductos.each do |producto|
-      productos.append(producto)
+    skus = [2,12,15,20,21,25,28,32,37]
+    productos = []
+    skus.each do |sku|
+      listaProductos = stock_de_almacen(almacenId,sku)
+      listaProductos.each do |producto|
+        productos.append(producto)
+      end
     end
-  end
-
-  return productos
+    return productos
   end
 
   def mover_producto_almacen(idProducto, almacenDestino)
@@ -729,35 +728,14 @@ class ApplicationController < ActionController::Base
       puts "(Mover_Producto_Almacen)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
       puts "--------Producto de Bodega Movido--------------"
+      return json if true # TODO: FIX THIS!!!
+      return false
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1010"
       render json: { error: ex.message }, status: 503 and return
     end
   end
-
-
-  def get_array_productos_almacen(almacenid, sku)
-    require 'httparty'
-    begin # Intentamos realizar conexión externa y obtener OC
-      puts "--------Obteniendo Productos por SKU del Almacen--------------"
-      result = HTTParty.get($urlBodega+"stock"+"?"+"almacenId="+almacenid+"&"+'sku='+sku.to_s,
-              headers: {
-                'Content-Type' => 'application/json',
-                'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenid+sku.to_s)
-              })
-      puts "(Array_Producto_Almacen)Respuesta de la contraparte: " + result.body.to_s
-      json = JSON.parse(result.body)
-      puts "--------Productos Obtenidos por SKU del Almacen--------------"
-      return json
-    rescue => ex # En caso de excepción retornamos error
-      logger.error ex.message
-      puts "error 1011"
-      render json: { error: ex.message }, status: 503 and return
-    end
-  end
-
-
 
   # ----------------------------------------------------------------------------
   # ------------------------------Fábrica---------------------------------------
@@ -796,7 +774,7 @@ class ApplicationController < ActionController::Base
     almacenes.each do |almacen|
       unless almacen['despacho']
         return if itemsDespachados == qty
-        productos = get_array_productos_almacen(almacen['_id'], sku)
+        productos = stock_de_almacen(almacen['_id'], sku)
         productos.each do |producto|
           return if itemsDespachados == qty
           idProducto = producto['_id']
@@ -824,7 +802,7 @@ class ApplicationController < ActionController::Base
     almacenes.each do |almacen|
       unless almacen['despacho']
         return if itemsDespachados == qty
-        productos = get_array_productos_almacen(almacen['_id'], sku)
+        productos = stock_de_almacen(almacen['_id'], sku)
         productos.each do |producto|
           return if itemsDespachados == qty
           idProducto = producto['_id']
@@ -890,26 +868,6 @@ class ApplicationController < ActionController::Base
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1010"
-      render json: { error: ex.message }, status: 503 and return
-    end
-  end
-
-  def get_array_productos_almacen(almacenid, sku)
-    require 'httparty'
-    begin # Intentamos realizar conexión externa y obtener OC
-      puts "--------Obteniendo Productos por SKU del Almacen--------------"
-      result = HTTParty.get($urlBodega+"stock"+"?"+"almacenId="+almacenid+"&"+'sku='+sku.to_s,
-              headers: {
-                'Content-Type' => 'application/json',
-                'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenid+sku.to_s)
-              })
-      puts "(Array_Producto_Almacen)Respuesta de la contraparte: " + result.body.to_s
-      json = JSON.parse(result.body)
-      puts "--------Productos Obtenidos por SKU del Almacen--------------"
-      return json
-    rescue => ex # En caso de excepción retornamos error
-      logger.error ex.message
-      puts "error 1011"
       render json: { error: ex.message }, status: 503 and return
     end
   end
