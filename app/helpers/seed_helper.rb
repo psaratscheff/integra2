@@ -33,19 +33,6 @@ module SeedHelper
     puts "--------Lista de Almacenes Obtenida--------------"
     return json
   end
-  def get_array_productos_almacen(almacenid, sku)
-    require 'httparty'
-    puts "--------Obteniendo Productos por SKU del Almacen--------------"
-    result = HTTParty.get($urlBodega+"stock"+"?"+"almacenId="+almacenid+"&"+'sku='+sku.to_s,
-            headers: {
-              'Content-Type' => 'application/json',
-              'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenid+sku.to_s)
-            })
-    puts "(Array_Producto_Almacen)Respuesta de la contraparte: " + result.body.to_s
-    json = JSON.parse(result.body)
-    puts "--------Productos Obtenidos por SKU del Almacen--------------"
-    return json
-  end
   def productos_almacen(almacenId)
     skus = [2,12,15,20,21,25,28,32,37]
     productos = []

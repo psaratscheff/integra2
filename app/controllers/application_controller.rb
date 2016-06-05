@@ -19,12 +19,14 @@ class ApplicationController < ActionController::Base
     $recepcionid = "572aad41bdb6d403005fb0ba"
     $despachoid = "572aad41bdb6d403005fb0bb"
     $bodegaid = '572aad41bdb6d403005fb0bc'
+    $pulmonid = '572aad41bdb6d403005fb1be'
   else
     $groupid = "571262b8a980ba030058ab50"
     $bancoid = "571262c3a980ba030058ab5c"
     $recepcionid = "571262aaa980ba030058a14e"
     $despachoid = "571262aaa980ba030058a14f"
     $bodegaid = '571262aaa980ba030058a150'
+    $pulmonid = '⁠⁠⁠571262aaa980ba030058a1f0'
   end
   ##### Método para obtener el almacenID en vivo
   #  parsed_json = lista_de_almacenes() # Función definida en ApplicationController
@@ -615,6 +617,27 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def stock_de_almacen_limited(almacenId, sku, limit)
+    require 'httparty'
+    puts "Almacen id= " + almacenId.to_s
+    begin # Intentamos realizar conexión externa y obtener OC
+    puts "--------Obteniendo Stock de Almacen--------------"
+      result = HTTParty.get($urlBodega+"stock"+"?almacenId="+almacenId+"&sku="+sku.to_s+"&limit="+limit.to_s,
+              headers: {
+                'Content-Type' => 'application/json',
+                'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenId.to_s+sku.to_s)
+              })
+      puts "(Stock_de_Almacen)Respuesta de la contraparte: " + result.body.to_s
+      json = JSON.parse(result.body)
+      puts "--------Stock de Almacen Obtenido--------------"
+      return json
+    rescue => ex # En caso de excepción retornamos error
+      logger.error ex.message
+      puts "error 1013"
+      render json: { error: ex.message }, status: 503 and return
+    end
+  end
+
 
   def aceptar_oc(idoc)
     require 'httparty'
@@ -796,10 +819,10 @@ class ApplicationController < ActionController::Base
       puts "--------Despachando DELETE--------------"
       result = HTTParty.delete($urlBodega+"stock",
               body: {
-                productId: producto_id,
-                direccion: direccion,
-                precio: precio,
-                oc: idoc
+                productId: producto_id.to_s,
+                direccion: direccion.to_s,
+                precio: precio.to_s,
+                oc: idoc.to_s
               }.to_json,
               headers: {
                 'Content-Type' => 'application/json',
@@ -812,7 +835,7 @@ class ApplicationController < ActionController::Base
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
-      puts "error 1009: " + ex.message
+      puts "error 1869: " + ex.message
       render json: { error: ex.message }, status: 503 and return
     end
   end

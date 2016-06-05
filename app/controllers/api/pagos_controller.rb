@@ -82,7 +82,7 @@ class Api::PagosController < ApplicationController
     almacenes.each do |almacen|
       unless almacen['despacho']
         return if itemsDespachados == qty
-        productos = get_array_productos_almacen(almacen['_id'], sku)
+        productos = stock_de_almacen(almacen['_id'], sku)
         productos.each do |producto|
           return if itemsDespachados == qty
           idProducto = producto['_id']

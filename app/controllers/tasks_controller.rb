@@ -251,14 +251,12 @@ class TasksController < ApplicationController
 		end
 	end
 
-	def limparBodegaRepecepcion
-		skus = [2,12,21,28,32,25,20,15,37] #Productos que podríamos tener en la bodega
+	def limpiarBodegaRepecepcion
+		skus = [params[:sku]]
 		almacenId = $recepcionid #Variable global definida en application_controller
 		skus.each do |sku|
-			productos = get_array_productos_almacen(almacenId, sku)
-			#TODO: Convertir productos a lista, o iterar sobre el json
+			productos = stock_de_almacen_limited(almacenId, sku, 10)
 			productos.each do |pr|
-				#TODO: Revisar que almacen no este lleno
 				if producto = mover_producto_almacen(pr['_id'], $bodegaid) # Variable global definida en AppCtrlr
 					producto = Producto.new(_id: pr['_id'], sku: sku, estado: 'disponible', almacen_id: $bodegaid)
 					almacen = Almacen.find_by(_id: $bodegaid)
@@ -266,18 +264,20 @@ class TasksController < ApplicationController
 				end
 			end
 		end
+		render json: { success: true }
 	end
 
-	def limparBodegaDespacho
+	def limpiarBodegaDespacho
 		skus = [2,12,21,28,32,25,20,15,37] #Productos que podríamos tener en la bodega
 		almacenId = $despachoid
 		skus.each do |sku|
-			productos = get_array_productos_almacen(almacenId, sku)
-			#TODO: Convertir productos a lista, o iterar sobre el json
-			productos.each do |producto|
-				idProducto = producto['_id']
-				mover_producto_almacen(idProducto, $despachoid) #TODO: Revisar que almacen no este lleno
+			while (productos = stock_de_almacen(almacenId, sku)).count > 0
+				productos.each do |producto|
+					idProducto = producto['_id']
+					mover_producto_almacen(idProducto, '572aad41bdb6d403005fb1be')
+				end
 			end
 		end
+		render json: { success: true }
 	end
 end
