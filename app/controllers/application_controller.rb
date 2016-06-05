@@ -805,7 +805,7 @@ class ApplicationController < ActionController::Base
       puts "--------Despachando DELETE--------------"
       result = HTTParty.delete($urlBodega+"stock",
               body: {
-                productId: producto_id.to_s,
+                productoId: producto_id.to_s,
                 direccion: direccion.to_s,
                 precio: precio.to_s,
                 oc: idoc.to_s
