@@ -22,28 +22,31 @@ ready = function() {
     alert('Lo lamento, ¡No tenemos suficiente stock!');
   };
 
+  var sku;
+  var productTitle;
+
+  productTitle = $('.product-title').html();
+  if (productTitle == 'Cereal Avena') {
+    sku = 12;
+  } else if (productTitle == 'Cuero') {
+    sku = 32;
+  } else if (productTitle == 'Algodon') {
+    sku = 21;
+  } else if (productTitle == 'Huevo') {
+    sku = 2;
+  } else if (productTitle == 'Tela de lino') {
+    sku = 28;
+  }
+  //$.ajax({
+  //    type: "GET",
+  //    url: "/web/load_product/" + sku
+  //  });
+
   $("#add-to-cart-button").on("click", function(e) {
-
     e.preventDefault();
-    var sku;
     var cantidad;
-    var productTitle;
-
-    productTitle = $('.product-title').html();
     cantidad = $('#quantity').val();
     url = window.location;
-
-    if (productTitle == 'Cereal Avena') {
-      sku = 12;
-    } else if (productTitle == 'Cuero') {
-      sku = 32;
-    } else if (productTitle == 'Algodon') {
-      sku = 21;
-    } else if (productTitle == 'Huevo') {
-      sku = 2;
-    } else if (productTitle == 'Tela de lino') {
-      sku = 28;
-    }
 
     window.location = "http://integra2.ing.puc.cl/handle_payment?sku=" + sku + "&cantidad=" + cantidad + "&url=" + url;
   });

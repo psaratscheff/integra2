@@ -1,4 +1,11 @@
 class WebController < ApplicationController
+  def load_product
+    @sku = params[:sku]
+    respond_to do |format|
+      format.js # actually means: if the client ask for js -> return file.js
+    end
+  end
+
   def procesar_compra
     sku = params[:sku]
     cantidad = params[:cantidad].to_i
