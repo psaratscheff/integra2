@@ -25,24 +25,7 @@ ready = function() {
   var sku = getUrlParameter('sku');
   var cantidad = getUrlParameter('cantidad');
   if (success === 'true') {
-    $('[data-hook="homepage_products"]').html(`
-      <h1 class='product-title' itemprop='name'> Tu Compra fue realizada con éxito.</h1>
-      <h3> Información de tu boleta </h3>
-      <div class='well' itemprop='description' data-hook='description'>
-        <b> ID Boleta: </b> ` + idBoleta + `
-        <br />
-        <b> Monto Bruto: </b> ` + montoBruto + `
-        <br />
-        <b> IVA: </b> ` + iva + `
-        <br />
-        <b> Total: </b> ` + total + `
-        <br />
-        <b> Direccion: </b> ` + direccion + `
-      </div>
-      <div id="despachado" class='well''>
-        <h2>Despachando, por favor espere...</h2>
-      </div>`
-    );
+    $('[data-hook="homepage_products"]').html("<h1 class='product-title' itemprop='name'> Tu Compra fue realizada con éxito.</h1><h3> Información de tu boleta </h3><div class='well' itemprop='description' data-hook='description'><b> ID Boleta: </b>"  + idBoleta + "<br /><b> Monto Bruto: </b> " + montoBruto +"<br /><b> IVA: </b>" + iva + "<br /><b> Total: </b>" + total +"<br /><b> Direccion: </b>" + direccion + "</div><div id='despachado' class='well'><h2>Despachando, por favor espere...</h2></div>");
     $.ajax({
         dataType: "json",
         type: "GET",
@@ -53,12 +36,7 @@ ready = function() {
       });
     '/handle_payment/despachar_producto/264f93gfwygf7sdfyb'
   } else if (success === 'false') {
-    $('[data-hook="homepage_products"]').html(`
-      <h1 class='product-title' itemprop='name'>No se pudo completar tu compra.</h1>
-          <div class='well' itemprop='description' data-hook='description'>
-            No te preocupes, el éxito es ir de fracaso en fracaso sin desesperarse...
-          </div>`
-    );
+    $('[data-hook="homepage_products"]').html("<h1 class='product-title' itemprop='name'>No se pudo completar tu compra.</h1><div class='well' itemprop='description' data-hook='description'>No te preocupes, el éxito es ir de fracaso en fracaso sin desesperarse...</div>");
   }
 
   //--------------------------PAGINA PRODUCTO-----------------------------------
@@ -92,15 +70,7 @@ ready = function() {
         $('#awesome').html(data.stock);
       }
     });
-  $('#product-price').after(`
-    <h6>Stock</h6>
-    <span id="awesome" class="lead price selling" itemprop="price">`
-    + `loading...` +
-    `</span>
-    <br />
-    <h6>Dirección de despacho</h6>
-    <input id="direccion_input" type="text" name="address">`
-  );
+  $('#product-price').after("<h6>Stock</h6><span id='awesome' class='lead price selling' itemprop='price'>loading...</span><br /><h6>Dirección de despacho</h6><input id='direccion_input' type='text' name='address'>");
 
   $("#add-to-cart-button").on("click", function(e) {
     e.preventDefault();
