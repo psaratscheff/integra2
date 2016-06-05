@@ -625,7 +625,7 @@ class ApplicationController < ActionController::Base
       result = HTTParty.get($urlBodega+"stock"+"?almacenId="+almacenId+"&sku="+sku.to_s+"&limit="+limit.to_s,
               headers: {
                 'Content-Type' => 'application/json',
-                'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenId.to_s+sku.to_s)
+                'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenId.to_s+sku.to_s+limit.to_s)
               })
       puts "(Stock_de_Almacen_Limited)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
