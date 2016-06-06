@@ -27,11 +27,13 @@ ready = function() {
   if (success === 'true') {
     $('[data-hook="homepage_products"]').html("<h1 class='product-title' itemprop='name'> Tu Compra fue realizada con éxito.</h1><h3> Información de tu boleta </h3><div class='well' itemprop='description' data-hook='description'><b> ID Boleta: </b>"  + idBoleta + "<br /><b> Monto Bruto: </b> " + montoBruto +"<br /><b> IVA: </b>" + iva + "<br /><b> Total: </b>" + total +"<br /><b> Direccion: </b>" + direccion + "</div><div id='despachado' class='well'><h2>Producto despachado</h2></div>");
     $.ajax({
-        dataType: "json",
         type: "GET",
         url: "/handle_payment/despachar_producto/264f93gfwygf7sdfyb/" + idBoleta + "?direccion=" + direccion + "&sku=" + sku + "&cantidad=" + cantidad,
         success: function(data) {
-          $(document).ready($('#despachado').html("<h1>¡Producto despachado!<h1>"));
+          $(document).ready($('#despachado').html("<h1>¡Pedido despachado!<h1>"));
+        },
+        error: function(err) {
+          console.log("AJAX error in request: " + JSON.stringify(err, null, 2));
         }
       });
   } else if (success === 'false') {
