@@ -25,7 +25,7 @@ ready = function() {
   var sku = getUrlParameter('sku');
   var cantidad = getUrlParameter('cantidad');
   if (success === 'true') {
-    $('[data-hook="homepage_products"]').html("<h1 class='product-title' itemprop='name'> Tu Compra fue realizada con éxito.</h1><h3> Información de tu boleta </h3><div class='well' itemprop='description' data-hook='description'><b> ID Boleta: </b>"  + idBoleta + "<br /><b> Monto Bruto: </b> " + montoBruto +"<br /><b> IVA: </b>" + iva + "<br /><b> Total: </b>" + total +"<br /><b> Direccion: </b>" + direccion + "</div><div id='despachado' class='well'><h2>Producto despachado</h2></div>");
+    $('[data-hook="homepage_products"]').html("<h1 class='product-title' itemprop='name'> Tu Compra fue realizada con éxito.</h1><h3> Información de tu boleta </h3><div class='well' itemprop='description' data-hook='description'><b> ID Boleta: </b>"  + idBoleta + "<br /><b> Monto Bruto: </b> " + montoBruto +"<br /><b> IVA: </b>" + iva + "<br /><b> Total: </b>" + total +"<br /><b> Direccion: </b>" + direccion + "</div><div id='despachado' class='well'><h2>Despachando pedido... En caso de desear una confirmación, no cierre esta ventana.</h2></div>");
     $.ajax({
         type: "GET",
         url: "/handle_payment/despachar_producto/264f93gfwygf7sdfyb/" + idBoleta + "?direccion=" + direccion + "&sku=" + sku + "&cantidad=" + cantidad,
@@ -34,6 +34,7 @@ ready = function() {
         },
         error: function(err) {
           console.log("AJAX error in request: " + JSON.stringify(err, null, 2));
+          $(document).ready($('#despachado').html("<h1 style='color: red;'>ERROR. Hubo un error al despachar su pedido, por favor contactenos al teléfono 123275613987163845, anexo 582735<h1>"));
         }
       });
   } else if (success === 'false') {

@@ -58,9 +58,7 @@ class WebController < ApplicationController
         items_despachados += 1
       end
     end
-    respond_to do |format|
-      format.js
-    end
+    render nothing: true, status: 200
     puts '-------------Producto B2C Despachado!--------------------------------'
   end
 end
