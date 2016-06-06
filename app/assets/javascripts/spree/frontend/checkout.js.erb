@@ -25,7 +25,7 @@ ready = function() {
   var sku = getUrlParameter('sku');
   var cantidad = getUrlParameter('cantidad');
   if (success === 'true') {
-    $('[data-hook="homepage_products"]').html("<h1 class='product-title' itemprop='name'> Tu Compra fue realizada con éxito.</h1><h3> Información de tu boleta </h3><div class='well' itemprop='description' data-hook='description'><b> ID Boleta: </b>"  + idBoleta + "<br /><b> Monto Bruto: </b> " + montoBruto +"<br /><b> IVA: </b>" + iva + "<br /><b> Total: </b>" + total +"<br /><b> Direccion: </b>" + direccion + "</div><div id='despachado' class='well'><h2>Despachando, por favor espere...</h2></div>");
+    $('[data-hook="homepage_products"]').html("<h1 class='product-title' itemprop='name'> Tu Compra fue realizada con éxito.</h1><h3> Información de tu boleta </h3><div class='well' itemprop='description' data-hook='description'><b> ID Boleta: </b>"  + idBoleta + "<br /><b> Monto Bruto: </b> " + montoBruto +"<br /><b> IVA: </b>" + iva + "<br /><b> Total: </b>" + total +"<br /><b> Direccion: </b>" + direccion + "</div><div id='despachado' class='well'><h2>Producto despachado</h2></div>");
     $.ajax({
         dataType: "json",
         type: "GET",
