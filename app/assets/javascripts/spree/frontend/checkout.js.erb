@@ -83,6 +83,10 @@ ready = function() {
     var cantidad;
     var direccion;
     cantidad = $('#quantity').val();
+    if (cantidad > 30) {
+      alert('El máximo por pedido es 30 unidades, por favor disminuye la cantidad solicitada.');
+      return;
+    }
     direccion = $('#direccion_input').val();
     url = window.location;
 
