@@ -25,7 +25,7 @@ ready = function() {
   var sku = getUrlParameter('sku');
   var cantidad = getUrlParameter('cantidad');
   if (success === 'true') {
-    $('[data-hook="homepage_products"]').html("<h1 class='product-title' itemprop='name'> Tu Compra fue realizada con éxito.</h1><h3> Información de tu boleta </h3><div class='well' itemprop='description' data-hook='description'><b> ID Boleta: </b>"  + idBoleta + "<br /><b> Monto Bruto: </b> " + montoBruto +"<br /><b> IVA: </b>" + iva + "<br /><b> Total: </b>" + total +"<br /><b> Direccion: </b>" + direccion + "</div><div id='despachado' class='well'><h2>Despachando pedido... En caso de desear una confirmación, no cierre esta ventana.</h2></div>");
+    $('[data-hook="homepage_products"]').html("<h1 class='product-title' itemprop='name'> Tu Compra fue realizada con éxito.</h1><h3> Información de tu boleta </h3><div class='well' itemprop='description' data-hook='description'><b> ID Boleta: </b>"  + idBoleta + "<br /><b> Monto Bruto: </b> " + montoBruto +"<br /><b> IVA: </b>" + iva + "<br /><b> Total: </b>" + total +"<br /><b> Direccion: </b>" + direccion + "</div><div id='despachado' class='well'><h2>Despachando pedido, por favor no cierre esta ventana...</h2></div>");
     $.ajax({
         type: "GET",
         url: "/handle_payment/despachar_producto/264f93gfwygf7sdfyb/" + idBoleta + "?direccion=" + direccion + "&sku=" + sku + "&cantidad=" + cantidad,
