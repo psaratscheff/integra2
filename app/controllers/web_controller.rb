@@ -12,7 +12,7 @@ class WebController < ApplicationController
     cantidad = params[:cantidad].to_s
     direccion = params[:direccion]
 
-    if stock_disponible(sku) < cantidad.to_i
+    if stock_disponible(sku) < cantidad.to_i || cantidad.to_i > 30
       url = params[:url]
       if url.include?('?')
         redirect_to params[:url] and return

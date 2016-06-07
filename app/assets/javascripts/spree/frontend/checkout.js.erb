@@ -34,7 +34,7 @@ ready = function() {
         },
         error: function(err) {
           console.log("AJAX error in request: " + JSON.stringify(err, null, 2));
-          $(document).ready($('#despachado').html("<h1 style='color: red;'>ERROR. Hubo un error al despachar su pedido, por favor contactenos al teléfono 123275613987163845, anexo 582735<h1>"));
+          $(document).ready($('#despachado').html("<h1 style='color: red;'>ERROR. Hubo un error al despachar su pedido, por favor contáctenos al teléfono 123275613987163845, anexo 582735<h1>"));
         }
       });
   } else if (success === 'false') {
@@ -69,7 +69,11 @@ ready = function() {
       type: "GET",
       url: "/api/consultar/" + sku,
       success: function(data) {
-        $('#awesome').html(data.stock);
+        if (data.stock > 30) {
+          $('#awesome').html('30+ (Máximo 30 unidades por pedido)');
+        } else {
+          $('#awesome').html(data.stock);
+        }
       }
     });
   $('#product-price').after("<h6>Stock</h6><span id='awesome' class='lead price selling' itemprop='price'>loading...</span><br /><h6>Dirección de despacho</h6><input id='direccion_input' type='text' name='address'>");
