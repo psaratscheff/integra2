@@ -6,6 +6,12 @@ Rails.application.routes.draw do
   get 'dashboard/materiasprimas'
   get 'dashboard/saldobanco'
 
+  get 'dashboard/recepcion'
+  get 'dashboard/despacho'
+  get 'dashboard/almacen1'
+  get 'dashboard/almacen2'
+  get 'dashboard/pulmon'
+
   resources :pagos
   resources :pagos
   resources :facturas
