@@ -37,6 +37,7 @@ class ApplicationController < ActionController::Base
   #  return almId
   #####
 
+
   private
 
   def transform_oc(oc)

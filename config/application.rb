@@ -2,13 +2,21 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 
+require 'twitter'
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
 module Integra2
   class Application < Rails::Application
-    
+
+    $client = Twitter::REST::Client.new do |config|
+      config.consumer_key        = 'mAjo3eo9BkrjqOgg8IBnAkEMW'
+      config.consumer_secret     = 'UYFFsbbuYPULzi6ZPkGdJXOOVLTZYCCHywyI0Rv1ofAGtYf23r'
+      config.access_token        = '310049995-9WHiDYdslsvjsbgw7exFbOEPTN7gp8rqhdyp5wgg'
+      config.access_token_secret = '6eNxzNnX3MwHH3tdyyd6buvyBOvfwtPPYG1Js04uBNctr'
+    end
+
     config.to_prepare do
       # Load application's model / class decorators
       Dir.glob(File.join(File.dirname(__FILE__), "../app/**/*_decorator*.rb")) do |c|
