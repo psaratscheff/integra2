@@ -26,6 +26,6 @@ every 19.minutes do
   rake 'fabricar_materia_prima'
 end
 
-every 10.minute do
+every 11.minute do
   rake 'liberar_bodega_recepcion'
 end
