@@ -26,6 +26,7 @@ class ApplicationController < ActionController::Base
     $despachoid = "571262aaa980ba030058a14f"
     $bodegaid = '571262aaa980ba030058a150'
   end
+  
   ##### Método para obtener el almacenID en vivo
   #  parsed_json = lista_de_almacenes() # Función definida en ApplicationController
   #  almId = nil # Necesario declararlo fuera del loop

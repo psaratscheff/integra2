@@ -1,9 +1,8 @@
 source 'https://rubygems.org'
 
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.6'
-
+gem 'googlecharts'
 # Hashing
 gem 'rubysl-base64', '2.0.0'
 gem 'ruby-hmac', '0.4.0'
