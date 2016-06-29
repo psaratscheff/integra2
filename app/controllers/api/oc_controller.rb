@@ -3,7 +3,7 @@ class Api::OcController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def recibir
-    puts "------------------------Solicitud de recibir OC recibida----------------------------"
+    puts "<h1>------------------------Solicitud de recibir OC recibida----------------------------</h1>"
     idoc = params[:idoc]
     oc = obtener_oc(idoc) # Función definida en ApplicationController
     puts "---- Obteniendo OC: " + oc.to_s + "-------"

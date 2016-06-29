@@ -1,6 +1,6 @@
 class Api::DespachosController < ApplicationController
   def recibir
-    puts "------------------------Aviso de DESPACHO recibido----------------------------"
+    puts "<h1>------------------------Aviso de DESPACHO recibido----------------------------</h1>"
     idfactura = params[:idfactura]
     background do
       sleep 5

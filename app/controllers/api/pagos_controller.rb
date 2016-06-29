@@ -4,7 +4,7 @@ class Api::PagosController < ApplicationController
   end
 
   def recibir
-    puts "------------------------Solicitud de recibir PAGO recibida----------------------------"
+    puts "<h1>------------------------Solicitud de recibir PAGO recibida----------------------------</h1>"
   	#Parte 7 del flujo: (recibir idtrx e idfactura)
   	idtrx = params[:idtrx]
     idfactura = params[:idfactura]
