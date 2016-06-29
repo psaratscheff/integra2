@@ -22,6 +22,14 @@ Rails.application.routes.draw do
   root 'welcome#index'
   get '/welcome', to: 'welcome#index'
 
+  # get '/contact', :to => redirect('/contact.html')
+
+  get "/contact" => "pages#index"
+
+  # Rails.application.routes.draw do
+  #   get "/contact" => "pages#show"
+  # end
+
   # Estas rutas solo sirven para testear resulado en la terminal
   # => get 'sftp', to: 'api/oc#sftp'
   # => get 'hmactest', to: 'api/oc#hmactest'

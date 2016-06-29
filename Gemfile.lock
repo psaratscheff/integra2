@@ -357,6 +357,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  autoprefixer-rails
+  bootstrap-sass
   byebug
   httparty
   jbuilder (~> 2.0)
