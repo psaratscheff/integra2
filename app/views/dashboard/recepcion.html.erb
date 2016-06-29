@@ -4,23 +4,46 @@
     <script type="text/javascript">
       google.charts.load("current", {packages:["corechart"]});
       google.charts.setOnLoadCallback(drawChart);
+<<<<<<< HEAD
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Task', 'Espacio en almacen'],
           ['Espacio disponible', <%=@disponibleRecepcion%>],
           ['Espacio ocupado',<%=@ocupadoRecepcion%>]
         ]);
+=======
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Espacio en almacen'],
+          ['Espacio disponible',     28],
+          ['Espacio ocupado',      10]
+        ]);
+
+>>>>>>> e764a98f50450e01416420ea3554f950ffb9bb67
         var options = {
           title: 'Espacio disponible/ocupado en Almacen de Recepción',
           is3D: true,
         };
+<<<<<<< HEAD
         var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
         chart.draw(data, options);
       }
+=======
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+        chart.draw(data, options);
+      }
+
+>>>>>>> e764a98f50450e01416420ea3554f950ffb9bb67
     </script>
   </head>
   <body>
   	<h1>Almacen de Recepción</h1>
     <div id="piechart_3d" style="width: 900px; height: 500px;"></div>
   </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> e764a98f50450e01416420ea3554f950ffb9bb67

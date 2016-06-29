@@ -13,6 +13,7 @@ class DashboardController < ApplicationController
     @ocupadoAlmacen1= 50
   end
 
+<<<<<<< HEAD
  def almacen2
     @disponibleAlmacen2 = 100
     @ocupadoAlmacen2 = 50
@@ -22,6 +23,21 @@ class DashboardController < ApplicationController
     @disponibleRecepcion = 100
     @ocupadoRecepcion = 50
   end
+=======
+=begin
+    result = HTTParty.post(url,
+                  body:    {
+                  fechaInicio: ,
+                  fechaFin: asdasd,
+                  id: aasdsad,
+                }.to_json,
+                  headers: {
+                    'Content-Type' => 'application/json'
+                })
+
+    json = JSON.parse(result.body)
+=end
+>>>>>>> e764a98f50450e01416420ea3554f950ffb9bb67
 
  def despacho
     @disponibleDespacho = 100
