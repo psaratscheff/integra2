@@ -122,7 +122,7 @@ class ScriptsController < ApplicationController
       render json: {anulada: true, oc: ocAnulada}.to_json #TODO: Tengo demasiados renders de más :$
     elsif respuesta['aceptado']
       puts "------OC ACEPTADA: "+oc.to_s
-      localOc.estado = "aceptada"
+      localOc.estado = "Aceptada"
       localOc.save!
       render json: oc #TODO: Tengo demasiados renders de más :$
     else
