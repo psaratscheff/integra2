@@ -9,11 +9,11 @@
       function drawStuff() {
         var data = new google.visualization.arrayToDataTable([
           ['Move', 'Cantidad'],
-          ["Huevo (sku 2)", 10],
-          ["Cereal de Avena (sku 12)", 10],
-          ["Algodon (sku 21)", 10],
-          ["Tela de Lino (sku 28)", 10],
-          ['Cuero (sku 32)', 10]
+          ["Huevo (sku 2)", <%=@huevo%>],
+          ["Cereal de Avena (sku 12)", <%=@cerealDeAvena%>],
+          ["Algodon (sku 21)", <%=@algodon%>],
+          ["Tela de Lino (sku 28)", <%=@telaDeLino%>],
+          ['Cuero (sku 32)', <%=@cuero%>]
         ]);
 
         var options = {

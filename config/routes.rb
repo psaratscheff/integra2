@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   get 'dashboard/almacen2'
   get 'dashboard/pulmon'
 
+  get 'dashboard/trx'
+
   resources :pagos
   resources :pagos
   resources :facturas

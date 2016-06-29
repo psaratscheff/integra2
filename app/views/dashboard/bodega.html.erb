@@ -8,12 +8,12 @@
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Task', 'Espacio en bodega'],
-          ['Espacio disponible',     11],
-          ['Espacio ocupado',      2]
+          ['Espacio disponible',     <%=@disponibleBodega%>],
+          ['Espacio ocupado',      <%=@ocupadoBodega%>]
         ]);
 
         var options = {
-          title: 'Espacio disponible/ocupado en bodega',
+          title: 'Espacio disponible/ocupado contando todos los almacenes',
           is3D: true,
         };
 
@@ -24,7 +24,7 @@
     </script>
   </head>
   <body>
-  	<h1>Bodega</h1>
+  	<h1>Bodega Completa</h1>
     <div id="piechart_3d" style="width: 900px; height: 500px;"></div>
   </body>
 </html>
