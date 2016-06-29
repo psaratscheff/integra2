@@ -655,7 +655,7 @@ class ApplicationController < ActionController::Base
       return 0 if result.body.to_s == '[]'
       json = JSON.parse(result.body)
       puts "--------Stock2 de Almacen Obtenido--------------"
-      stock_count = json.find { |e| e['_id'] == sku }[total]
+      stock_count = json.find { |e| e['_id'] == sku.to_s }['total']
       puts "---stock disponible de este almacen: " + stock_count.to_s
       return stock_count
     rescue => ex # En caso de excepción retornamos error
