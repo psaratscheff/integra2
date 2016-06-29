@@ -11,7 +11,10 @@ class Api::OcController < ApplicationController
       puts "---------LA OC SOLICITADA NO EXISTE!-------"
       render json: {error: "La OC solicitada no existe", aceptado: false, idoc: idoc, msgCurso: oc}, status: 400 and return
     end
-    if consultar_stock(oc["sku"]) >= oc["cantidad"]
+    if oc["proveedor"] != $groupid
+      puts "-----------NO SOMOS EL PROVEEDOR, rechazar!!--------------"
+      render json: { aceptado: false, idoc: idoc, msgCurso: oc }, status: 400
+    elsif consultar_stock(oc["sku"]) >= oc["cantidad"]
       puts "--------Suficiente Stock--------------"
       aceptar_oc(oc["_id"])
       # Seguimos con el tema de la factura en un Thread aparte, para
