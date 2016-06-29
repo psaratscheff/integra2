@@ -109,6 +109,7 @@ class TasksController < ApplicationController
 
 	def producirMP
 		sku = params[:sku]
+		puts "------------INICIANDO PROCESO producirMP para SKU: " + sku.to_s + "----------------"
 		producirMateriaPrima(sku)
 	end
 
