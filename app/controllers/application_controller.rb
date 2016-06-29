@@ -760,6 +760,7 @@ class ApplicationController < ActionController::Base
     productos = []
     skus.each do |sku|
       listaProductos = stock_de_almacen(almacenId,sku)
+      # TODO: SI TENGO MAS DE 100 ???
       listaProductos.each do |producto|
         productos.append(producto)
       end
@@ -834,13 +835,15 @@ class ApplicationController < ActionController::Base
     almacenes.each do |almacen|
       unless almacen['despacho']
         while itemsDespachados < qty
-        productos = stock_de_almacen(almacen['_id'], sku)
-        productos.each do |producto|
-          return if itemsDespachados >= qty
-          idProducto = producto['_id']
-          mover_a_despacho(idProducto)
-          despachar_delete_producto(idProducto, 'internacional', precio, idoc)
-          itemsDespachados += 1
+          productos = stock_de_almacen(almacen['_id'], sku)
+          break if productos.count == 0
+          productos.each do |producto|
+            idProducto = producto['_id']
+            mover_a_despacho(idProducto)
+            despachar_delete_producto(idProducto, 'internacional', precio, idoc)
+            itemsDespachados += 1
+            return if itemsDespachados >= qty
+          end
         end
       end
     end
@@ -895,13 +898,15 @@ class ApplicationController < ActionController::Base
     almacenes.each do |almacen|
       unless almacen['despacho']
         while itemsDespachados < qty
-        productos = stock_de_almacen(almacen['_id'], sku)
-        productos.each do |producto|
-          return if itemsDespachados >= qty
-          idProducto = producto['_id']
-          mover_a_despacho(idProducto) # TODO: IMPLEMENTAR FUNCION
-          despachar_producto(producto, almacenClienteId, idoc, precio) # TODO: IMPLEMENTAR FUNCION
-          itemsDespachados += 1
+          productos = stock_de_almacen(almacen['_id'], sku)
+          break if productos.count == 0
+          productos.each do |producto|
+            idProducto = producto['_id']
+            mover_a_despacho(idProducto) # TODO: IMPLEMENTAR FUNCION
+            despachar_producto(producto, almacenClienteId, idoc, precio) # TODO: IMPLEMENTAR FUNCION
+            itemsDespachados += 1
+            return if itemsDespachados >= qty
+          end
         end
       end
     end
