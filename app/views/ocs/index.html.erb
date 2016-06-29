@@ -55,7 +55,7 @@
           <td class="proveedor"><%= oc.proveedor %></td>
           <td class="sku"><%= oc.sku %></td>
           <td class="cantidad"><%= oc.cantidad %></td>
-          <td class="cantidadDespachada"><%= oc.cantidadDespachada %></td>
+          <td class="cantidadDespachada"><%= oc.cantidadDespachada if oc.cantidadDespachada > 0 %></td>
           <td><%= link_to 'Show', oc %></td>
         </tr>
       <% end %>
