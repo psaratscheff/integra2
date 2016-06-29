@@ -17,13 +17,17 @@ class TasksController < ApplicationController
 					#sftp.download!("/pedidos", "public/pedidos", :recursive => true)
 					# list the entries in a directory
 					sftp.dir.foreach("/pedidos") do |entry|
-						if entry.name[0]!="." && ((((Time.now.to_i).to_s + "000").to_i - 172800000)  < entry.name.split('.')[0].to_i) # Pedidos de los últimos dos días
+						if entry.name[0]!="." # && ((((Time.now.to_i).to_s + "000").to_i - 172800000)  < entry.name.split('.')[0].to_i) # Pedidos de los últimos dos días
 							puts (entry.name.split('.')[0].to_i).to_s
 							data = sftp.download!("/pedidos/"+entry.name)
 							id = three_letters = data[/<id>(.*?)<\/id>/m, 1]
 							sku = three_letters = data[/<sku>(.*?)<\/sku>/m, 1]
 							qty = three_letters = data[/<qty>(.*?)<\/qty>/m, 1]
-							puts "ID: "+id+" // sku: "+ sku + " // qty: "+qty
+							puts "-------PEDIDO SFTP --> ID: "+id+" // sku: "+ sku + " // qty: "+qty + "----------"
+
+							# Saltar si ya fue leída
+							already_oc = Oc.find_by idoc: id
+							next if already_oc != nil
 
 							# Metodo definidos en application_controller
 							stock = consultar_stock(sku).to_i
