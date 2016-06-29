@@ -833,10 +833,10 @@ class ApplicationController < ActionController::Base
     itemsDespachados = 0
     almacenes.each do |almacen|
       unless almacen['despacho']
-        return if itemsDespachados == qty
+        while itemsDespachados < qty
         productos = stock_de_almacen(almacen['_id'], sku)
         productos.each do |producto|
-          return if itemsDespachados == qty
+          return if itemsDespachados >= qty
           idProducto = producto['_id']
           mover_a_despacho(idProducto)
           despachar_delete_producto(idProducto, 'internacional', precio, idoc)
@@ -894,10 +894,10 @@ class ApplicationController < ActionController::Base
     itemsDespachados = 0
     almacenes.each do |almacen|
       unless almacen['despacho']
-        return if itemsDespachados == qty
+        while itemsDespachados < qty
         productos = stock_de_almacen(almacen['_id'], sku)
         productos.each do |producto|
-          return if itemsDespachados == qty
+          return if itemsDespachados >= qty
           idProducto = producto['_id']
           mover_a_despacho(idProducto) # TODO: IMPLEMENTAR FUNCION
           despachar_producto(producto, almacenClienteId, idoc, precio) # TODO: IMPLEMENTAR FUNCION

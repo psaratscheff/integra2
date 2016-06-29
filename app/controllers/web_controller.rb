@@ -46,12 +46,12 @@ class WebController < ApplicationController
     almacenes = lista_de_almacenes
     items_despachados = 0
     almacenes.each do |almacen|
-
-      break if items_despachados >= cantidad.to_i
       next if almacen['despacho']
+      while items_despachados < cantidad.to_i
       productos = stock_de_almacen(almacen['_id'], sku)
+      break if productos.count == 0
       productos.each do |producto|
-        break if items_despachados == cantidad.to_i
+        break if items_despachados >= cantidad.to_i
         id_producto = producto['_id']
         mover_a_despacho(id_producto)
         despachar_delete_producto(id_producto, direccion, Item.find(sku.to_i).Precio_Unitario, id_boleta)

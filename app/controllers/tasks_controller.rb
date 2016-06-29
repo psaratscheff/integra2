@@ -262,7 +262,7 @@ class TasksController < ApplicationController
 		skus = [2, 12, 15, 20, 21, 25, 28, 32, 37]
 		almacenId = $recepcionid #Variable global definida en application_controller
 		skus.each do |sku|
-			productos = stock_de_almacen(almacenId, sku)
+			while (productos = stock_de_almacen(almacenId, sku)).count > 0
 			productos.each do |pr|
 				if producto = mover_producto_almacen(pr['_id'], $bodegaid) # Variable global definida en AppCtrlr
 					producto = Producto.new(_id: pr['_id'], sku: sku, estado: 'disponible', almacen_id: $bodegaid)
@@ -293,7 +293,7 @@ class TasksController < ApplicationController
 			skus = [2, 12, 15, 20, 21, 25, 28, 32, 37]
 			almacenId = $recepcionid #Variable global definida en application_controller
 			skus.each do |sku|
-				productos = stock_de_almacen(almacenId, sku)
+				while (productos = stock_de_almacen(almacenId, sku)).count > 0
 				productos.each do |pr|
 					if producto = mover_producto_almacen(pr['_id'], $bodegaid) # Variable global definida en AppCtrlr
 						producto = Producto.new(_id: pr['_id'], sku: sku, estado: 'disponible', almacen_id: $bodegaid)
