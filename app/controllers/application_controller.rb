@@ -664,7 +664,7 @@ class ApplicationController < ActionController::Base
       return stock_count
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
-      puts "error 18713"
+      puts "error 18713: " + ex.message
       render json: { error: ex.message }, status: 503 and return
     end
   end
