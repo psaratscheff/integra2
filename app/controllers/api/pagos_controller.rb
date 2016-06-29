@@ -119,6 +119,7 @@ class Api::PagosController < ApplicationController
       producto =Producto.find_by(_id: idProducto)
       producto.almacen = Almacen.find_by(_id: idDespacho) if producto != nil
       puts "--------Producto Movido a Despacho PAGOS--------------"
+      sleep(10) # Sleep 10 seconds...
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
@@ -150,6 +151,7 @@ class Api::PagosController < ApplicationController
       producto = Producto.find_by(_id: producto_id)
       producto.delete if producto != nil
       puts "--------Producto Despachado a Cliente B2B--------------"
+      sleep(10) # Sleep 10 seconds...
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message

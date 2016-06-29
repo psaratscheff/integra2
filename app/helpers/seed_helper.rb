@@ -13,6 +13,7 @@ module SeedHelper
       puts "(Stock_de_Almacen)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
       puts "--------Stock de Almacen Obtenido--------------"
+      sleep(10) # Sleep 10 seconds...
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
@@ -31,6 +32,7 @@ module SeedHelper
     puts "(Lista_de_Almacenes)Respuesta de la contraparte: " + result.body.to_s
     json = JSON.parse(result.body)
     puts "--------Lista de Almacenes Obtenida--------------"
+    sleep(10) # Sleep 10 seconds...
     return json
   end
   def productos_almacen(almacenId)

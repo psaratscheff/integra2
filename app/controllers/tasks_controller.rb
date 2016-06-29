@@ -164,6 +164,7 @@ class TasksController < ApplicationController
 	      puts "(Produciendo_Stock_Prima_?)Respuesta de la contraparte: " + result.body.to_s
 	      detallesPedido = JSON.parse(result.body)
 				puts "--------Stock Producido (Materia Prima)--------------" + detallesPedido.to_s
+	      sleep(10) # Sleep 10 seconds...
 	    rescue => ex # En caso de excepción retornamos error
 	      logger.error ex.message
 	      puts "error 1015"
@@ -243,6 +244,7 @@ class TasksController < ApplicationController
 																})
 					detallesPedido = JSON.parse(result.body)
 					puts "--------Stock Producido (Producto Procesado)--------------" + detallesPedido.to_s
+		      sleep(10) # Sleep 10 seconds...
 				rescue => ex # En caso de excepción retornamos error
 					logger.error ex.message
 					puts "error 1015"

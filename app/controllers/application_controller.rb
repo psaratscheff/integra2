@@ -357,6 +357,7 @@ class ApplicationController < ActionController::Base
         raise "Error: No existe la OC pedida" and return
       end
       puts "--------OC Obtenida--------------"
+      sleep(10) # Sleep 10 seconds...
       return json[0]
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
@@ -609,6 +610,7 @@ class ApplicationController < ActionController::Base
       puts "(Stock_de_Almacen)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
       puts "--------Stock de Almacen Obtenido--------------"
+      sleep(10) # Sleep 10 seconds...
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
@@ -698,6 +700,7 @@ class ApplicationController < ActionController::Base
       puts "(Lista_de_Almacenes)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
       puts "--------Lista de Almacenes Obtenida--------------"
+      sleep(10) # Sleep 10 seconds...
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
@@ -738,6 +741,7 @@ class ApplicationController < ActionController::Base
         producto.almacen = Almacen.find_by(_id: almacenDestino)
       end
       puts "--------Producto de Bodega Movido--------------"
+      sleep(10) # Sleep 10 seconds...
       return json if true # SIEMPRE RETORNA NIL, no podemos verificar exito :(
       return false
     rescue => ex # En caso de excepción retornamos error
@@ -764,6 +768,7 @@ class ApplicationController < ActionController::Base
     puts "(Cuenta_Fabrica)Respuesta de la contraparte: " + result.body.to_s
     json = JSON.parse(result.body)
     puts "--------Cuenta Fabrica Obtenida--------------"
+    sleep(10) # Sleep 10 seconds...
     return json['cuentaId'] #TODO: Revisar si es json[0] o solo json
   end
 
@@ -823,6 +828,7 @@ class ApplicationController < ActionController::Base
       oc.cantidadDespachada += 1
       oc.save!
       puts "--------Despachado DELETE--------------"
+      sleep(10) # Sleep 10 seconds...
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
@@ -881,6 +887,7 @@ class ApplicationController < ActionController::Base
         producto.almacen = Almacen.find_by(_id: idDespacho)
       end
       puts "--------Producto Movido a Despacho--------------"
+      sleep(10) # Sleep 10 seconds...
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
@@ -915,6 +922,7 @@ class ApplicationController < ActionController::Base
       oc.cantidadDespachada += 1
       oc.save!
       puts "--------Producto Despachado a Cliente B2B--------------"
+      sleep(10) # Sleep 10 seconds...
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
