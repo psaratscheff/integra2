@@ -138,7 +138,7 @@ class TasksController < ApplicationController
 
 		if stock <= minSku
 			cantidadProducir = maxSku-stock
-			cantidadLotes =  (cantidadProducir/tamanoLote) #La parte entera del numero
+			cantidadLotes = 1 # (cantidadProducir/tamanoLote) #La parte entera del numero
 			costoPedido = cantidadLotes*costoLote
 			#Hacer la transacccion
 			cuentaOrigen = getIdBanco('2')
