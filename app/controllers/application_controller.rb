@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include HmacHelper # Para utilizar la función de hashing
 
-  $ambiente = true
+  $ambiente = true # true = production, false = desarrollo
 
   if $ambiente
     $urlBodega = "http://integracion-2016-prod.herokuapp.com/bodega/"

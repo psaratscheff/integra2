@@ -30,6 +30,7 @@ end
 
 desc "Procesar OC internacionales - sftp"
 task :procesar_oc_sftp do
+  $ambiente = true
   if $ambiente
     url = "http://integra2.ing.puc.cl/tasks/procesar_sftp"
   else
@@ -40,6 +41,7 @@ end
 
 desc "Fabricar Materia Prima"
 task :fabricar_materia_prima do
+  $ambiente = true
   puts "---------------GET Funcion PRODUCIR SKU 2-------------------"
   if $ambiente
     url = "http://integra2.ing.puc.cl/tasks/producirMateriaPrima/2"
