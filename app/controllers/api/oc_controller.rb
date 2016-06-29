@@ -11,9 +11,6 @@ class Api::OcController < ApplicationController
       puts "---------LA OC SOLICITADA NO EXISTE!-------"
       render json: {error: "La OC solicitada no existe", aceptado: false, idoc: idoc, msgCurso: oc}, status: 400 and return
     end
-    if oc["proveedor"] != $groupid
-      puts "---------NO SOY EL PROVEEDOR!!-------"
-      render json: { error: "No soy el proveedor correcto (¿Estás en producción?)", aceptado: false, idoc: idoc, msgCurso: oc }, status: 400 and return
     if consultar_stock(oc["sku"]) >= oc["cantidad"]
       puts "--------Suficiente Stock--------------"
       aceptar_oc(oc["_id"])
