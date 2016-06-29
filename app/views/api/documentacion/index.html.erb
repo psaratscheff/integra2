@@ -1,49 +1,114 @@
-<h1>Documentación API - Grupo 2</h1>
-<h2>Lista de funcionalidades implementadas:</h2>
-<ul>
-  <li><a href="documentacion">integra2.ing.puc.cl/api/documentacion (GET)</a></li>
-  <p>Muestra esta página con la documentación de la aplicación.</p>
-  <p>Parámetros: Ningungo</p>
-  <p>Retorno: <span class="code">HTML</span></p>
 
-  <li><a href="ids/grupo">integra2.ing.puc.cl/api/ids/grupo (GET)</a></li>
-  <p>Retorna un JSON con el id del grupo.</p>
-  <p>Parámetros: Ningungo</p>
-  <p>Retorno: <span class="code">{“id”: string}</span></p>
+</br>
+</br>
+</br>
 
-  <li><a href="ids/banco">integra2.ing.puc.cl/api/ids/banco (GET)</a></li>
-  <p>Retorna un JSON con el id de la cuenta de banco del grupo.</p>
-  <p>Parámetros: Ningungo</p>
-  <p>Retorno: <span class="code">{“id”: string}</span></p>
 
-  <li><a href="ids/almacenId">integra2.ing.puc.cl/api/ids/almacenId (GET)</a></li>
-  <p>Retorna un JSON con el id del almacen de recepción del grupo.</p>
-  <p>Parámetros: Ningungo</p>
-  <p>Retorno: <span class="code">{“id”: string}</span></p>
 
-  <li><a href="#">integra2.ing.puc.cl/api/consultar/.:sku (GET)</a></li>
-  <p>Retorna un JSON con el stock del SKU sumando todas los almacenes de la empresa (Excepto las de despacho).</p>
-  <p>Parámetros: Ningungo</p>
-  <p>Retorno: <span class="code">{“stock”: int, “sku”: int}</span></p>
 
-  <li><a href="#">integra2.ing.puc.cl/api/oc/recibir/.:idoc (GET)</a></li>
-  <p>Retorna un JSON informando si se aceptó la OC</p>
-  <p>Parámetros: Ningungo</p>
-  <p>Retorno: <span class="code">{“aceptado”: boolean, “idoc”: string}</span></p>
+<div class="containter text-center">
+<h2> <span class="glyphicon glyphicon-book" aria-hidden="true"></span> Documentación API </h2>
+</br>
 
-  <li><a href="#">integra2.ing.puc.cl/api/facturas/recibir/.:idfactura (GET)</a></li>
-  <p>Retorna un JSON informando si se validó la factura</p>
-  <p>Parámetros: Ningungo</p>
-  <p>Retorno: <span class="code">{“validado”: boolean, “idfactura”: string}</span></p>
+</div>
+<div class="row">
+  <div class="col-sm-1">
+  </div>
 
-  <li><a href="#">integra2.ing.puc.cl/api/pagos/recibir/.:idtrx?idfactura=.:idfactura (GET)</a></li>
-  <p>Retorna un JSON informando si se validó la transacción</p>
-  <p>Parámetros: idfactura (String)</p>
-  <p>Retorno: <span class="code">{“validado”: boolean, “idtrx”: string}</span></p>
+  <div class="col-sm-10">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <a href="/documentacion">integra2.ing.puc.cl/api/documentacion (GET)</a>
+      </div>
+      <div class="panel-body">
+        <p>Muestra esta página con la documentación de la aplicación.</p>
+        <p>Parámetros: Ningungo</p>
+        <p>Retorno: <span class="code">HTML</span></p>  </div>
+    </div>
 
-  <li><a href="#">integra2.ing.puc.cl/api/despachos/recibir/.:idfactura (GET)</a></li>
-  <p>Retorna un JSON informando si ya llegaron los productos despachados acorde a la factura</p>
-  <p>Parámetros: Ninguno</p>
-  <p>Retorno: <span class="code">{“validado”: boolean}</span></p>
 
-</ul>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <a href="ids/banco">integra2.ing.puc.cl/api/ids/banco (GET)</a>
+      </div>
+      <div class="panel-body">
+        <p>Retorna un JSON con el id de la cuenta de banco del grupo.</p>
+        <p>Parámetros: Ningungo</p>
+        <p>Retorno: <span class="code">{“id”: string}</span></p>
+      </div>
+    </div>
+
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <a href="ids/almacenId">integra2.ing.puc.cl/api/ids/almacenId (GET)</a>
+      </div>
+      <div class="panel-body">
+        <p>Retorna un JSON con el id del almacen de recepción del grupo.</p>
+        <p>Parámetros: Ningungo</p>
+        <p>Retorno: <span class="code">{“id”: string}</span></p>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <a href="#">integra2.ing.puc.cl/api/consultar/.:sku (GET)</a>
+      </div>
+      <div class="panel-body">
+        <p>Retorna un JSON con el stock del SKU sumando todas los almacenes de la empresa (Excepto las de despacho).</p>
+        <p>Parámetros: Ningungo</p>
+        <p>Retorno: <span class="code">{“stock”: int, “sku”: int}</span></p>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <a href="#">integra2.ing.puc.cl/api/oc/recibir/.:idoc (GET)</a>
+      </div>
+      <div class="panel-body">
+        <p>Retorna un JSON informando si se aceptó la OC</p>
+        <p>Parámetros: Ningungo</p>
+        <p>Retorno: <span class="code">{“aceptado”: boolean, “idoc”: string}</span></p>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <a href="#">integra2.ing.puc.cl/api/facturas/recibir/.:idfactura (GET)</a>
+      </div>
+      <div class="panel-body">
+        <p>Retorna un JSON informando si se validó la factura</p>
+        <p>Parámetros: Ningungo</p>
+        <p>Retorno: <span class="code">{“validado”: boolean, “idfactura”: string}</span></p>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <a href="#">integra2.ing.puc.cl/api/pagos/recibir/.:idtrx?idfactura=.:idfactura (GET)</a>
+      </div>
+      <div class="panel-body">
+        <p>Retorna un JSON informando si se validó la transacción</p>
+        <p>Parámetros: idfactura (String)</p>
+        <p>Retorno: <span class="code">{“validado”: boolean, “idtrx”: string}</span></p>
+      </div>
+    </div>
+
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <a href="#">integra2.ing.puc.cl/api/despachos/recibir/.:idfactura (GET)</a>
+      </div>
+      <div class="panel-body">
+        <p>Retorna un JSON informando si ya llegaron los productos despachados acorde a la factura</p>
+        <p>Parámetros: Ninguno</p>
+        <p>Retorno: <span class="code">{“validado”: boolean}</span></p>
+      </div>
+    </div>
+
+  </div>
+  <div class="col-sm-1">
+
+  </div>
+
+</div>
