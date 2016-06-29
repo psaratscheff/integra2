@@ -615,7 +615,7 @@ class ApplicationController < ActionController::Base
 
     contador=0
     parsed_json.each do |almacen|
-      contador += stock_de_almacen(almacen["_id"], sku).count() unless almacen["despacho"] # No consideramos el stock en el almacen de despacho
+      contador += stock_2_de_almacen(almacen["_id"], sku) unless almacen["despacho"] # No consideramos el stock en el almacen de despacho
     end
 
     return contador
@@ -635,6 +635,29 @@ class ApplicationController < ActionController::Base
       json = JSON.parse(result.body)
       puts "--------Stock de Almacen Obtenido--------------"
       return json
+    rescue => ex # En caso de excepción retornamos error
+      logger.error ex.message
+      puts "error 1013"
+      render json: { error: ex.message }, status: 503 and return
+    end
+  end
+
+  def stock_2_de_almacen(almacenId, sku)
+    require 'httparty'
+    begin # Intentamos realizar conexión externa y obtener OC
+    puts "--------Obteniendo Stock2 de Almacen---- :" + $urlBodega+"stock"+"?almacenId="+almacenId.to_s
+      result = HTTParty.get($urlBodega+"skusWithStock"+"?almacenId="+almacenId.to_s,
+              headers: {
+                'Content-Type' => 'application/json',
+                'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenId.to_s)
+              })
+      puts "(Stock_2_de_Almacen)Respuesta de la contraparte: " + result.body.to_s
+      json = JSON.parse(result.body)
+      puts "--------Stock2 de Almacen Obtenido--------------"
+      h["incidents"].find {|h1| h1['key']=='xyz098'}['number']
+      stock_count = json.find { |e| e['_id'] == sku }[total]
+      puts "STOCK DISPONIBLE: " + stock_count.to_s
+      return stock_count
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 1013"
