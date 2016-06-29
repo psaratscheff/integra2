@@ -35,7 +35,7 @@ class Api::OcController < ApplicationController
     if !factura
       return false
     end
-    json = enviarFactura(factura) #Definido un poco más abajo
+    json = enviarFactura(factura) # Definido un poco más abajo
     # Si es que el key validado no existe en el json de la respuesta o el
     # value es false de ese key, la factura no fue validada
     if !json['validado'] || json['validado']==false
@@ -45,13 +45,13 @@ class Api::OcController < ApplicationController
       #TODO: anular_oc() (O SI NO NOS QUITAN PUNTOS POR DEJAR OCS EN LA NADA!)
     else
       puts "--------Factura Validada por Contraparte--------------"
-      oc = Oc.find_by idoc: factura['oc']
-      if oc == nil
+      oc = Oc.find_by idoc: idoc
+      if oc.nil?
         puts "-----------ERROOOOR: Muy bizarro :/ La OC no existe y eso que la acabo de generar ---------"
-        render json: {"error": "ERROOOOR: Muy bizarro :/ La OC no existe y eso que la acabo de generar"}, status: 500 and return false
+        render json: { error: "ERROOOOR: Muy bizarro :/ La OC no existe y eso que la acabo de generar" }, status: 500 and return false
       else
         puts "--------Factura Aceptada---------"
-        oc['estado'] = "Facturada"
+        oc.estado = "Facturada"
         oc.save!
         return true
       end
