@@ -259,7 +259,7 @@ class TasksController < ApplicationController
 	end
 
 	def limpiarBodegaRepecepcion
-		skus = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56]
+		skus = [2, 12, 15, 20, 21, 25, 28, 32, 37]
 		almacenId = $recepcionid #Variable global definida en application_controller
 		skus.each do |sku|
 			productos = stock_de_almacen(almacenId, sku)
@@ -275,7 +275,7 @@ class TasksController < ApplicationController
 	end
 
 	def limpiarBodegaDespacho
-		skus = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56]
+		skus = [2, 12, 15, 20, 21, 25, 28, 32, 37]
 		almacenId = $despachoid
 		skus.each do |sku|
 			while (productos = stock_de_almacen(almacenId, sku)).count > 0
@@ -290,7 +290,7 @@ class TasksController < ApplicationController
 
 	def limpiarBodegaRepecepcionBackground
 		background do
-			skus = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56]
+			skus = [2, 12, 15, 20, 21, 25, 28, 32, 37]
 			almacenId = $recepcionid #Variable global definida en application_controller
 			skus.each do |sku|
 				productos = stock_de_almacen(almacenId, sku)
@@ -308,7 +308,7 @@ class TasksController < ApplicationController
 
 	def limpiarBodegaDespachoBackground
 		background do
-			skus = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56]
+			skus = [2, 12, 15, 20, 21, 25, 28, 32, 37]
 			almacenId = $despachoid
 			skus.each do |sku|
 				while (productos = stock_de_almacen(almacenId, sku)).count > 0
