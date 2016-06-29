@@ -910,6 +910,10 @@ class ApplicationController < ActionController::Base
       json = JSON.parse(result.body)
       producto = Producto.find_by(_id: idProducto)
       producto.delete if producto != nil
+
+      oc = Oc.find_by idoc: idoc
+      oc.cantidadDespachada += 1
+      oc.save!
       puts "--------Producto Despachado a Cliente B2B--------------"
       return json
     rescue => ex # En caso de excepción retornamos error
