@@ -302,6 +302,31 @@ class ApplicationController < ActionController::Base
     return url
   end
 
+
+  def post_facebook
+    # @user = Koala::Facebook::API.new('EAACEdEose0cBALPUxqgCjOKqhSpbhts290mbsZBd1YrsxsDNRKmmchQRnwCNtFNeNOC2290hQwLuI2Af3GB0muFgwZARyoyo15XvcIoIETZA1nfoxrmsPlLAcZAbNW28cQxvSD2MlP8wDvSya37J0D6SbKfsSshhuhVOPcMXaAZDZD')
+    # page_access_token = @user.get_connections('me', 'accounts').first['EAACEdEose0cBALPUxqgCjOKqhSpbhts290mbsZBd1YrsxsDNRKmmchQRnwCNtFNeNOC2290hQwLuI2Af3GB0muFgwZARyoyo15XvcIoIETZA1nfoxrmsPlLAcZAbNW28cQxvSD2MlP8wDvSya37J0D6SbKfsSshhuhVOPcMXaAZDZD'] #this gets the users first page.
+    # @page = Koala::Facebook::API.new(page_access_token)
+    @page = Koala::Facebook::API.new('EAACEdEose0cBAI7cgexq69BOXCb1YMhVS7XXTMaS1WeUUAwivHcZB4MdfL0JWlwDlE9LJlOw4bPP5dfcx64o6k2qt76stqhaxQxViBV75qZBr9IDysGWdGaHIIGSCD4gp4RyHIyDkC3910PWAUiSDufVaxKMfo0rAUJMZAgVwZDZD')
+    @page.put_object("me", "feed", :message => "¡¡Que buenos huevos!!", :link => "https://authoritynutrition.com/wp-content/uploads/2013/01/egg.jpg",
+    :picture => "https://authoritynutrition.com/wp-content/uploads/2013/01/egg.jpg", :name => "Huevos", :caption => "Caption", :description => "Descripcion de huevos ricos")
+
+  end
+
+
+  def twittear
+    img = open("public/images/logo.png")
+    if img.is_a?(StringIO)
+      ext = File.extname(url)
+      name = File.basename(url, ext)
+      Tempfile.new([name, ext])
+    else
+      img
+    end
+    $client.update_with_media('Nuestro lino es el mejor', img)
+  end
+
+
   # ----------------------------------------------------------------------------
   # ---------------- FUNCIONES DE ACTUALIZACION LOCAL --------------------------
   # ----------------------------------------------------------------------------

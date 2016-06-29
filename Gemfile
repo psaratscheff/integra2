@@ -40,7 +40,10 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
+#Para publicar con twitter
 gem 'twitter', '~> 5.11.0'
+# Para publicar con facebook
+gem "koala", "~> 2.2"
 # Para el servidor
 gem 'puma'
 # Para conectar sftp

@@ -130,6 +130,10 @@ GEM
     kaminari (0.16.3)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
+    koala (2.3.0)
+      addressable
+      faraday
+      multi_json
     listjs-rails (1.1.1)
       railties (>= 3.1.0)
     loofah (2.0.3)
@@ -357,6 +361,7 @@ DEPENDENCIES
   httparty
   jbuilder (~> 2.0)
   jquery-rails
+  koala (~> 2.2)
   listjs-rails
   net-sftp
   pg
