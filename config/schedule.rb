@@ -18,14 +18,14 @@
 # end
 
 # Learn more: http://github.com/javan/whenever
-every 30.minute do
+every 29.minutes do
   rake 'procesar_oc_sftp'
 end
 
-every 10.minutes do
+every 19.minutes do
   rake 'fabricar_materia_prima'
 end
 
-every 1.minute do
+every 10.minute do
   rake 'liberar_bodega_recepcion'
 end
