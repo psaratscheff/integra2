@@ -14,7 +14,7 @@ class DashboardController < ApplicationController
     result = HTTParty.post(url,
                   body:    {
                   fechaInicio: ,
-                  fechaFin: asdasd, 
+                  fechaFin: asdasd,
                   id: aasdsad,
                 }.to_json,
                   headers: {
@@ -22,7 +22,7 @@ class DashboardController < ApplicationController
                 })
 
     json = JSON.parse(result.body)
-=end 
+=end
 
   end
 
