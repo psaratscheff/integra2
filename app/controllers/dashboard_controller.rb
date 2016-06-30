@@ -13,7 +13,6 @@ class DashboardController < ApplicationController
     @ocupadoAlmacen1= 50
   end
 
-<<<<<<< HEAD
  def almacen2
     @disponibleAlmacen2 = 100
     @ocupadoAlmacen2 = 50
@@ -23,21 +22,6 @@ class DashboardController < ApplicationController
     @disponibleRecepcion = 100
     @ocupadoRecepcion = 50
   end
-=======
-=begin
-    result = HTTParty.post(url,
-                  body:    {
-                  fechaInicio: ,
-                  fechaFin: asdasd,
-                  id: aasdsad,
-                }.to_json,
-                  headers: {
-                    'Content-Type' => 'application/json'
-                })
-
-    json = JSON.parse(result.body)
-=end
->>>>>>> e764a98f50450e01416420ea3554f950ffb9bb67
 
  def despacho
     @disponibleDespacho = 100
@@ -71,6 +55,23 @@ class DashboardController < ApplicationController
     @fecha = @dia+" - "+@mes+" - "+@año
     @numeroTrx = numeroTrxDia(@dia.to_i,@mes.to_i,@año.to_i)
     @transacciones = cartolaTrxDia(@dia.to_i,@mes.to_i,@año.to_i)
+  end
+
+  def ventas
+    date7 = Time.now.to_i
+    @dia7= numeroTrxDia2(date7*1000)
+    date6= date7-86400
+    @dia6= numeroTrxDia2(date6*1000)
+    date5= date6-86400
+    @dia5= numeroTrxDia2(date5*1000)
+    date4= date5-86400
+    @dia4= numeroTrxDia2(date4*1000)
+    date3= date4-86400
+    @dia3= numeroTrxDia2(date3*1000)
+    date2= date3-86400
+    @dia2= numeroTrxDia2(date2*1000)
+    date1= date2-86400
+    @dia1= numeroTrxDia2(date1*1000)
   end
 
   def saldobanco
@@ -110,6 +111,25 @@ class DashboardController < ApplicationController
     cantidadTrx = json['total']
     return cantidadTrx
   end
+
+  def numeroTrxDia2(timestamp)
+    url = 'http://mare.ing.puc.cl/banco/cartola'
+    ayer = timestamp-86400000
+    result = HTTParty.post(url,
+                    body:    {
+                      fechaInicio:ayer,
+                      fechaFin:timestamp,
+                      id: $bancoid,
+
+                    }.to_json,
+              headers: {
+                'Content-Type' => 'application/json'
+              })
+    json = JSON.parse(result.body)
+    cantidadTrx = json['total']
+    return cantidadTrx
+  end
+
 
   def cartolaTrxDia(dia, mes, año)
     url = 'http://mare.ing.puc.cl/banco/cartola'

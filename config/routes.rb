@@ -13,6 +13,10 @@ Rails.application.routes.draw do
   get 'dashboard/pulmon'
 
   get 'dashboard/trx'
+  
+  get 'dashboard/ventas'
+
+  get 'dashboard/ingresos'
 
   resources :pagos
   resources :pagos
