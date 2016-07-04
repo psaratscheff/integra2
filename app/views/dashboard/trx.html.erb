@@ -1,0 +1,36 @@
+  <br/>
+  <br/>
+<h1>Transacciones</h1>
+<h3>Fecha Transacciones</h3>
+<%= "Dia - Mes - Año"%>
+<br/>
+<%=@fecha%>
+<br/>
+<h3>Numero Transacciones</h3>
+<%=@numeroTrx%>
+<h3>Lista Transacciones</h3>
+ <table>
+   <thead>
+     <tr>
+       <th>Id</th>
+       <th>Fecha</th>
+       <th>Cuenta Origen</th>
+       <th>Cuenta Destino</th>
+       <th>Monto</th>
+       <th colspan="3"></th>
+     </tr>
+	</thead>
+	<tbody class="list">
+		<% @transacciones.each do |trx| %>
+	        <tr>
+	          <td class="idoc"><%= trx['_id'] %></td>
+	          <td class="idoc"><%= trx['created_at'] %></td>
+	          <td class="idoc"><%= trx['origen'] %></td>
+	          <td class="idoc"><%= trx['destino'] %></td>
+	          <td class="idoc"><%= trx['monto'] %></td>
+
+	        </tr>
+      	<% end %>
+    </tbody>
+  </table>
+

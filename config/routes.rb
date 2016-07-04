@@ -1,5 +1,21 @@
 Rails.application.routes.draw do
 
+  get 'dashboard/index'
+  get 'dashboard/bodega'
+  get 'dashboard/productos'
+  get 'dashboard/materiasprimas'
+  get 'dashboard/saldobanco'
+
+  get 'dashboard/recepcion'
+  get 'dashboard/despacho'
+  get 'dashboard/almacen1'
+  get 'dashboard/almacen2'
+  get 'dashboard/pulmon'
+
+  get 'dashboard/trx'
+  get 'dashboard/ventas'
+  get 'dashboard/ingresos'
+
   resources :pagos
   resources :pagos
   resources :facturas
@@ -27,6 +43,8 @@ Rails.application.routes.draw do
   get "/contact" => "pages#index"
 
   # Rails.application.routes.draw do
+  get 'dashboard/index'
+
   #   get "/contact" => "pages#show"
   # end
 
