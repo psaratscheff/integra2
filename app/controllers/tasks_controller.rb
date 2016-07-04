@@ -117,8 +117,45 @@ class TasksController < ApplicationController
 		producirMateriaPrima(sku)
 	end
 
+
+
+	def comprarMateriaPrima
+		sku = params[:sku]
+		puts "------------ Compraremos " + sku.to_s + "----------------"
+		cliente = get_id_by_group('12')
+		case sku
+		when "25"
+		  proveedor = get_id_by_group('6')
+			tamanoLote = 400
+		when "20"
+			proveedor = get_id_by_group('9')
+			tamanoLote = 400
+		when "15"
+			proveedor = get_id_by_group('12')
+			tamanoLote = 400
+		when "37"
+			proveedor = get_id_by_group('8')
+			tamanoLote = 1200
+		end
+
+		stock = consultar_stock(sku).to_i
+
+		minSku = 800 #TODO: Elegir minimo y maximo
+		maxSku = 1200 #Todos los productos tendran el mismo maximo
+
+		if stock <= minSku
+			puts 'Hay menos de 800 unidades, entonces pido'
+			cantidadProducir = maxSku-stock
+			cantidadLotes = 1 # (cantidadProducir/tamanoLote) #La parte entera del numero
+			cantidadSolicitar = cantidadLotes*tamanoLote
+			comprar(cliente, proveedor, sku, cantidadSolicitar, Time.now.tomorrow.to_i.to_s+"000", "OC generada por grupo 2")
+		end
+
+	end
+
 	def producirMateriaPrima(sku) #Solo puede entrar a la funcion si sku = 2,21,32
 		stock = consultar_stock(sku).to_i
+		puts "------------ Produciremos " + stock.to_s + "----------------"
 
 		case sku
 		when "2"
@@ -176,7 +213,10 @@ class TasksController < ApplicationController
 		render json: { success: true}
 	end
 
-	def producirProductosElaborados(sku) #Solo puede entrar a la funcion si sku = 12 o 28
+
+
+	def producirProductosElaborados
+		sku = params[:sku]
 		stock = consultar_stock(sku).to_i
 		materiasPrimas = []
 		case sku
@@ -192,7 +232,14 @@ class TasksController < ApplicationController
 		  materiasPrimas[0] = 37.to_s #Lino
 		end
 
-		cantidadMateriaPrimaPorLote = {'25':133,'20':147,'15':113,'37':440} # TODO: Funciona?
+		cantidadMateriaPrimaPorLote = {133=>'25',
+																	147 =>'20',
+																	113 =>'15',
+																	440 =>'37'
+																}
+		puts cantidadMateriaPrimaPorLote.key('20')
+
+		# cantidadMateriaPrimaPorLote = {'25':133,'20':147,'15':113,'37':440} # TODO: Funciona?
 		minSku = 800 # TODO: Elegir minimo y maximo
 		maxSku = 1200 # Todos los productos tendran el mismo maximo
 		costoLote = costoProduccionUnidad*tamanoLote
@@ -210,8 +257,10 @@ class TasksController < ApplicationController
 				#pero solo puedo producir 2, no produzco
 
 			tengoStock = true
+			puts materiasPrimas
 			materiasPrimas.each do |materiaPrima|
-				if cantidadMateriaPrimaPorLote['materiaPrima']*cantidadLotes < consultar_stock(materiaPrima).to_i
+				puts materiaPrima
+				if cantidadMateriaPrimaPorLote.key(materiaPrima)*cantidadLotes < consultar_stock(materiaPrima).to_i
 					tengoStock = false
 				end
 			end
@@ -244,6 +293,7 @@ class TasksController < ApplicationController
 																})
 					detallesPedido = JSON.parse(result.body)
 					puts "--------Stock Producido (Producto Procesado)--------------" + detallesPedido.to_s
+					render json: { success: true }
 		      sleep(5) # Sleep 5 seconds...
 				rescue => ex # En caso de excepción retornamos error
 					logger.error ex.message
@@ -251,10 +301,12 @@ class TasksController < ApplicationController
 					render json: { error: ex.message }, status: 503 and return
 				end
 
+			else
+				#TODO: Comprar a los otros grupos
 			end
 
-			    #TODO: Checkear que los pedidos lleguen a nuestra bodega de despacho
-			    #TODO: Moverlos a otras bodegas.
+	    #TODO: Checkear que los pedidos lleguen a nuestra bodega de despacho
+	    #TODO: Moverlos a otras bodegas.
 		end
 	end
 

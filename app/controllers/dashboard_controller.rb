@@ -1,11 +1,11 @@
 class DashboardController < ApplicationController
-  
+
   def index
   end
 
   def bodega
     @disponibleBodega = 100
-    @ocupadoBodega = 50
+    @ocupadoBodega = stock_total_almacen($bodegaid)
   end
 
  def almacen1
@@ -20,12 +20,12 @@ class DashboardController < ApplicationController
 
  def recepcion
     @disponibleRecepcion = 100
-    @ocupadoRecepcion = 50
+    @ocupadoRecepcion = stock_total_almacen($recepcionid)
   end
 
  def despacho
     @disponibleDespacho = 100
-    @ocupadoDespacho = 50
+    @ocupadoDespacho = stock_total_almacen($despachoid)
   end
 
  def pulmon
@@ -34,18 +34,18 @@ class DashboardController < ApplicationController
   end
 
   def productos
-    @huevo = 1
-    @cerealDeAvena = 2
-    @algodon = 3 
-    @telaDeLino = 4
-    @cuero = 5
+    @huevo = consultar_stock_total('2')
+    @cerealDeAvena = consultar_stock_total('12')
+    @algodon = consultar_stock_total('21')
+    @telaDeLino = consultar_stock_total('28')
+    @cuero = consultar_stock_total('32')
   end
 
   def materiasprimas
-    @avena = 1
-    @cacao = 2
-    @azucar = 3
-    @lino =  4
+    @avena = consultar_stock_total('15')
+    @cacao = consultar_stock_total('20')
+    @azucar = consultar_stock_total('25')
+    @lino =  consultar_stock_total('37')
   end
 
   def trx

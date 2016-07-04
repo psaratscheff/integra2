@@ -403,6 +403,89 @@ class ApplicationController < ActionController::Base
   # -----------------------------------OCs--------------------------------------
   # ----------------------------------------------------------------------------
 
+  def comprar(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
+    oc, localOc = generar_oc(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
+    puts "OC GENERADA: " + oc.to_s
+
+    respuesta, valida = enviar_oc(oc)
+    if !valida
+      puts "------No se pudo enviar la OC: " + oc.to_s
+      ocAnulada = anular_oc(oc)
+      localOc.estado = "anulada por error de envío"
+      localOc.save!
+      render json: {anulada: true, oc: ocAnulada}.to_json #TODO: Tengo demasiados renders de más :$
+    elsif respuesta['aceptado']
+      puts "------OC ACEPTADA: "+oc.to_s
+      localOc.estado = "Aceptada"
+      localOc.save!
+      render json: oc #TODO: Tengo demasiados renders de más :$
+    else
+      puts "------OC RECHAZADA: "+oc.to_s
+      ocAnulada = anular_oc(oc)
+      localOc.estado = "anulada por rechazo"
+      localOc.save!
+      render json: {anulada: true, oc: ocAnulada}.to_json #TODO: Tengo demasiados renders de más :$
+    end
+  end
+
+  def generar_oc(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
+    require 'httparty'
+    begin # Intentamos realizar conexión externa y obtener OC
+      puts "--------Generando OC--------------"
+      url = getLinkServidorCurso + "oc/"
+      result = HTTParty.put(url+"crear",
+          body:    {
+                      cliente: cliente,
+                      proveedor: proveedor,
+                      sku: sku,
+                      fechaEntrega: fechaEntrega,
+                      precioUnitario: Item.find(sku).Precio_Unitario, # Definido en seeds.rb
+                      cantidad: cantidad,
+                      canal: "b2b"
+                    }.to_json,
+          headers: {
+            'Content-Type' => 'application/json'
+          })
+      puts "(Generar_OC)Respuesta de la contraparte: " + result.body.to_s
+      oc = JSON.parse(result.body)
+      if !oc["proveedor"] # Validamos que la oc sea válida, probando si tiene el key proveedor
+        render json: { error: "Error: No se pudo recibir la OC" }, status: 503 and return
+      end
+      puts "--------OC Generada--------------"
+      tOc = transform_oc(oc)
+    rescue => ex # En caso de excepción retornamos error
+      logger.error ex.message
+      puts "error 1015"
+      render json: { error: ex.message }, status: 503 and return
+    end
+    localOc = Oc.new(tOc)
+    localOc.save!
+
+    return oc, localOc
+  end
+
+  def enviar_oc(oc)
+    puts "--------Enviando OC--------------"
+    puts oc
+    idProveedor = oc['proveedor'] #Revisar sintaxis
+    idOc = oc['_id']
+    idOc = oc['idoc'] if (idOc == nil) # En caso de que oc no haya sido transformada todavía
+    if getLinkGrupo(idProveedor) == nil # El grupo no está en nuestro diccionario
+      puts "--------------ERROR: ID de grupo inválido--------"
+      return {"aceptado" => false}, false
+    end
+    url = getLinkGrupo(idProveedor)+'api/oc/recibir/'+idOc.to_s
+    puts "--------Enviando a: " + url + "-----"
+    result = HTTParty.get(url,
+            headers: {
+              'Content-Type' => 'application/json'
+            })
+    json = JSON.parse(result.body)
+    puts "(Enviar_OC)Respuesta de la contraparte: " + json.to_s
+    puts "--------OC Enviada, Respuesta Recibida--------------"
+    return json, true
+  end
+
   def obtener_oc(idoc)
     require 'httparty'
     begin # Intentamos realizar conexión externa y obtener OC
@@ -660,6 +743,51 @@ class ApplicationController < ActionController::Base
     return contador
   end
 
+  def consultar_stock_total(sku)
+    parsed_json = lista_de_almacenes()
+    contador=0
+    parsed_json.each do |almacen|
+      contador += stock_2_de_almacen(almacen["_id"], sku)
+    end
+    return contador
+  end
+
+
+  def stock_total_almacen(almacenId)
+    require 'httparty'
+    total = 0
+    begin # Intentamos realizar conexión externa y obtener OC
+    puts "--------Obteniendo Stock2 de Almacen---- :" + $urlBodega+"skusWithStock"+"?almacenId="+almacenId.to_s
+      result = HTTParty.get($urlBodega+"skusWithStock"+"?almacenId="+almacenId.to_s,
+              headers: {
+                'Content-Type' => 'application/json',
+                'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenId.to_s)
+              })
+      puts "(Stock_2_de_Almacen)Respuesta de la contraparte: " + result.body.to_s
+      return 0 if result.body.to_s == '[]'
+      json = JSON.parse(result.body)
+      puts json
+      puts "--------Stock2 de Almacen Obtenido--------------"
+      json.each do |child|
+          puts child['total']
+          total = total + child['total']
+      end
+      return total
+      # stock_count_json = json.find { |e| e['_id'] == sku.to_s }
+      # puts stock_count_json
+      # return 0 if stock_count_json == nil
+      # stock_count = stock_count_json['total']
+      # puts stock_count
+      # puts "---stock disponible de este almacen: " + stock_count.to_s
+      # return stock_count
+    rescue => ex # En caso de excepción retornamos error
+      logger.error ex.message
+      puts "error 18713"
+      render json: { error: ex.message }, status: 503 and return
+    end
+  end
+
+
   def stock_de_almacen(almacenId, sku)
     require 'httparty'
     puts "Almacen id= " + almacenId.to_s
@@ -694,7 +822,11 @@ class ApplicationController < ActionController::Base
       return 0 if result.body.to_s == '[]'
       json = JSON.parse(result.body)
       puts "--------Stock2 de Almacen Obtenido--------------"
-      stock_count = json.find { |e| e['_id'] == sku.to_s }['total']
+      stock_count_json = json.find { |e| e['_id'] == sku.to_s }
+      puts stock_count_json
+      return 0 if stock_count_json == nil
+      stock_count = stock_count_json['total']
+      puts stock_count
       puts "---stock disponible de este almacen: " + stock_count.to_s
       return stock_count
     rescue => ex # En caso de excepción retornamos error

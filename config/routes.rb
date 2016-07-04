@@ -55,6 +55,10 @@ Rails.application.routes.draw do
 
   get 'tasks/procesar_sftp'
   get 'tasks/producirMateriaPrima/:sku', to: 'tasks#producirMP'
+  get 'tasks/comprarMateriaPrima/:sku', to: 'tasks#comprarMateriaPrima'
+  get 'tasks/producirProductosElaborados/:sku', to: 'tasks#producirProductosElaborados'
+
+
   get '/limpiar_recepcion', to: 'tasks#limpiarBodegaRepecepcion'
   get '/limpiar_despacho', to: 'tasks#limpiarBodegaDespacho'
   get '/limpiar_recepcion_background', to: 'tasks#limpiarBodegaRepecepcionBackground'
