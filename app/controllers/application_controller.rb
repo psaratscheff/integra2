@@ -303,19 +303,51 @@ class ApplicationController < ActionController::Base
   end
 
 
-  def post_facebook
+  # ----------------------------------------------------------------------------
+  # -------------------- COMPARTIR EN REDES SOCIALES ---------------------------
+  # ----------------------------------------------------------------------------
+
+
+  def post_facebook(productTitle)
+    case productTitle
+    when "Avena"
+      link = "http://integra2.ing.puc.cl/images/products/avena.png";
+    when "Cuero"
+      link = "http://integra2.ing.puc.cl/images/products/cuero.png";
+    when "Algodon"
+      link = "http://integra2.ing.puc.cl/images/products/algodon.png";
+    when "Lino"
+      link = "http://integra2.ing.puc.cl/images/products/lino.png";
+    when "Huevo"
+      link = "http://integra2.ing.puc.cl/images/products/huevos.png";
+    end
+
     # @user = Koala::Facebook::API.new('EAACEdEose0cBALPUxqgCjOKqhSpbhts290mbsZBd1YrsxsDNRKmmchQRnwCNtFNeNOC2290hQwLuI2Af3GB0muFgwZARyoyo15XvcIoIETZA1nfoxrmsPlLAcZAbNW28cQxvSD2MlP8wDvSya37J0D6SbKfsSshhuhVOPcMXaAZDZD')
     # page_access_token = @user.get_connections('me', 'accounts').first['EAACEdEose0cBALPUxqgCjOKqhSpbhts290mbsZBd1YrsxsDNRKmmchQRnwCNtFNeNOC2290hQwLuI2Af3GB0muFgwZARyoyo15XvcIoIETZA1nfoxrmsPlLAcZAbNW28cQxvSD2MlP8wDvSya37J0D6SbKfsSshhuhVOPcMXaAZDZD'] #this gets the users first page.
     # @page = Koala::Facebook::API.new(page_access_token)
-    @page = Koala::Facebook::API.new('EAACEdEose0cBAI7cgexq69BOXCb1YMhVS7XXTMaS1WeUUAwivHcZB4MdfL0JWlwDlE9LJlOw4bPP5dfcx64o6k2qt76stqhaxQxViBV75qZBr9IDysGWdGaHIIGSCD4gp4RyHIyDkC3910PWAUiSDufVaxKMfo0rAUJMZAgVwZDZD')
-    @page.put_object("me", "feed", :message => "¡¡Que buenos huevos!!", :link => "https://authoritynutrition.com/wp-content/uploads/2013/01/egg.jpg",
-    :picture => "https://authoritynutrition.com/wp-content/uploads/2013/01/egg.jpg", :name => "Huevos", :caption => "Caption", :description => "Descripcion de huevos ricos")
+    @page = Koala::Facebook::API.new('EAADoyVItZAOoBAOhWV8WhIW2o17TC26g4XvgCijuqKp6qJVdjWn6btK0D8SwZAuuNSpGEN7LyLG9eznIRUy9wgGoM8piQLGuvWQodjwDahmfoZAXsXJQGh1pE9cogn1W6t3ZCLzWT3oOUhfeZCxAyg8qdrwalUS8ZD')
+    @page.put_object("me", "feed", :message => "¡¡Que buen " + productTitle + "!!", :link => link,
+    :picture => link, :name => productTitle, :caption => productTitle, :description => "")
 
   end
 
 
-  def twittear
-    img = open("public/images/logo.png")
+  def twittear(productTitle)
+    puts productTitle
+    case productTitle
+    when "Avena"
+      img = open("public/images/products/avena.png")
+    when "Cuero"
+      img = open("public/images/products/cuero.png")
+    when "Algodon"
+      img = open("public/images/products/algodon.png")
+    when "Lino"
+      img = open("public/images/products/lino.png")
+    when "Huevo"
+      img = open("public/images/products/huevos.png")
+    end
+
+    # img = open("public/images/logo.png")
     if img.is_a?(StringIO)
       ext = File.extname(url)
       name = File.basename(url, ext)
@@ -323,7 +355,7 @@ class ApplicationController < ActionController::Base
     else
       img
     end
-    $client.update_with_media('Nuestro lino es el mejor', img)
+    $client.update_with_media('Prueba la calidad de nuestro ' + productTitle + ' ¡No te arrepentiras!', img)
   end
 
 
