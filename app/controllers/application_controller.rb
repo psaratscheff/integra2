@@ -4,7 +4,14 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include HmacHelper # Para utilizar la función de hashing
 
-  $ambiente = true # true = production, false = desarrollo
+  $ambiente = false # true = production, false = desarrollo
+
+  if $ambiente
+    $paginaGrupo = "http://http://integra2.ing.puc.cl/"
+  else
+    $paginaGrupo = "http://localhost:3000/"
+  end
+
 
   if $ambiente
     $urlBodega = "http://integracion-2016-prod.herokuapp.com/bodega/"
@@ -303,19 +310,51 @@ class ApplicationController < ActionController::Base
   end
 
 
-  def post_facebook
+  # ----------------------------------------------------------------------------
+  # -------------------- COMPARTIR EN REDES SOCIALES ---------------------------
+  # ----------------------------------------------------------------------------
+
+
+  def post_facebook(productTitle)
+    case productTitle
+    when "Avena"
+      link = "http://integra2.ing.puc.cl/images/products/avena.png";
+    when "Cuero"
+      link = "http://integra2.ing.puc.cl/images/products/cuero.png";
+    when "Algodon"
+      link = "http://integra2.ing.puc.cl/images/products/algodon.png";
+    when "Lino"
+      link = "http://integra2.ing.puc.cl/images/products/lino.png";
+    when "Huevo"
+      link = "http://integra2.ing.puc.cl/images/products/huevos.png";
+    end
+
     # @user = Koala::Facebook::API.new('EAACEdEose0cBALPUxqgCjOKqhSpbhts290mbsZBd1YrsxsDNRKmmchQRnwCNtFNeNOC2290hQwLuI2Af3GB0muFgwZARyoyo15XvcIoIETZA1nfoxrmsPlLAcZAbNW28cQxvSD2MlP8wDvSya37J0D6SbKfsSshhuhVOPcMXaAZDZD')
     # page_access_token = @user.get_connections('me', 'accounts').first['EAACEdEose0cBALPUxqgCjOKqhSpbhts290mbsZBd1YrsxsDNRKmmchQRnwCNtFNeNOC2290hQwLuI2Af3GB0muFgwZARyoyo15XvcIoIETZA1nfoxrmsPlLAcZAbNW28cQxvSD2MlP8wDvSya37J0D6SbKfsSshhuhVOPcMXaAZDZD'] #this gets the users first page.
     # @page = Koala::Facebook::API.new(page_access_token)
-    @page = Koala::Facebook::API.new('EAACEdEose0cBAI7cgexq69BOXCb1YMhVS7XXTMaS1WeUUAwivHcZB4MdfL0JWlwDlE9LJlOw4bPP5dfcx64o6k2qt76stqhaxQxViBV75qZBr9IDysGWdGaHIIGSCD4gp4RyHIyDkC3910PWAUiSDufVaxKMfo0rAUJMZAgVwZDZD')
-    @page.put_object("me", "feed", :message => "¡¡Que buenos huevos!!", :link => "https://authoritynutrition.com/wp-content/uploads/2013/01/egg.jpg",
-    :picture => "https://authoritynutrition.com/wp-content/uploads/2013/01/egg.jpg", :name => "Huevos", :caption => "Caption", :description => "Descripcion de huevos ricos")
+    @page = Koala::Facebook::API.new('EAADoyVItZAOoBAOhWV8WhIW2o17TC26g4XvgCijuqKp6qJVdjWn6btK0D8SwZAuuNSpGEN7LyLG9eznIRUy9wgGoM8piQLGuvWQodjwDahmfoZAXsXJQGh1pE9cogn1W6t3ZCLzWT3oOUhfeZCxAyg8qdrwalUS8ZD')
+    @page.put_object("me", "feed", :message => "¡¡Que buen " + productTitle + "!!", :link => link,
+    :picture => link, :name => productTitle, :caption => productTitle, :description => "")
 
   end
 
 
-  def twittear
-    img = open("public/images/logo.png")
+  def twittear(productTitle)
+    puts productTitle
+    case productTitle
+    when "Avena"
+      img = open("public/images/products/avena.png")
+    when "Cuero"
+      img = open("public/images/products/cuero.png")
+    when "Algodon"
+      img = open("public/images/products/algodon.png")
+    when "Lino"
+      img = open("public/images/products/lino.png")
+    when "Huevo"
+      img = open("public/images/products/huevos.png")
+    end
+
+    # img = open("public/images/logo.png")
     if img.is_a?(StringIO)
       ext = File.extname(url)
       name = File.basename(url, ext)
@@ -323,7 +362,7 @@ class ApplicationController < ActionController::Base
     else
       img
     end
-    $client.update_with_media('Nuestro lino es el mejor', img)
+    $client.update_with_media('Prueba la calidad de nuestro ' + productTitle + ' ¡No te arrepentiras!', img)
   end
 
 
@@ -363,6 +402,89 @@ class ApplicationController < ActionController::Base
   # ----------------------------------------------------------------------------
   # -----------------------------------OCs--------------------------------------
   # ----------------------------------------------------------------------------
+
+  def comprar(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
+    oc, localOc = generar_oc(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
+    puts "OC GENERADA: " + oc.to_s
+
+    respuesta, valida = enviar_oc(oc)
+    if !valida
+      puts "------No se pudo enviar la OC: " + oc.to_s
+      ocAnulada = anular_oc(oc)
+      localOc.estado = "anulada por error de envío"
+      localOc.save!
+      render json: {anulada: true, oc: ocAnulada}.to_json #TODO: Tengo demasiados renders de más :$
+    elsif respuesta['aceptado']
+      puts "------OC ACEPTADA: "+oc.to_s
+      localOc.estado = "Aceptada"
+      localOc.save!
+      render json: oc #TODO: Tengo demasiados renders de más :$
+    else
+      puts "------OC RECHAZADA: "+oc.to_s
+      ocAnulada = anular_oc(oc)
+      localOc.estado = "anulada por rechazo"
+      localOc.save!
+      render json: {anulada: true, oc: ocAnulada}.to_json #TODO: Tengo demasiados renders de más :$
+    end
+  end
+
+  def generar_oc(cliente, proveedor, sku, cantidad, fechaEntrega, notas)
+    require 'httparty'
+    begin # Intentamos realizar conexión externa y obtener OC
+      puts "--------Generando OC--------------"
+      url = getLinkServidorCurso + "oc/"
+      result = HTTParty.put(url+"crear",
+          body:    {
+                      cliente: cliente,
+                      proveedor: proveedor,
+                      sku: sku,
+                      fechaEntrega: fechaEntrega,
+                      precioUnitario: Item.find(sku).Precio_Unitario, # Definido en seeds.rb
+                      cantidad: cantidad,
+                      canal: "b2b"
+                    }.to_json,
+          headers: {
+            'Content-Type' => 'application/json'
+          })
+      puts "(Generar_OC)Respuesta de la contraparte: " + result.body.to_s
+      oc = JSON.parse(result.body)
+      if !oc["proveedor"] # Validamos que la oc sea válida, probando si tiene el key proveedor
+        render json: { error: "Error: No se pudo recibir la OC" }, status: 503 and return
+      end
+      puts "--------OC Generada--------------"
+      tOc = transform_oc(oc)
+    rescue => ex # En caso de excepción retornamos error
+      logger.error ex.message
+      puts "error 1015"
+      render json: { error: ex.message }, status: 503 and return
+    end
+    localOc = Oc.new(tOc)
+    localOc.save!
+
+    return oc, localOc
+  end
+
+  def enviar_oc(oc)
+    puts "--------Enviando OC--------------"
+    puts oc
+    idProveedor = oc['proveedor'] #Revisar sintaxis
+    idOc = oc['_id']
+    idOc = oc['idoc'] if (idOc == nil) # En caso de que oc no haya sido transformada todavía
+    if getLinkGrupo(idProveedor) == nil # El grupo no está en nuestro diccionario
+      puts "--------------ERROR: ID de grupo inválido--------"
+      return {"aceptado" => false}, false
+    end
+    url = getLinkGrupo(idProveedor)+'api/oc/recibir/'+idOc.to_s
+    puts "--------Enviando a: " + url + "-----"
+    result = HTTParty.get(url,
+            headers: {
+              'Content-Type' => 'application/json'
+            })
+    json = JSON.parse(result.body)
+    puts "(Enviar_OC)Respuesta de la contraparte: " + json.to_s
+    puts "--------OC Enviada, Respuesta Recibida--------------"
+    return json, true
+  end
 
   def obtener_oc(idoc)
     require 'httparty'
@@ -620,6 +742,51 @@ class ApplicationController < ActionController::Base
 
     return contador
   end
+
+  def consultar_stock_total(sku)
+    parsed_json = lista_de_almacenes()
+    contador=0
+    parsed_json.each do |almacen|
+      contador += stock_2_de_almacen(almacen["_id"], sku)
+    end
+    return contador
+  end
+
+
+  def stock_total_almacen(almacenId)
+    require 'httparty'
+    total = 0
+    begin # Intentamos realizar conexión externa y obtener OC
+    puts "--------Obteniendo Stock2 de Almacen---- :" + $urlBodega+"skusWithStock"+"?almacenId="+almacenId.to_s
+      result = HTTParty.get($urlBodega+"skusWithStock"+"?almacenId="+almacenId.to_s,
+              headers: {
+                'Content-Type' => 'application/json',
+                'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenId.to_s)
+              })
+      puts "(Stock_2_de_Almacen)Respuesta de la contraparte: " + result.body.to_s
+      return 0 if result.body.to_s == '[]'
+      json = JSON.parse(result.body)
+      puts json
+      puts "--------Stock2 de Almacen Obtenido--------------"
+      json.each do |child|
+          puts child['total']
+          total = total + child['total']
+      end
+      return total
+      # stock_count_json = json.find { |e| e['_id'] == sku.to_s }
+      # puts stock_count_json
+      # return 0 if stock_count_json == nil
+      # stock_count = stock_count_json['total']
+      # puts stock_count
+      # puts "---stock disponible de este almacen: " + stock_count.to_s
+      # return stock_count
+    rescue => ex # En caso de excepción retornamos error
+      logger.error ex.message
+      puts "error 18713"
+      render json: { error: ex.message }, status: 503 and return
+    end
+  end
+
 
   def stock_de_almacen(almacenId, sku)
     require 'httparty'

@@ -67,6 +67,67 @@ task :fabricar_materia_prima do
   HTTParty.get(url)
 end
 
+
+desc "Comprar Materia Prima"
+task :comprar_materia_prima do
+  $ambiente = true
+  puts "---------------GET Funcion COMPRAR SKU 25-------------------"
+  if $ambiente
+    url = "http://integra2.ing.puc.cl/tasks/comprarMateriaPrima/25"
+  else
+    url = "http://localhost:3000/tasks/comprarMateriaPrima/25"
+  end
+  HTTParty.get(url)
+
+  puts "---------------GET Funcion COMPRAR SKU 20-------------------"
+  if $ambiente
+    url = "http://integra2.ing.puc.cl/tasks/comprarMateriaPrima/20"
+  else
+    url = "http://localhost:3000/tasks/comprarMateriaPrima/20"
+  end
+  HTTParty.get(url)
+
+  puts "---------------GET Funcion COMPRAR SKU 15-------------------"
+  if $ambiente
+    url = "http://integra2.ing.puc.cl/tasks/comprarMateriaPrima/15"
+  else
+    url = "http://localhost:3000/tasks/comprarMateriaPrima/15"
+  end
+  HTTParty.get(url)
+
+  puts "---------------GET Funcion COMPRAR SKU 37-------------------"
+  if $ambiente
+    url = "http://integra2.ing.puc.cl/tasks/comprarMateriaPrima/37"
+  else
+    url = "http://localhost:3000/tasks/comprarMateriaPrima/37"
+  end
+  HTTParty.get(url)
+end
+
+
+desc "Fabricar Productos Procesados"
+task :fabricar_productos_procesados do
+  $ambiente = true
+  puts "---------------GET Funcion GENERAR SKU 12-------------------"
+  if $ambiente
+    url = "http://integra2.ing.puc.cl/tasks/producirProductosElaborados/12"
+  else
+    url = "http://localhost:3000/tasks/producirProductosElaborados/12"
+  end
+  HTTParty.get(url)
+
+  puts "---------------GET Funcion GENERAR SKU 28-------------------"
+  if $ambiente
+    url = "http://integra2.ing.puc.cl/tasks/producirProductosElaborados/28"
+  else
+    url = "http://localhost:3000/tasks/producirProductosElaborados/28"
+  end
+  HTTParty.get(url)
+
+end
+
+
+
 #
 # desc "Procesar OC internacionales"
 # task :procesar_sftp do
