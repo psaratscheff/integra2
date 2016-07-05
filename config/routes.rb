@@ -79,6 +79,7 @@ Rails.application.routes.draw do
     get 'ids/banco'
     get 'ids/almacenId'
     get 'pagos/recibir/:idtrx', to: 'pagos#recibir'
+    get 'pagos/recibir/sin_validar/:idfactura', to: 'pagos#recibir_sin_validar_trx'
     get 'despachos/recibir/:idfactura', to: 'despachos#recibir'
   end
 

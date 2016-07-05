@@ -43,6 +43,37 @@ class Api::PagosController < ApplicationController
     render json: { validado: true, idtrx: idtrx.to_s }
   end
 
+  def recibir_sin_validar_trx
+    puts "<h1>------------------------Solicitud de recibir PAGO recibida----------------------------</h1>"
+  	#Parte 7 del flujo: (recibir idtrx e idfactura)
+    idfactura = params[:idfactura]
+    if !idfactura
+      puts "--------Parámetros Incorrectos-------"
+      render json: {error: "Parámetros Incorrectos", validado: false}, status: 400 and return
+    end
+    puts "---a---idfactura: " + idfactura
+    factura = obtener_factura(idfactura)
+    puts "factura: " + factura.to_s
+    if (Oc.find_by idfactura: idfactura) == nil
+      puts "-----No tenemos la factura pagada en nuestro sistema-----"
+        render json: {error: "No tenemos la factura en nuestro sistema", validado: false}, status: 400 and return
+    elsif !factura['total']
+      puts "-----FACTURA OBTENIDA INVÁLIDA!-----"
+        render json: {error: "FACTURA OBTENIDA INVÁLIDA!", validado: false}, status: 400 and return
+    end
+    # Seguimos con el tema de la factura en un Thread aparte, para
+    # no demorar la entrega de la respuesta
+    background do # Función background definida en ApplicationController
+      localOc = Oc.find_by idfactura: idfactura
+      localOc["estado"] = "pagada"
+      localOc.save!
+      #TODO: MARCAR FACTURA PAGADA EN EL SISTEMA DEL CURSO!!
+      despachado = despachar(idfactura, factura) #Función definida en application_controller
+      avisar_a_grupo(factura['cliente'], idfactura)
+    end
+    render json: { validado: true }
+  end
+
   private
 
   def avisar_a_grupo(groupid, idfactura)
