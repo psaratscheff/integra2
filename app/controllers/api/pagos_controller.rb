@@ -157,7 +157,7 @@ class Api::PagosController < ApplicationController
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
-      puts "error 1010"
+      puts "error 1010a: " + ex.message
       render json: { error: ex.message }, status: 503 and return
     end
   end
