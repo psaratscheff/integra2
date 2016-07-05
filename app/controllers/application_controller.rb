@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   $ambiente = true # true = production, false = desarrollo
 
   if $ambiente
-    $paginaGrupo = "http://http://integra2.ing.puc.cl/"
+    $paginaGrupo = "http://integra2.ing.puc.cl/"
   else
     $paginaGrupo = "http://localhost:3000/"
   end
