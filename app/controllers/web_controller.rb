@@ -62,4 +62,9 @@ class WebController < ApplicationController
     render nothing: true, status: 200
     puts '-------------Producto B2C Despachado!--------------------------------'
   end
+
+  def nothing
+    puts '<h1> Someone asked for [POST] -> /instagram/nueva_promocion ... WTF?! </h1>'
+    render nothing: true, status: 404
+  end
 end

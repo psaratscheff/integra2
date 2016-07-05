@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
 
+  # DON'T KNOW WHO IS ASKING, but I want to get rid of the error on the log:
+  post '/instagram/nueva_promocion', to: 'web#nothing'
+
   get 'dashboard/index'
   get 'dashboard/bodega'
   get 'dashboard/productos'
