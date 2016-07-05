@@ -936,7 +936,6 @@ class ApplicationController < ActionController::Base
       puts "(Lista_de_Almacenes)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
       puts "--------Lista de Almacenes Obtenida--------------"
-      sleep(5) # Sleep 5 seconds...
       return json
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
