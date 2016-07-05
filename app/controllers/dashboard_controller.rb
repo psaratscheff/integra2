@@ -1,36 +1,40 @@
 class DashboardController < ApplicationController
 
   def index
+    a = capacidadAlmacen($almacen1id)
+  end
+
+
+  def almacen1
+    @disponibleAlmacen1 = capacidadAlmacen($almacen1id) - espacio_ocupado_almacen($almacen1id)
+    @ocupadoAlmacen1= espacio_ocupado_almacen($almacen1id)
+  end
+
+  def almacen2
+    @disponibleAlmacen2 = capacidadAlmacen($almacen2id) - espacio_ocupado_almacen($almacen2id)
+    @ocupadoAlmacen2 = espacio_ocupado_almacen($almacen2id)
+  end
+
+  def recepcion
+    @disponibleRecepcion = capacidadAlmacen($recepcionid) - espacio_ocupado_almacen($recepcionid)
+    @ocupadoRecepcion = espacio_ocupado_almacen($recepcionid)
+  end
+
+  def despacho
+    @disponibleDespacho = capacidadAlmacen($despachoid) - espacio_ocupado_almacen($despachoid)
+    @ocupadoDespacho = espacio_ocupado_almacen($despachoid)
+  end
+
+  def pulmon
+    @disponiblePulmon = capacidadAlmacen($pulmonid) - espacio_ocupado_almacen($pulmonid)
+    @ocupadoPulmon = espacio_ocupado_almacen($pulmonid)
   end
 
   def bodega
-    @disponibleBodega = 100
-    @ocupadoBodega = stock_total_almacen($bodegaid)
-  end
-
- def almacen1
-    @disponibleAlmacen1 = 100
-    @ocupadoAlmacen1= 50
-  end
-
- def almacen2
-    @disponibleAlmacen2 = 100
-    @ocupadoAlmacen2 = 50
-  end
-
- def recepcion
-    @disponibleRecepcion = 100
-    @ocupadoRecepcion = stock_total_almacen($recepcionid)
-  end
-
- def despacho
-    @disponibleDespacho = 100
-    @ocupadoDespacho = stock_total_almacen($despachoid)
-  end
-
- def pulmon
-    @disponiblePulmon = 100
-    @ocupadoPulmon = 50
+    capacidad = capacidadAlmacen($despachoid)+capacidadAlmacen($recepcionid)+capacidadAlmacen($almacen1id)+capacidadAlmacen($almacen2id)  #- espacio_ocupado_almacen($despachoid)
+    ocupado = espacio_ocupado_almacen($almacen1id)+espacio_ocupado_almacen($almacen2id) + espacio_ocupado_almacen($recepcionid)+espacio_ocupado_almacen($despachoid)
+    @disponibleBodega = capacidad-ocupado
+    @ocupadoBodega = ocupado
   end
 
   def productos
@@ -75,7 +79,8 @@ class DashboardController < ApplicationController
   end
 
   def saldobanco
-    url = 'http://mare.ing.puc.cl/banco/cuenta/'+ $bancoid
+
+    url = 'http://mare.ing.puc.cl/banco/cuenta/'+ '571262c3a980ba030058ab5c'
     result = HTTParty.get(url,
               headers: {
                 'Content-Type' => 'application/json'
@@ -83,6 +88,8 @@ class DashboardController < ApplicationController
     json = JSON.parse(result.body)
     plata = json[0]['saldo'].to_s
     @saldo = "$"+plata
+
+
   end
 
 

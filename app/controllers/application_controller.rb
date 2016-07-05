@@ -4,14 +4,13 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include HmacHelper # Para utilizar la función de hashing
 
-  $ambiente = false # true = production, false = desarrollo
+  $ambiente = true # true = production, false = desarrollo
 
   if $ambiente
     $paginaGrupo = "http://http://integra2.ing.puc.cl/"
   else
     $paginaGrupo = "http://localhost:3000/"
   end
-
 
   if $ambiente
     $urlBodega = "http://integracion-2016-prod.herokuapp.com/bodega/"
@@ -26,15 +25,44 @@ class ApplicationController < ActionController::Base
     $recepcionid = "572aad41bdb6d403005fb0ba"
     $despachoid = "572aad41bdb6d403005fb0bb"
     $bodegaid = '572aad41bdb6d403005fb0bc'
+    $almacen1id = '572aad41bdb6d403005fb0bc'
+    $almacen2id = '572aad41bdb6d403005fb1bd'
     $pulmonid = '572aad41bdb6d403005fb1be'
   else
     $groupid = "571262b8a980ba030058ab50"
     $bancoid = "571262c3a980ba030058ab5c"
     $recepcionid = "571262aaa980ba030058a14e"
     $despachoid = "571262aaa980ba030058a14f"
+    $almacen1id = '571262aaa980ba030058a150'
+    $almacen2id = '571262aaa980ba030058a1ef'
     $bodegaid = '571262aaa980ba030058a150'
     $pulmonid = '⁠⁠⁠571262aaa980ba030058a1f0'
   end
+
+  #Solo se define para ambiente producción
+  def capacidadAlmacen(idAlmacen)
+    capacidad = 0
+
+    if idAlmacen == "572aad41bdb6d403005fb0ba" #Recepcion
+      capacidad = 810+6126
+
+    elsif idAlmacen == "572aad41bdb6d403005fb0bb" #Despacho
+      capacidad = 1584
+
+    elsif idAlmacen == "572aad41bdb6d403005fb1be" #Pulmon
+      capacidad = 99999999
+
+    elsif idAlmacen == "572aad41bdb6d403005fb0bc" #Almacen1
+      capacidad = 28923
+
+    elsif idAlmacen == "572aad41bdb6d403005fb1bd" #Almacen2
+      capacidad = 5306+902
+  
+    end
+  end
+
+
+
   ##### Método para obtener el almacenID en vivo
   #  parsed_json = lista_de_almacenes() # Función definida en ApplicationController
   #  almId = nil # Necesario declararlo fuera del loop
@@ -753,33 +781,24 @@ class ApplicationController < ActionController::Base
   end
 
 
-  def stock_total_almacen(almacenId)
+  def espacio_ocupado_almacen(almacenId)
     require 'httparty'
     total = 0
     begin # Intentamos realizar conexión externa y obtener OC
-    puts "--------Obteniendo Stock2 de Almacen---- :" + $urlBodega+"skusWithStock"+"?almacenId="+almacenId.to_s
       result = HTTParty.get($urlBodega+"skusWithStock"+"?almacenId="+almacenId.to_s,
               headers: {
                 'Content-Type' => 'application/json',
                 'Authorization' => 'INTEGRACIONgrupo2:'+encode('GET'+almacenId.to_s)
               })
-      puts "(Stock_2_de_Almacen)Respuesta de la contraparte: " + result.body.to_s
       return 0 if result.body.to_s == '[]'
       json = JSON.parse(result.body)
       puts json
-      puts "--------Stock2 de Almacen Obtenido--------------"
       json.each do |child|
           puts child['total']
           total = total + child['total']
       end
       return total
-      # stock_count_json = json.find { |e| e['_id'] == sku.to_s }
-      # puts stock_count_json
-      # return 0 if stock_count_json == nil
-      # stock_count = stock_count_json['total']
-      # puts stock_count
-      # puts "---stock disponible de este almacen: " + stock_count.to_s
-      # return stock_count
+
     rescue => ex # En caso de excepción retornamos error
       logger.error ex.message
       puts "error 18713"
