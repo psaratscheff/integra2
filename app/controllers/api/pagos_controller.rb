@@ -117,7 +117,7 @@ class Api::PagosController < ApplicationController
         productos = stock_de_almacen(almacen['_id'], sku)
         break if productos.count == 0
         productos.each do |producto|
-          puts '--- Despachando item N°' + (items_despachados + 1).to_s + ' idoc: ' + idoc.to_s + '-----'
+          puts '--- Despachando item N°' + (items_despachados + 1).to_s + '/' + qty.to_s + ' idoc: ' + idoc.to_s + '-----'
           idProducto = producto['_id']
           mover_a_despacho(idProducto) #TODO: IMPLEMENTAR FUNCION
           despachar_producto(producto, almacenClienteId, idoc, precio) #TODO: IMPLEMENTAR FUNCION
