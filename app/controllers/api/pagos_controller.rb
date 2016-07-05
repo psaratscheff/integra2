@@ -181,7 +181,7 @@ class Api::PagosController < ApplicationController
               })
       puts "(Despachar_Producto)Respuesta de la contraparte: " + result.body.to_s
       json = JSON.parse(result.body)
-      producto = Producto.find_by(_id: producto_id)
+      producto = Producto.find_by(_id: idProducto)
       producto.delete if producto != nil
       puts "--------Producto Despachado a Cliente B2B--------------"
       sleep(5) # Sleep 5 seconds...
