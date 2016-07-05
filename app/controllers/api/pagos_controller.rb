@@ -109,19 +109,20 @@ class Api::PagosController < ApplicationController
     almacenClienteId = get_almacen_id(grupo)
 
     almacenes = lista_de_almacenes()
-    itemsDespachados = 0
+    items_despachados = 0
+    puts '------PAGOS_DESPACHAR: Qty: ' + qty.to_s + ' Sku: ' + sku.to_s + ' idoc: ' + idoc.to_s + '------------'
     almacenes.each do |almacen|
-      unless almacen['despacho']
-        while itemsDespachados < qty
-          productos = stock_de_almacen(almacen['_id'], sku)
-          break if productos.count == 0
-          productos.each do |producto|
-            idProducto = producto['_id']
-            mover_a_despacho(idProducto) #TODO: IMPLEMENTAR FUNCION
-            despachar_producto(producto, almacenClienteId, idoc, precio) #TODO: IMPLEMENTAR FUNCION
-            itemsDespachados += 1
-            return if itemsDespachados >= qty
-          end
+      next if almacen['despacho']
+      while items_despachados < qty
+        productos = stock_de_almacen(almacen['_id'], sku)
+        break if productos.count == 0
+        productos.each do |producto|
+          puts '--- Despachando item N°' + (items_despachados + 1).to_s + ' idoc: ' + idoc.to_s + '-----'
+          idProducto = producto['_id']
+          mover_a_despacho(idProducto) #TODO: IMPLEMENTAR FUNCION
+          despachar_producto(producto, almacenClienteId, idoc, precio) #TODO: IMPLEMENTAR FUNCION
+          items_despachados += 1
+          return if items_despachados >= qty
         end
       end
     end
@@ -133,7 +134,6 @@ class Api::PagosController < ApplicationController
   def mover_a_despacho(idProducto)
     require 'httparty'
     idDespacho = $despachoid
-
 
     begin # Intentamos realizar conexión externa y obtener OC
       puts "--------Moviendo Producto a Despacho PAGOS--------------"
