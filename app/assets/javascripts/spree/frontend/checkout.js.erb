@@ -96,6 +96,7 @@ ready = function() {
     if (direccion === '') {
       alert('Debes ingresar una dirección!');
     } else {
+      // post_facebook('Algodon')
       window.location = "http://integra2.ing.puc.cl/handle_payment?sku=" + sku + "&cantidad=" + cantidad + "&url=" + url + '&direccion=' + direccion;
     }
   });
