@@ -1141,7 +1141,7 @@ class ApplicationController < ActionController::Base
     idProducto = producto['_id']
 
     begin # Intentamos realizar conexión externa y obtener OC
-      puts "--------Despachando Producto a Cliente B2B--------------"
+      puts "--------Despachando Producto a Cliente B2B: " + producto.to_s + almacenClienteId.to_s + idoc.to_s + precio.to_s + "--------------"
       result = HTTParty.post($urlBodega+"moveStockBodega",
               body: {
                 productoId: idProducto,
