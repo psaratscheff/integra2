@@ -122,13 +122,14 @@ class Api::PagosController < ApplicationController
           mover_a_despacho(idProducto) #TODO: IMPLEMENTAR FUNCION
           despachar_producto(producto, almacenClienteId, idoc, precio) #TODO: IMPLEMENTAR FUNCION
           items_despachados += 1
-          return if items_despachados >= qty
+          if items_despachados >= qty
+            oc["estado"] = "despachada"
+            oc.save!
+            return true
+          end
         end
       end
     end
-    oc["estado"] = "despachada"
-    oc.save!
-    return true
   end
 
   def mover_a_despacho(idProducto)
