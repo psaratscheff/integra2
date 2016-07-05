@@ -19,6 +19,8 @@ Rails.application.routes.draw do
   get 'dashboard/ventas'
   get 'dashboard/ingresos'
 
+
+
   resources :pagos
   resources :pagos
   resources :facturas
@@ -60,6 +62,9 @@ Rails.application.routes.draw do
   get 'tasks/producirMateriaPrima/:sku', to: 'tasks#producirMP'
   get 'tasks/comprarMateriaPrima/:sku', to: 'tasks#comprarMateriaPrima'
   get 'tasks/producirProductosElaborados/:sku', to: 'tasks#producirProductosElaborados'
+
+  get '/post_facebook', to: 'pages#post_facebook'
+
 
 
   get '/limpiar_recepcion', to: 'tasks#limpiarBodegaRepecepcion'
