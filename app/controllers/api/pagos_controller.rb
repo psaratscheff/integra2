@@ -161,6 +161,7 @@ class Api::PagosController < ApplicationController
     end
   end
 
+=begin # ESTE METODO ESTA EN APP_CONTROLLER, pq duplicado?!?!?! ESTE MALO!!!
   def despachar_producto(producto, almacenClienteId, idoc, precio)
     require 'httparty'
     idProducto = producto['_id']
@@ -192,5 +193,6 @@ class Api::PagosController < ApplicationController
       render json: { error: ex.message }, status: 503 and return
     end
   end
+=end
 
 end
